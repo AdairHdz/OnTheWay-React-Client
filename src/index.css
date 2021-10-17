@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .input-error-text {
+        @apply text-sm text-left font-thin text-red-500;
+    }
+}

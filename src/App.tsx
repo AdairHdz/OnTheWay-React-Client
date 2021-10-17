@@ -4,6 +4,8 @@ import {
   Route,  
 } from "react-router-dom";
 import './App.css';
+import LoginPage from "./pages/LoginPage";
+import RegistryPage from "./pages/RegistryPage";
 
 function App() {
   return (
@@ -13,8 +15,11 @@ function App() {
           <Route path="/" exact>
             <p className="text-red-500">Hello world</p>    
           </Route>
-          <Route path="/home">
-            <p className="text-blue-500">Home</p>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/registry">
+            <RegistryPage />
           </Route>
         </Switch>
       </Router>
