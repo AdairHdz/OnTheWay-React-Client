@@ -7,11 +7,28 @@ import { useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
 
 const LoginForm: React.FC<{
-    className?: string
+    className?: string,
+    showLoginErrorHandler: (httpStatusCode: number) => void,    
 }> = (props) => {
 
-    const authContext = useContext(AuthContext)                
+    const authContext = useContext(AuthContext)    
 
+    const login = async (values: {
+        emailAddress: string,
+        password: string
+    }) => {        
+        const init = {
+            method: "POST",
+            body: JSON.stringify(values)
+        }
+        const response = await fetch("http://127.0.0.1:50000/login", init)
+        if(response.ok) {
+            const data = await response.json()            
+            authContext.login(data.token)
+            return
+        }
+        props.showLoginErrorHandler(response.status)
+    }
     return (
         <Formik
             initialValues={{
@@ -28,15 +45,7 @@ const LoginForm: React.FC<{
                     .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
             })}
             onSubmit={(values) => {
-                fetch("http://127.0.0.1:50000/login", {
-                    method: "POST",
-                    body: JSON.stringify(values)
-                }).then(response => response.json())
-                .then(data => {
-                    console.log(data)                    
-                    authContext.login(data.token)
-                    console.log(authContext.authenticationToken)
-                })
+                login(values)
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">                
                 <Form className="m-auto w-full px-12">

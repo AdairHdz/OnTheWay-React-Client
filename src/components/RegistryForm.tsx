@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import StateResponse from '../models/state-response';
 
 const RegistryForm: React.FC<{
-    className?: string
+    className?: string,    
 }> = (props) => {
     const history = useHistory()
 
@@ -25,8 +25,7 @@ const RegistryForm: React.FC<{
         if (response.ok) {
           return response.json()
         }
-      }).then((data: StateResponse[]) => {
-        console.log(data)
+      }).then((data: StateResponse[]) => {        
         setStates(data)        
       }).catch(err => console.log(err))
     }, [])
@@ -56,18 +55,21 @@ const RegistryForm: React.FC<{
           names: Yup.string()
             .trim()            
             .required("Este campo es obligatorio")
-            .max(30, "Por favor inserte un nombre de menos de 30 caracteres"),
+            .max(30, "Por favor inserte un nombre de menos de 30 caracteres")
+            .matches(/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/g, "Por favor inserte un nombre que solo contenga letras, espacios y/o acentos"),
           lastName: Yup.string()
           .trim()            
           .required("Este campo es obligatorio")
-          .max(30, "Por favor inserte un apellido de menos de 30 caracteres"),
+          .max(30, "Por favor inserte un apellido de menos de 30 caracteres")
+          .matches(/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/g, "Por favor inserte un apellido que solo contenga letras, espacios y/o acentos"),
           emailAddress: Yup.string()
           .required("Este campo es obligatorio")
             .email("Por favor inserte una dirección de correo válida"),
           password: Yup.string()
             .required("Este campo es obligatorio")
             .min(8, "Por favor inserte una contraseña de al menos 8 caracteres")
-            .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
+            .max(50, "Por favor inserte una contraseña de menos de 50 caracteres")
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, "Por favor introduzca una contraseña con al menos una minúscula, una mayúscula, un símbolo y un número"),
           stateId: Yup.string()
             .required("Este campo es obligatorio")
             .uuid("Por favor seleccione un estado"),
@@ -78,15 +80,16 @@ const RegistryForm: React.FC<{
             .optional()
             .matches(/[A-z]{1,30}/, "Por favor ingrese solo letras"),
          })}         
-         onSubmit={(values) => {
+         onSubmit={(values) => {           
            values.userType = +values.userType           
            fetch("http://127.0.0.1:8000/users", {
              method: "POST",
              body: JSON.stringify(values),
            }).then(response => {
-             if(response.ok) {               
+             if(response.ok) {              
                history.push({
-                 pathname: "/login",                 
+                 pathname: "/login",
+                 search: "?success=true",
                })
              }
            })
