@@ -25,11 +25,9 @@ const LoginForm: React.FC<{
         }
         const response = await fetch("http://127.0.0.1:50000/login", init)
         if(response.ok) {
-            const data: Login = await response.json()            
-            authContext.login(data)
-            history.push({
-                pathname: `/service-providers/${data.id}`
-            })
+            const data: Login = await response.json()
+            authContext.login(data)            
+            history.push("/")            
             return
         }
         props.showLoginErrorHandler(response.status)

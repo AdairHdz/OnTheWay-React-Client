@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { useContext, useEffect, useState } from "react"
 import Review from "../../responses/review"
+import {AuthContext} from "../../store/AuthContext"
 import Paginator from "../generics/Paginator"
 import ReviewItem from "./ReviewItem"
 
 const ReviewsList = () => {
     const [error, setError] = useState<string>("")
     const [reviews, setReviews] = useState<Review[]>([])
-    const { providerId } = useParams<{
-        providerId: string
-    }>()
+    const {data} = useContext(AuthContext)
+
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/reviews/${providerId}?page=1&pageElements=5`)
+        fetch(`http://127.0.0.1:8000/reviews/${data.id}?page=1&pageElements=5`)
         .then(response => {
             if(response.ok) {
                 return response.json()
@@ -22,7 +21,7 @@ const ReviewsList = () => {
             setReviews(data)
         })
         .catch(err => console.log(err))
-    }, [providerId])
+    }, [data.id])
      
     useEffect(() => {
 

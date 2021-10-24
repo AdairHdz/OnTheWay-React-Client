@@ -1,23 +1,22 @@
-import { useCallback, useState } from "react"
+import { useCallback, useContext, useState } from "react"
 import NewPriceRateForm from "../../components/service-provider/price-rate/NewPriceRateForm"
 import PriceRatesList from "../../components/service-provider/price-rate/PriceRatesList"
 import ReviewsList from "../../components/reviews/ReviewsList"
 import InfoOVerview from "../../components/service-provider/InfoOverview"
 import PriceRate from "../../responses/price-rate"
-import { useParams } from "react-router-dom"
+import { AuthContext } from "../../store/AuthContext"
 
 const HomePage = () => {
     const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)    
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
-    const closePriceRateModal = () => setShowNewPriceRateForm(false)
-    const { providerId } = useParams<{
-        providerId: string
-    }>()
+    const closePriceRateModal = () => setShowNewPriceRateForm(false)    
+
+    const {data} = useContext(AuthContext)
     const [priceRates, setPriceRates] = useState<PriceRate[]>()
     const [error, setError] = useState<string>("")
 
     const fetchPriceRates = useCallback(() => {
-        fetch(`http://127.0.0.1:8000/price-rates/${providerId}`)
+        fetch(`http://127.0.0.1:8000/price-rates/${data.id}`)
         .then(response => {
             if(response.ok) {
                 return response.json()
@@ -28,7 +27,7 @@ const HomePage = () => {
             setPriceRates(data)
         })
         .catch(err => console.log(err))
-    }, [providerId])
+    }, [data.id])
     return (
         <>
             <div className="shadow-md bg-white flex-grow-0 mb-5">

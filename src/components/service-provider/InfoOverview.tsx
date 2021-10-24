@@ -1,23 +1,22 @@
 import StarRate from "../generics/StarRate"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEdit } from "@fortawesome/free-solid-svg-icons"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { useContext, useEffect, useState } from "react"
+
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
+import {AuthContext} from "../../store/AuthContext"
 
 const InfoOVerview = () => {
-    const { providerId } = useParams<{
-        providerId: string
-    }>()
+    const {data} = useContext(AuthContext)
 
     const [serviceProviderInfoOverview, setServiceProviderInfoOverview] = useState<ServiceProviderInfoOverview>()
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/service-providers/${providerId}`)        
+        fetch(`http://127.0.0.1:8000/service-providers/${data.id}`)        
         .then(response => response.json())
         .then((data: ServiceProviderInfoOverview) => setServiceProviderInfoOverview(data))
         .catch(err => console.log(err))
-    }, [providerId])
+    }, [data.id])
     return (
         <div className="flex flex-col md:flex-row">
             <img

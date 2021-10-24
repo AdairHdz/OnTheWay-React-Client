@@ -7,16 +7,16 @@ import Login from "../responses/login"
 type AuthContextType = {
     data: Login
     login: (loginResponse: Login) => void,
-    logout: () => void,
-    redirectToHomePage: () => void
+    logout: () => void,    
 }
 
-export const AuthContext = React.createContext<AuthContextType>({
+const defaultValues = {
     data: new Login(),
     login: (loginResponse: Login) => {},
-    logout: () => {},
-    redirectToHomePage: () => {}
-})
+    logout: () => {},    
+}
+
+export const AuthContext = React.createContext<AuthContextType>(defaultValues)
 
 
 const AuthContextProvider: React.FC = (props) => {
@@ -37,26 +37,17 @@ const AuthContextProvider: React.FC = (props) => {
     
 
     const login = (loginResponse: Login) => {
-        setdata(loginResponse)
-        // redirectToHomePage()
+        setdata(loginResponse)        
     }
 
     const logout = () => {
         
-    }
-
-    const redirectToHomePage = () => {
-        if(data?.userType === UserType.SERVICE_PROVIDER) {
-            history.push(`/service-providers/${data.id}`)
-            return
-        }
-    }
+    }    
 
     const authContextValues: AuthContextType = {
         data,
         login,
-        logout,
-        redirectToHomePage
+        logout,        
     }
 
     return (
