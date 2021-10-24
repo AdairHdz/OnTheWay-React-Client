@@ -10,6 +10,7 @@ import UserType from "./enums/user-type";
 import LoginPage from "./pages/LoginPage";
 import RegistryPage from "./pages/RegistryPage";
 import ServiceProviderHomePage from "./pages/service-providers/ServiceProviderHomePage";
+import ServiceRequestDetailsPage from "./pages/service-requesters/ServiceRequestDetailsPage";
 import ServiceRequesterHomePage from "./pages/service-requesters/ServiceRequesterHomePage";
 import {AuthContext} from "./store/AuthContext";
 
@@ -41,6 +42,11 @@ function App() {
           </Route>
           <Route path="/registry">
             <RegistryPage />
+          </Route>
+          <Route path="/service-requesters/:requesterId/service-requests/:requestId">
+            <MainTabLayout>
+              <ServiceRequestDetailsPage />
+            </MainTabLayout>
           </Route>
         </Switch>
       </Router>
