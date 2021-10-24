@@ -1,62 +1,59 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router"
-import UserType from "../models/userType"
+import UserType from "../enums/user-type"
+import Login from "../responses/login"
+
 
 type AuthContextType = {
-    authenticationToken: string,
-    userType?: UserType
-    login: (authenticationToken: string) => void,
+    data: Login
+    login: (loginResponse: Login) => void,
     logout: () => void,
     redirectToHomePage: () => void
 }
 
 export const AuthContext = React.createContext<AuthContextType>({
-    authenticationToken: "",    
-    login: (authenticationToken: string) => {},
+    data: new Login(),
+    login: (loginResponse: Login) => {},
     logout: () => {},
     redirectToHomePage: () => {}
 })
 
 
 const AuthContextProvider: React.FC = (props) => {
-    const [authenticationToken, setAuthenticationToken] = useState("")
-    const [userType, setUserType] = useState<UserType>()
+    const [data, setdata] = useState<Login>(new Login())
     const history = useHistory()
 
     useEffect(() => {        
-        if(userType === undefined) {
+        if(!data?.userType) {
             return
         }
 
-        if(userType === UserType.SERVICE_PROVIDER) {
-            history.push("/home")
+        if(data.userType === UserType.SERVICE_PROVIDER) {
+            history.push(`/service-providers/${data.id}`)
             return
         }
-    }, [userType, history])
+    }, [data.id, history, data.userType])
 
     
 
-    const login = (authenticationToken: string) => {
-        setAuthenticationToken(authenticationToken)
-        setUserType(UserType.SERVICE_PROVIDER)
+    const login = (loginResponse: Login) => {
+        setdata(loginResponse)
         // redirectToHomePage()
     }
 
     const logout = () => {
-        setAuthenticationToken("")
-        setUserType(undefined)
+        
     }
 
     const redirectToHomePage = () => {
-        if(userType === UserType.SERVICE_PROVIDER) {
-            history.push("/home")
-        } else {
-            //Go to homepage for service_requester
+        if(data?.userType === UserType.SERVICE_PROVIDER) {
+            history.push(`/service-providers/${data.id}`)
+            return
         }
     }
 
-    const authContextValues = {
-        authenticationToken,
+    const authContextValues: AuthContextType = {
+        data,
         login,
         logout,
         redirectToHomePage

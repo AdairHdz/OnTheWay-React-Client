@@ -4,16 +4,20 @@ import {
   Route,  
 } from "react-router-dom";
 import './App.css';
+import MainTabLayout from "./components/generics/MainTabLayout";
 import LoginPage from "./pages/LoginPage";
 import RegistryPage from "./pages/RegistryPage";
+import HomePage from "./pages/service-providers/Home";
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>
-          <Route path="/" exact>
-            <p className="text-red-500">Hello world</p>    
+        <Switch>          
+          <Route path="/service-providers/:providerId" exact>
+            <MainTabLayout>
+              <HomePage />
+            </MainTabLayout>            
           </Route>
           <Route path="/login">
             <LoginPage />

@@ -2,16 +2,18 @@ import { Form, Formik } from 'formik';
 import * as Yup from "yup"
 import StandardInput from './generics/StandardInput';
 import BlackLogo from "../assets/images/logo.png"
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
+import Login from '../responses/login';
 
 const LoginForm: React.FC<{
     className?: string,
     showLoginErrorHandler: (httpStatusCode: number) => void,    
 }> = (props) => {
 
-    const authContext = useContext(AuthContext)    
+    const authContext = useContext(AuthContext)
+    const history = useHistory()
 
     const login = async (values: {
         emailAddress: string,
@@ -23,8 +25,11 @@ const LoginForm: React.FC<{
         }
         const response = await fetch("http://127.0.0.1:50000/login", init)
         if(response.ok) {
-            const data = await response.json()            
-            authContext.login(data.token)
+            const data: Login = await response.json()            
+            authContext.login(data)
+            history.push({
+                pathname: `/service-providers/${data.id}`
+            })
             return
         }
         props.showLoginErrorHandler(response.status)
@@ -45,7 +50,7 @@ const LoginForm: React.FC<{
                     .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
             })}
             onSubmit={(values) => {
-                login(values)
+                login(values)                
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">                
                 <Form className="m-auto w-full px-12">
