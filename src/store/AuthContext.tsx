@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router"
-import UserType from "../enums/user-type"
 import Login from "../responses/login"
 
 
@@ -20,28 +18,24 @@ export const AuthContext = React.createContext<AuthContextType>(defaultValues)
 
 
 const AuthContextProvider: React.FC = (props) => {
-    const [data, setdata] = useState<Login>(new Login())
-    const history = useHistory()
+    const [data, setData] = useState<Login>(new Login())
 
-    useEffect(() => {        
-        if(!data?.userType) {
-            return
+
+    useEffect(() => {
+        const userData = localStorage.getItem("user-data")
+        if(userData) {
+            const parsedData: Login = JSON.parse(userData)
+            setData(parsedData)
         }
-
-        if(data.userType === UserType.SERVICE_PROVIDER) {
-            history.push(`/service-providers/${data.id}`)
-            return
-        }
-    }, [data.id, history, data.userType])
-
-    
+    }, [])
 
     const login = (loginResponse: Login) => {
-        setdata(loginResponse)        
+        setData(loginResponse)
+        localStorage.setItem("user-data", JSON.stringify(loginResponse))
     }
 
     const logout = () => {
-        
+        localStorage.removeItem("user-data")
     }    
 
     const authContextValues: AuthContextType = {
