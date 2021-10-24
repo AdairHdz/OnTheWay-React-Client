@@ -6,31 +6,43 @@ import { Link, useHistory } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import Login from '../responses/login';
+import useFetch from '../hooks/use-fetch';
 
 const LoginForm: React.FC<{
     className?: string,
-    showLoginErrorHandler: (httpStatusCode: number) => void,    
+    showLoginErrorHandler: (httpStatusCode: number) => void,
 }> = (props) => {
 
     const authContext = useContext(AuthContext)
     const history = useHistory()
 
+    const {
+        data,
+        error,
+        isLoading,
+        sendRequest
+    } = useFetch<Login>()
+
     const login = async (values: {
         emailAddress: string,
         password: string
-    }) => {        
+    }) => {
         const init = {
             method: "POST",
             body: JSON.stringify(values)
         }
-        const response = await fetch("http://127.0.0.1:50000/login", init)
-        if(response.ok) {
-            const data: Login = await response.json()
-            authContext.login(data)            
-            history.push("/")            
+        sendRequest("http://127.0.0.1:50000/login", init)
+        if(data) {
+            authContext.login(data)
+            history.push("/")
             return
         }
-        props.showLoginErrorHandler(response.status)
+        
+        if(error && !isLoading) {
+            props.showLoginErrorHandler(error.statusCode!)            
+            return
+        }        
+        
     }
     return (
         <Formik
@@ -48,9 +60,9 @@ const LoginForm: React.FC<{
                     .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
             })}
             onSubmit={(values) => {
-                login(values)                
+                login(values)
             }} >
-            <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">                
+            <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">
                 <Form className="m-auto w-full px-12">
                     <img src={BlackLogo} className="mx-auto my-10" alt="" />
                     <p className="font-bold text-2xl text-center mb-5">Iniciar sesión</p>

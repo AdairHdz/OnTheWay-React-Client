@@ -6,4 +6,20 @@
     .input-error-text {
         @apply text-sm text-left font-thin text-red-500;
     }
+
+    .spinner {
+        border: 4px solid rgba(0,0,0,0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 100%;
+        border-left-color: #09F;
+    }
+
+    .btn-primary {
+        @apply bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center mb-5;
+    }
+
+    .btn-primary-disabled {
+        @apply btn-primary opacity-50
+    }
 }

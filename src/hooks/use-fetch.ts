@@ -10,10 +10,13 @@ const useFetch = <T>(): {
 
     const [error, setError] = useState<HTTPRequestError|undefined>(undefined)
 
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<any>()
     
-    const sendRequest = async <Type>(url: string, init?: RequestInit): Promise<any> => {        
+    const sendRequest = async <Type>(url: string, init?: RequestInit): Promise<any> => {
+        setIsLoading(true)
+        setData(undefined)
+        setError(undefined)
         try {
             let request
             if(init) {
@@ -22,24 +25,20 @@ const useFetch = <T>(): {
                 request = await fetch(url)
             }
                 
-            if(request.ok) {                        
+            if(request.ok) {
                 const response: Type = await request.json()            
-                setData(response)                                 
+                setData(response)
+                setError(undefined)
                 return
-            }            
+            }
             const response: HTTPRequestError = await request.json()
             setError({...response})
-            // throw new HTTPRequestError("")
-            throw error
         } catch(error) {
-            if(error !instanceof HTTPRequestError) {
-                setError({
-                    name: "Connection Refused",
-                    message: "We couldn't stablish a connection with our servers. Please try again later",
-                    statusCode: 0,
-                })    
-            }
-            throw new Error()
+            setError({
+                name: "Conexión rechazada",
+                message: "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde",
+                statusCode: 0,
+            })
         } finally {            
             setIsLoading(false)
         }                        

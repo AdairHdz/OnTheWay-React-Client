@@ -7,7 +7,11 @@ import CheckboxInputWithLetter from "../../generics/CheckboxInputWithLetter"
 import TimeInput from "../../generics/TimeInput"
 import * as Yup from "yup"
 import Modal from "../../generics/Modal"
-import { useParams } from "react-router-dom"
+import { useContext } from "react"
+import { AuthContext } from "../../../store/AuthContext"
+import useFetch from "../../../hooks/use-fetch"
+import ErrorMessage from "../../generics/ErrorMessage"
+import Spinner from "../../generics/Spinner"
 
 // const parseTime = (time: string): string => {
 //     const parsedTime = new Date('1970-01-01T' + time + 'Z')
@@ -18,13 +22,16 @@ import { useParams } from "react-router-dom"
 //         return parsedTime.replaceAll(" ", "")
 // }
 
-const NewPriceRateForm: React.FC<{    
+const NewPriceRateForm: React.FC<{
     submitFormHandler: () => void,
     closeModalHandler: () => void
 }> = (props) => {
-    const { providerId } = useParams<{
-        providerId: string
-    }>()
+    const { data } = useContext(AuthContext)
+    const {
+        error,
+        isLoading,
+        sendRequest
+    } = useFetch()
     return (
         <Modal>
             <div className="flex justify-end items-start mb-5">
@@ -66,52 +73,46 @@ const NewPriceRateForm: React.FC<{
                         .uuid("Valor no válido"),
                     kindOfService: Yup.number()
                         .required("Por favor seleccione un tipo de servicio")
-                        .oneOf([0, 1, 2, 3, 4], "Valor no válido"),                        
+                        .oneOf([0, 1, 2, 3, 4], "Valor no válido"),
                     priceRate: Yup.number()
                         .required("Por favor fije una tarifa")
                         .min(1, "Por favor fije una tarifa mayor a $0")
                         .max(100, "Lo sentimos; las tarifas mayores a $100 no están permitidas"),
                     startingHour: Yup.string()
-                        .required("Por favor seleccione una hora de inicio"),                        
+                        .required("Por favor seleccione una hora de inicio"),
                     endingHour: Yup.string()
                         .required("Por favor seleccione una hora de inicio"),
                 })}
                 onSubmit={(values) => {
                     values.kindOfService = +values.kindOfService
-                    console.log(values)
-                    // const parsedStartingHour = parseTime(values.startingHour)
-                    // const parsedEndingHour = parseTime(values.endingHour)
-                    // values.startingHour = parsedStartingHour
-                    // values.endingHour = parsedEndingHour
-
                     const {
                         city: cityId,
                         startingHour,
                         endingHour,
                         kindOfService,
                         priceRate
-                     } = values
+                    } = values
 
                     let workingDays: number[] = []
-                    if(values.monday) {
+                    if (values.monday) {
                         workingDays.push(1)
                     }
-                    if(values.tuesday) {
+                    if (values.tuesday) {
                         workingDays.push(2)
                     }
-                    if(values.wednesday) {
+                    if (values.wednesday) {
                         workingDays.push(3)
                     }
-                    if(values.thursday) {
+                    if (values.thursday) {
                         workingDays.push(4)
                     }
-                    if(values.friday) {
+                    if (values.friday) {
                         workingDays.push(5)
                     }
-                    if(values.saturday) {
+                    if (values.saturday) {
                         workingDays.push(6)
                     }
-                    if(values.sunday) {
+                    if (values.sunday) {
                         workingDays.push(7)
                     }
 
@@ -123,16 +124,11 @@ const NewPriceRateForm: React.FC<{
                         priceRate,
                         workingDays
                     }
-                    
-                    fetch(`http://127.0.0.1:8000/price-rates/${providerId}`, {
+
+                    sendRequest(`http://127.0.0.1:8000/price-rates/${data.id}`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })
-                    .then(response => {
-                        if(response.ok) {
-                            props.submitFormHandler()
-                        }
-                    })                    
                 }}>
                 <Form>
                     <div className="mb-5 flex justify-around">
@@ -179,7 +175,7 @@ const NewPriceRateForm: React.FC<{
                         <option value="1">Compra de fármacos</option>
                         <option value="2">Compra de víveres</option>
                         <option value="3">Entrega</option>
-                        <option value="4">Otro</option>                        
+                        <option value="4">Otro</option>
                     </SelectInput>
                     <StandardInput
                         id="priceRate"
@@ -202,11 +198,18 @@ const NewPriceRateForm: React.FC<{
                                 className="block w-3/4 mx-auto" />
                         </div>
                     </div>
-                    <button
-                        type="submit"
-                        className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center mb-5">
-                        Registrar
-                    </button>
+                    {isLoading && <Spinner />}
+                    {!isLoading && (
+                        <button                            
+                            type="submit"
+                            className="btn-primary">
+                            Registrar
+                        </button>
+                    )}
+
+                    {error !== undefined && !isLoading && (
+                        <ErrorMessage className="text-center" />
+                    )}
                 </Form>
             </Formik>
         </Modal>

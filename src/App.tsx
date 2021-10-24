@@ -9,7 +9,8 @@ import MainTabLayout from "./components/generics/MainTabLayout";
 import UserType from "./enums/user-type";
 import LoginPage from "./pages/LoginPage";
 import RegistryPage from "./pages/RegistryPage";
-import HomePage from "./pages/service-providers/Home";
+import ServiceProviderHomePage from "./pages/service-providers/ServiceProviderHomePage";
+import ServiceRequesterHomePage from "./pages/service-requesters/ServiceRequesterHomePage";
 import {AuthContext} from "./store/AuthContext";
 
 function App() {
@@ -17,11 +18,11 @@ function App() {
 
   const renderHomePage = () => {    
     if(authContext.data.userType === UserType.SERVICE_PROVIDER) {
-      return <HomePage />
+      return <ServiceProviderHomePage />
     }
 
     if(authContext.data.userType === UserType.SERVICE_REQUESTER) {
-      return <p>Requester</p>
+      return <ServiceRequesterHomePage />
     }
     return null
   }
@@ -29,12 +30,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>          
-          <Route path="/service-providers/:providerId" exact>
-            <MainTabLayout>
-              <HomePage />
-            </MainTabLayout>            
-          </Route>
+        <Switch>                    
           <Route path="/" exact>
             <MainTabLayout>
               {renderHomePage()}

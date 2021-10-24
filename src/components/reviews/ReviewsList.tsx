@@ -1,26 +1,23 @@
 import { useContext, useEffect, useState } from "react"
+import useFetch from "../../hooks/use-fetch"
 import Review from "../../responses/review"
 import {AuthContext} from "../../store/AuthContext"
+import ErrorMessage from "../generics/ErrorMessage"
 import Paginator from "../generics/Paginator"
+import Spinner from "../generics/Spinner"
 import ReviewItem from "./ReviewItem"
 
-const ReviewsList = () => {
-    const [error, setError] = useState<string>("")
-    const [reviews, setReviews] = useState<Review[]>([])
+const ReviewsList = () => {    
     const {data} = useContext(AuthContext)
+    const {
+        data: reviews,
+        error,
+        isLoading,
+        sendRequest
+    } = useFetch<Review[]>()
 
-    useEffect(() => {
-        fetch(`http://127.0.0.1:8000/reviews/${data.id}?page=1&pageElements=5`)
-        .then(response => {
-            if(response.ok) {
-                return response.json()
-            }
-            setError("No se encontraron reseñas")
-        })
-        .then((data: Review[]) => {            
-            setReviews(data)
-        })
-        .catch(err => console.log(err))
+    useEffect(() => {        
+        sendRequest(`http://127.0.0.1:8000/reviews/${data.id}?page=1&pageElements=5`)
     }, [data.id])
      
     useEffect(() => {
@@ -41,7 +38,12 @@ const ReviewsList = () => {
                         <Paginator />
                     </>
                 )}
-                {error && <p> {error} </p>}
+
+                {isLoading && <Spinner />}
+
+                {error && !isLoading && (
+                    <ErrorMessage />
+                )}
             </div>            
             
         </>
