@@ -1,25 +1,70 @@
+import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,  
 } from "react-router-dom";
 import './App.css';
+import MainTabLayout from "./components/generics/MainTabLayout";
+import UserType from "./enums/user-type";
 import LoginPage from "./pages/LoginPage";
 import RegistryPage from "./pages/RegistryPage";
+import ServiceProviderHomePage from "./pages/service-providers/ServiceProviderHomePage";
+import NewServiceRequestPage from "./pages/service-requesters/NewServiceRequestPage";
+import ServiceProviderDetailsPage from "./pages/service-requesters/ServiceProviderDetailsPage";
+import ServiceProvidersSearchPage from "./pages/service-requesters/ServiceProvidersSearchPage";
+import ServiceRequestDetailsPage from "./pages/service-requesters/ServiceRequestDetailsPage";
+import ServiceRequesterHomePage from "./pages/service-requesters/ServiceRequesterHomePage";
+import {AuthContext} from "./store/AuthContext";
 
 function App() {
+  const authContext = useContext(AuthContext)
+
+  const renderHomePage = () => {    
+    if(authContext.data.userType === UserType.SERVICE_PROVIDER) {
+      return <ServiceProviderHomePage />
+    }
+
+    if(authContext.data.userType === UserType.SERVICE_REQUESTER) {
+      return <ServiceRequesterHomePage />
+    }
+    return null
+  }
+
   return (
     <div className="App">
       <Router>
-        <Switch>
+        <Switch>                    
           <Route path="/" exact>
-            <p className="text-red-500">Hello world</p>    
+            <MainTabLayout>
+              {renderHomePage()}
+            </MainTabLayout>            
           </Route>
           <Route path="/login">
             <LoginPage />
           </Route>
           <Route path="/registry">
             <RegistryPage />
+          </Route>
+          <Route path="/service-requesters/:requesterId/service-requests/:requestId">
+            <MainTabLayout>
+              <ServiceRequestDetailsPage />
+            </MainTabLayout>
+          </Route>
+          <Route path="/providers" exact>
+            <MainTabLayout>
+              <ServiceProvidersSearchPage />
+            </MainTabLayout>
+          </Route>
+          <Route path="/service-providers/:providerId" exact>
+            <MainTabLayout>
+              <ServiceProviderDetailsPage />
+            </MainTabLayout>
+          </Route>
+          <Route path="/service-providers/:providerId/service-request">
+            <MainTabLayout>
+              <NewServiceRequestPage />
+            </MainTabLayout>
           </Route>
         </Switch>
       </Router>

@@ -1,65 +1,47 @@
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router"
-import UserType from "../models/userType"
+import Login from "../responses/login"
+
 
 type AuthContextType = {
-    authenticationToken: string,
-    userType?: UserType
-    login: (authenticationToken: string) => void,
-    logout: () => void,
-    redirectToHomePage: () => void
+    data: Login
+    login: (loginResponse: Login) => void,
+    logout: () => void,    
 }
 
-export const AuthContext = React.createContext<AuthContextType>({
-    authenticationToken: "",    
-    login: (authenticationToken: string) => {},
-    logout: () => {},
-    redirectToHomePage: () => {}
-})
+const defaultValues = {
+    data: new Login(),
+    login: (loginResponse: Login) => {},
+    logout: () => {},    
+}
+
+export const AuthContext = React.createContext<AuthContextType>(defaultValues)
 
 
 const AuthContextProvider: React.FC = (props) => {
-    const [authenticationToken, setAuthenticationToken] = useState("")
-    const [userType, setUserType] = useState<UserType>()
-    const history = useHistory()
+    const [data, setData] = useState<Login>(new Login())
 
-    useEffect(() => {        
-        if(userType === undefined) {
-            return
+
+    useEffect(() => {
+        const userData = localStorage.getItem("user-data")
+        if(userData) {
+            const parsedData: Login = JSON.parse(userData)
+            setData(parsedData)
         }
+    }, [])
 
-        if(userType === UserType.SERVICE_PROVIDER) {
-            history.push("/home")
-            return
-        }
-    }, [userType, history])
-
-    
-
-    const login = (authenticationToken: string) => {
-        setAuthenticationToken(authenticationToken)
-        setUserType(UserType.SERVICE_PROVIDER)
-        // redirectToHomePage()
+    const login = (loginResponse: Login) => {
+        setData(loginResponse)
+        localStorage.setItem("user-data", JSON.stringify(loginResponse))
     }
 
     const logout = () => {
-        setAuthenticationToken("")
-        setUserType(undefined)
-    }
+        localStorage.removeItem("user-data")
+    }    
 
-    const redirectToHomePage = () => {
-        if(userType === UserType.SERVICE_PROVIDER) {
-            history.push("/home")
-        } else {
-            //Go to homepage for service_requester
-        }
-    }
-
-    const authContextValues = {
-        authenticationToken,
+    const authContextValues: AuthContextType = {
+        data,
         login,
-        logout,
-        redirectToHomePage
+        logout,        
     }
 
     return (

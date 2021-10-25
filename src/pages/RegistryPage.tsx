@@ -8,7 +8,7 @@ const RegistryPage = () => {
             <div className="md:bg-blue-600 hidden md:w-1/2 h-full md:flex">
                 <img src={Image} className="hidden md:block m-auto" alt="" />
             </div>
-            <div className="w-full md:w-1/2 flex">                
+            <div className="w-full md:w-1/2 flex relative">                
                 <RegistryForm className="h-screen md:h-auto" />
             </div>
         </div>
