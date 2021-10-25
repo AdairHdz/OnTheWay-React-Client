@@ -15,8 +15,9 @@
         border-left-color: #09F;
     }
 
+    /* @apply bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center mb-5; */
     .btn-primary {
-        @apply bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center mb-5;
+        @apply bg-yellow-500 rounded-sm block py-1 px-5 text-white text-center;        
     }
 
     .btn-primary-disabled {
@@ -24,6 +25,6 @@
     }
 
     .btn-primary-outlined {
-        @apply bg-white rounded-sm block mx-auto py-1 px-5 text-yellow-500 border border-yellow-500 text-center mb-5;
+        @apply bg-white rounded-sm block py-1 px-5 text-yellow-500 border border-yellow-500 text-center;
     }
 }
