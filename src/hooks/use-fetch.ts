@@ -26,14 +26,17 @@ const useFetch = <T>(): {
             }
                 
             if(request.ok) {
-                const response: Type = await request.json()            
-                setData(response)
+                if(request.status !== 204) {
+                    const response: Type = await request.json()
+                    setData(response)
+                }                
                 setError(undefined)
                 return
             }
             const response: HTTPRequestError = await request.json()
             setError({...response})
         } catch(error) {
+            console.log(error)
             setError({
                 name: "Conexión rechazada",
                 message: "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde",

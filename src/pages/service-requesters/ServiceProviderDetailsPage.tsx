@@ -24,7 +24,7 @@ const ServiceProviderDetailsPage = () => {
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
-        fetchUserInfo(`http://127.0.0.1:8000/service-providers/${providerId}`)
+        fetchUserInfo(`http://127.0.0.1:8000/providers/${providerId}`)
     }
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const ServiceProviderDetailsPage = () => {
     } = useFetch<PriceRate[]>()
 
     const getPriceRates = () => {
-        fetchPriceRates(`http://127.0.0.1:8000/price-rates/${providerId}`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${providerId}/priceRates`)
     }
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const ServiceProviderDetailsPage = () => {
     } = useFetch<Review[]>()
 
     const getReviews = () => {
-        fetchReviews(`http://127.0.0.1:8000/reviews/${providerId}?page=1&pageElements=5`)
+        fetchReviews(`http://127.0.0.1:8000/providers/${providerId}/reviews?page=1&pageSize=5`)
     }
 
     useEffect(() => {
