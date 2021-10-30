@@ -125,7 +125,8 @@ const NewPriceRateForm: React.FC<{
                         workingDays
                     }
 
-                    sendRequest(`http://127.0.0.1:8000/price-rates/${data.id}`, {
+                    console.log(requestBody)
+                    sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })
