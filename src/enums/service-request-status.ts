@@ -2,7 +2,8 @@ enum ServiceRequestStatus {
     PENDING_OF_ACCEPTANCE,
     ACTIVE,
     CONCLUDED,
-    CANCELED
+    CANCELED,
+    REJECTED
 }
 
 export default ServiceRequestStatus

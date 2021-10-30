@@ -15,6 +15,9 @@ const getServiceRequestStatus = (serviceRequestNumber: number): string => {
             case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
                 serviceRequestName = "Pendiente de aceptación"
                 break
+            case ServiceRequestStatus.REJECTED:
+                serviceRequestName = "Rechazado"
+                break
             default:
                 serviceRequestName = "Desconocido"
     }    

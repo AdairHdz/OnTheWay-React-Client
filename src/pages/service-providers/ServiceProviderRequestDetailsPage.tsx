@@ -9,7 +9,7 @@ import { AuthContext } from "../../store/AuthContext"
 import getKindOfService from "../../utils/kind-of-service-mapper"
 import getServiceRequestStatus from "../../utils/service-request-status-mapper"
 
-const ServiceRequestDetailsPage = () => {
+const ServiceProviderRequestDetailsPage = () => {
     const { requestId } = useParams<{
         requestId: string
     }>()
@@ -28,7 +28,7 @@ const ServiceRequestDetailsPage = () => {
     } = useFetch()
 
     useEffect(() => {
-        sendRequest(`http://127.0.0.1:8000/requesters/${authData.id}/requests/${requestId}`)
+        sendRequest(`http://127.0.0.1:8000/providers/${authData.id}/requests/${requestId}`)
     }, [])
 
     const changeRequestStatus = (newStatus: number) => {
@@ -42,17 +42,7 @@ const ServiceRequestDetailsPage = () => {
             body: JSON.stringify(payload)
         })
     }
-
-    const renderButton = () => {                                                        
-        switch(data.status) {
-            case ServiceRequestStatus.ACTIVE:
-                return <button className="btn-primary" onClick={ () => changeRequestStatus(ServiceRequestStatus.CONCLUDED) }>Marcar como completado</button>                
-            case ServiceRequestStatus.CONCLUDED:
-                return <button className="btn-primary">Calificar servicio</button>
-            case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
-                return <button className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" onClick={ () => changeRequestStatus(ServiceRequestStatus.CANCELED) }>Cancelar</button>            
-        }
-    }
+    
     return (
         <div className="shadow-md bg-white m-5 p-5 lg:w-2/3 lg:mx-auto">
             {data && (
@@ -75,7 +65,13 @@ const ServiceRequestDetailsPage = () => {
                         <p> {getServiceRequestStatus(data.status!)} </p>
                     </div>
                     <div className="flex justify-around">                        
-                        {renderButton()}
+                        {data.status === ServiceRequestStatus.PENDING_OF_ACCEPTANCE ? (
+                            <button
+                                className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear"
+                                onClick={ () => changeRequestStatus(ServiceRequestStatus.REJECTED) }>
+                                Rechazar
+                            </button>
+                        ) : null}
                     </div>
                 </>
             )}
@@ -85,4 +81,4 @@ const ServiceRequestDetailsPage = () => {
     )
 }
 
-export default ServiceRequestDetailsPage
+export default ServiceProviderRequestDetailsPage

@@ -22,9 +22,11 @@ const ServiceRequestItem: React.FC<{
                 return ConcludedStatus
             case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
                 return PendingOfAceptanceStatus
+            case ServiceRequestStatus.REJECTED:
+                return CanceledStatus
             default:
                 return ActiveStatus
-        }    
+        }
     }
 
     return (

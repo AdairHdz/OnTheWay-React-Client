@@ -8,7 +8,7 @@ import Paginator from "../generics/Paginator"
 import Spinner from "../generics/Spinner"
 import ServiceRequestItem from "./ServiceRequestItem"
 
-const ServiceRequestsList: React.FC<{
+const ServiceRequesterRequestsList: React.FC<{
     className?: string,
     serviceRequests: ServiceRequestDetails[],
     serviceRequestError: HTTPRequestError|undefined,
@@ -31,4 +31,4 @@ const ServiceRequestsList: React.FC<{
 }
 
 
-export default ServiceRequestsList
+export default ServiceRequesterRequestsList

@@ -10,12 +10,14 @@ import UserType from "./enums/user-type";
 import LoginPage from "./pages/LoginPage";
 import RegistryPage from "./pages/RegistryPage";
 import ServiceProviderHomePage from "./pages/service-providers/ServiceProviderHomePage";
+import ServicesPage from "./pages/service-providers/ServicesPage";
 import NewServiceRequestPage from "./pages/service-requesters/NewServiceRequestPage";
 import ServiceProviderDetailsPage from "./pages/service-requesters/ServiceProviderDetailsPage";
 import ServiceProvidersSearchPage from "./pages/service-requesters/ServiceProvidersSearchPage";
-import ServiceRequestDetailsPage from "./pages/service-requesters/ServiceRequestDetailsPage";
+import ServiceRequestDetailsPage from "./pages/service-requesters/ServiceRequesterRequestDetailsPage";
 import ServiceRequesterHomePage from "./pages/service-requesters/ServiceRequesterHomePage";
 import {AuthContext} from "./store/AuthContext";
+import ServiceProviderRequestDetailsPage from "./pages/service-providers/ServiceProviderRequestDetailsPage";
 
 function App() {
   const authContext = useContext(AuthContext)
@@ -64,6 +66,16 @@ function App() {
           <Route path="/service-providers/:providerId/service-request">
             <MainTabLayout>
               <NewServiceRequestPage />
+            </MainTabLayout>
+          </Route>
+          <Route path="/services">
+            <MainTabLayout>
+              <ServicesPage />
+            </MainTabLayout>
+          </Route>
+          <Route path="/service-providers/:providerId/service-requests/:requestId">
+            <MainTabLayout>
+              <ServiceProviderRequestDetailsPage />
             </MainTabLayout>
           </Route>
         </Switch>
