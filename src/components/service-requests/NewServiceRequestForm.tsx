@@ -97,9 +97,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         serviceProviderId: providerId,
                         cost: priceRate.price,
                         description: "a"
-                    }
-
-                    console.log(payload)
+                    }                    
                     sendServiceRequest(`http://127.0.0.1:8000/requests`, {
                         method: "POST",
                         body: JSON.stringify(payload)

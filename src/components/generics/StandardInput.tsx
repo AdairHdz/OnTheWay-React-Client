@@ -6,10 +6,11 @@ const StandardInput: React.FC<{
     type: string,
     placeholder?: string,
     label?: string,
-    className?: string
+    className?: string,
+    inputHandler?: (value: string) => void
 }> = (props) => {
 
-    const [fieldProps, metadata] = useField({name: props.name})
+    const [fieldProps, metadata, helpers] = useField({name: props.name})
 
     return (
         <div className="mb-5">
@@ -27,7 +28,14 @@ const StandardInput: React.FC<{
                 id={props.id}
                 type={props.type}
                 name={props.name}
-                placeholder={props.placeholder} />
+                placeholder={props.placeholder}
+                onChange={(e) => {
+                    const value = e.target.value
+                    helpers.setValue(value)
+                    if(props.inputHandler) {
+                        props.inputHandler(value)
+                    }
+                }} />
             {(metadata.error && metadata.touched) ? (
                 <p className="input-error-text">
                     {metadata.error}
