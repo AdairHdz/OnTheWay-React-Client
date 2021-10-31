@@ -11,11 +11,11 @@ import City from "../../responses/city"
 import SelectInput from "../generics/SelectInput"
 
 const NewAddressForm: React.FC<{
-    submitFormHandler: () => void,
+    submitFormHandler: (statusCode: number|undefined) => void,
     closeModalHandler: () => void
 }> = (props) => {
 
-    const {data} = useContext(AuthContext)
+    const {data} = useContext(AuthContext)    
     const {
         data: cities,
         sendRequest: fetchCities
@@ -26,8 +26,19 @@ const NewAddressForm: React.FC<{
     }, [])
 
     const {
-        sendRequest: registerAddress
+        sendRequest: registerAddress,
+        responseStatus,
+        error: addressRegistrationError
     } = useFetch()
+
+    useEffect(() => {
+        if(responseStatus === undefined && addressRegistrationError === undefined) {
+            return
+        }        
+        props.submitFormHandler(responseStatus)
+        return
+
+    }, [responseStatus, addressRegistrationError])
 
     return (
         <Modal>
@@ -61,7 +72,7 @@ const NewAddressForm: React.FC<{
                     registerAddress(`http://127.0.0.1:8000/requesters/${data.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)
-                    })
+                    })                    
                 }}>
                 <Form>
                     <StandardInput id="indoorNumber" name="indoorNumber" type="text" label="Número interior" />
