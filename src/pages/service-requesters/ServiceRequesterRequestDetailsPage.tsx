@@ -101,7 +101,7 @@ const ServiceRequesterRequestDetailsPage = () => {
                         <p className="font-bold"> Tipo de servicio </p>
                         <p> {getKindOfService(data.kindOfService!)} </p>
                         <p className="font-bold">Ciudad</p>
-                        <p>Xalapa</p>
+                        <p> {data.deliveryAddress!.city!.name} </p>
                         <p className="font-bold">Detalles adicionales</p>
                         <p>
                             {data.description}
