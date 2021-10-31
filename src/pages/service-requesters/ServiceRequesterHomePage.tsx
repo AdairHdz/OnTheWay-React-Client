@@ -1,21 +1,25 @@
 import { Form, Formik } from "formik"
 import StandardInput from "../../components/generics/StandardInput"
 import * as Yup from "yup"
-import { useContext, useState } from "react"
-import ServiceRequestsList from "../../components/service-requests/ServiceRequesterRequestsList"
+import { useContext } from "react"
+
 import useFetch from "../../hooks/use-fetch"
 import { AuthContext } from "../../store/AuthContext"
 import ServiceRequestDetails from "../../responses/service-request-details"
+import ServiceRequesterRequestsList from "../../components/service-requests/ServiceRequesterRequestsList"
+import Alert from "../../components/generics/Alert"
+import useFlashMessage from "../../hooks/use-flash-message"
 
-const ServiceProviderHomePage = () => {    
-    const [selectedDate, setSelectedDate] = useState<string>("")
+const ServiceProviderHomePage = () => {        
     const {data} = useContext(AuthContext)
     const {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
         isLoading: serviceRequestsFetchingIsLoading,
         sendRequest: fetchServiceRequests
-    } = useFetch<ServiceRequestDetails[]>()    
+    } = useFetch<ServiceRequestDetails[]>()
+
+    const {message} = useFlashMessage()    
     
     return (
         <div className="flex flex-col h-screen lg:flex-row">
@@ -29,15 +33,16 @@ const ServiceProviderHomePage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceRequests(`http://127.0.0.1:8000/requesters/${data.id}/requests?date=${selectedDate}`)
+                        fetchServiceRequests(`http://127.0.0.1:8000/requesters/${data.id}/requests?date=${values.date}`)
                     }}>
                     <Form>
-                        <StandardInput type="date" id="date" name="date" label="Fecha" inputHandler={(value) => setSelectedDate(value)} />
+                        <StandardInput type="date" id="date" name="date" label="Fecha" />
                         <button type="submit" className="btn-primary mx-auto">Buscar</button>
                     </Form>
                 </Formik>                
             </div>
-            <ServiceRequestsList serviceRequests={serviceRequests} className="bg-white shadow m-5 flex-grow p-3" serviceRequestError={serviceRequestsFetchingError} serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
+            <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
+            <ServiceRequesterRequestsList serviceRequests={serviceRequests} className="bg-white shadow m-5 flex-grow p-3" serviceRequestError={serviceRequestsFetchingError} serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
         </div>
     )
 }

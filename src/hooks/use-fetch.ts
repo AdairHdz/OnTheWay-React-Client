@@ -5,10 +5,12 @@ const useFetch = <T>(): {
     error: HTTPRequestError|undefined,
     isLoading: boolean,
     sendRequest: <T>(url: string, init?: RequestInit) => Promise<T>,
-    data: T
+    data: T,
+    responseStatus: number|undefined
 } => {
 
     const [error, setError] = useState<HTTPRequestError|undefined>(undefined)
+    const [responseStatus, setResponseStatus] = useState<number|undefined>(undefined)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<any>()
@@ -24,7 +26,7 @@ const useFetch = <T>(): {
             } else {
                 request = await fetch(url)
             }
-                
+            setResponseStatus(request.status)
             if(request.ok) {
                 if(request.status !== 204) {
                     const response: Type = await request.json()
@@ -35,8 +37,7 @@ const useFetch = <T>(): {
             }
             const response: HTTPRequestError = await request.json()
             setError({...response})
-        } catch(error) {
-            console.log(error)
+        } catch(error) {            
             setError({
                 name: "Conexión rechazada",
                 message: "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde",
@@ -51,7 +52,8 @@ const useFetch = <T>(): {
         error,
         isLoading,
         sendRequest,
-        data
+        data,
+        responseStatus
     }
 }
 
