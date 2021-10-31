@@ -18,8 +18,7 @@ const useFlashMessage = (): {
 
     useEffect(() => {
         return () => {
-            if(message) {
-                console.log("Limpi an do")
+            if(message) {                
                 clearFlashMessage()
             }
         }

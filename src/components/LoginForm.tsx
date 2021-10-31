@@ -7,14 +7,15 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import Login from '../responses/login';
 import useFetch from '../hooks/use-fetch';
+import useFlashMessage from '../hooks/use-flash-message';
 
 const LoginForm: React.FC<{
-    className?: string,
-    showLoginErrorHandler: (httpStatusCode: number) => void,
+    className?: string,    
 }> = (props) => {
 
     const authContext = useContext(AuthContext)
     const history = useHistory()
+    const { setFlashMessage } = useFlashMessage()
 
     const {
         data,
@@ -23,18 +24,18 @@ const LoginForm: React.FC<{
         sendRequest
     } = useFetch<Login>()
 
-    useEffect(() => {
+    useEffect(() => {        
         if (data) {
-            authContext.login(data)
+            authContext.login(data)            
             history.push("/")
             return
         }
 
         if (error && !isLoading) {
-            props.showLoginErrorHandler(error.statusCode!)
+            setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
             return
         }
-    }, [data, error, isLoading, authContext, history, props])
+    }, [data, error, isLoading, authContext, history, setFlashMessage])
 
     return (
         <Formik
