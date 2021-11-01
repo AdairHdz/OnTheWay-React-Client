@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import StateResponse from '../models/state-response';
 import useFetch from '../hooks/use-fetch';
 import Alert from './generics/Alert';
+import useFlashMessage from '../hooks/use-flash-message';
 
 const RegistryForm: React.FC<{
   className?: string,
@@ -22,11 +23,12 @@ const RegistryForm: React.FC<{
   const {
     error: registryError,
     isLoading: registryRequestIsLoading,
-    sendRequest: sendRegistryRequest
+    sendRequest: sendRegistryRequest,
+    responseStatus
   } = useFetch()
   const [selectedUserType, setSelectedUserType] = useState<number>(0)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
-  
+  const {setFlashMessage} = useFlashMessage()
   const handleChange = (value: string) => {
     setSelectedUserType(parseInt(value))
   }
@@ -37,6 +39,20 @@ const RegistryForm: React.FC<{
       setStatesWereAlreadyFetched(true)
     }
   }, [statesWereAlreadyFetched, fetchStates, states])
+
+  useEffect(() => {
+    if(responseStatus === 200) {
+      setFlashMessage("Registro exitoso", "El registro se ha realizado de forma exitosa. Luego de verificar su cuenta, podrá iniciar sesión.")
+      history.push("/login")
+      return
+    }
+
+    if(registryError && !registryRequestIsLoading) {
+      setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")
+      history.push("/login")
+      return
+    }
+  }, [history, responseStatus, setFlashMessage, registryError, registryRequestIsLoading])
 
   const formRef = useRef<FormikProps<{
     names: string
@@ -94,13 +110,6 @@ const RegistryForm: React.FC<{
         sendRegistryRequest<any>("http://127.0.0.1:8000/users", {
           method: "POST",
           body: JSON.stringify(values)
-        }).then(() => {          
-          history.push({
-            pathname: "/login",
-            search: "?success=true",
-          })           
-        }).catch(() => {
-          console.log(registryError)
         })
       }} >
       <>

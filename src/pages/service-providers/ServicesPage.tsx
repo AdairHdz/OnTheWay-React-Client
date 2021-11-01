@@ -1,14 +1,17 @@
 import { Form, Formik } from "formik"
 import StandardInput from "../../components/generics/StandardInput"
-import ServiceProviderRequestsList from "../../components/service-requests/ServiceProviderRequestsList"
 import * as Yup from "yup"
 import { useContext } from "react"
 import { AuthContext } from "../../store/AuthContext"
 import useFetch from "../../hooks/use-fetch"
 import ServiceRequestDetails from "../../responses/service-request-details"
+import ServiceProviderRequestsList from "../../components/service-requests/ServiceProviderRequestsList"
+import useFlashMessage from "../../hooks/use-flash-message"
+import Alert from "../../components/generics/Alert"
 
 const ServicesPage = () => {    
     const { data } = useContext(AuthContext)
+    const {message} = useFlashMessage()
     const {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
@@ -35,6 +38,7 @@ const ServicesPage = () => {
                     </Form>
                 </Formik>
             </div>
+            <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
             <ServiceProviderRequestsList serviceRequests={serviceRequests} className="bg-white shadow m-5 flex-grow p-3" serviceRequestError={serviceRequestsFetchingError} serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
         </div>
     )

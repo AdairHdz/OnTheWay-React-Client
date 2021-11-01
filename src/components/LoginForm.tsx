@@ -3,18 +3,19 @@ import * as Yup from "yup"
 import StandardInput from './generics/StandardInput';
 import BlackLogo from "../assets/images/logo.png"
 import { Link, useHistory } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import Login from '../responses/login';
 import useFetch from '../hooks/use-fetch';
+import useFlashMessage from '../hooks/use-flash-message';
 
 const LoginForm: React.FC<{
-    className?: string,
-    showLoginErrorHandler: (httpStatusCode: number) => void,
+    className?: string,    
 }> = (props) => {
 
     const authContext = useContext(AuthContext)
     const history = useHistory()
+    const { setFlashMessage } = useFlashMessage()
 
     const {
         data,
@@ -23,27 +24,19 @@ const LoginForm: React.FC<{
         sendRequest
     } = useFetch<Login>()
 
-    const login = async (values: {
-        emailAddress: string,
-        password: string
-    }) => {
-        const init = {
-            method: "POST",
-            body: JSON.stringify(values)
-        }
-        sendRequest("http://127.0.0.1:50000/login", init)
-        if(data) {
-            authContext.login(data)
+    useEffect(() => {        
+        if (data) {
+            authContext.login(data)            
             history.push("/")
             return
         }
-        
-        if(error && !isLoading) {
-            props.showLoginErrorHandler(error.statusCode!)            
+
+        if (error && !isLoading) {
+            setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
             return
-        }        
-        
-    }
+        }
+    }, [data, error, isLoading, authContext, history, setFlashMessage])
+
     return (
         <Formik
             initialValues={{
@@ -60,7 +53,11 @@ const LoginForm: React.FC<{
                     .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
             })}
             onSubmit={(values) => {
-                login(values)
+                const init = {
+                    method: "POST",
+                    body: JSON.stringify(values)
+                }
+                sendRequest("http://127.0.0.1:50000/login", init)
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">
                 <Form className="m-auto w-full px-12">
@@ -79,7 +76,7 @@ const LoginForm: React.FC<{
                     <Link to="/" className="text-center block text-sm mt-10">
                         ¿Olvidaste tu contraseña?
                     </Link>
-                    <button type="submit" className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center my-10">
+                    <button type="submit" disabled={isLoading} className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center my-10">
                         Iniciar sesión
                     </button>
                     <Link to="/registry" className="text-center block text-sm text-blue-500">

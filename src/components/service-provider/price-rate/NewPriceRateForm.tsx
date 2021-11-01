@@ -7,11 +7,10 @@ import CheckboxInputWithLetter from "../../generics/CheckboxInputWithLetter"
 import TimeInput from "../../generics/TimeInput"
 import * as Yup from "yup"
 import Modal from "../../generics/Modal"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AuthContext } from "../../../store/AuthContext"
 import useFetch from "../../../hooks/use-fetch"
 import ErrorMessage from "../../generics/ErrorMessage"
-import Spinner from "../../generics/Spinner"
 
 // const parseTime = (time: string): string => {
 //     const parsedTime = new Date('1970-01-01T' + time + 'Z')
@@ -23,15 +22,26 @@ import Spinner from "../../generics/Spinner"
 // }
 
 const NewPriceRateForm: React.FC<{
-    submitFormHandler: () => void,
+    submitFormHandler: (statusCode: number|undefined) => void,
     closeModalHandler: () => void
 }> = (props) => {
     const { data } = useContext(AuthContext)
     const {
         error,
         isLoading,
-        sendRequest
+        sendRequest,
+        responseStatus
     } = useFetch()
+
+
+    useEffect(() => {        
+        if(responseStatus !== undefined) {
+            props.submitFormHandler(responseStatus)
+            return
+        }
+
+    }, [responseStatus])
+
     return (
         <Modal>
             <div className="flex justify-end items-start mb-5">
@@ -124,8 +134,7 @@ const NewPriceRateForm: React.FC<{
                         priceRate,
                         workingDays
                     }
-
-                    console.log(requestBody)
+                    
                     sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
@@ -199,14 +208,12 @@ const NewPriceRateForm: React.FC<{
                                 className="block w-3/4 mx-auto" />
                         </div>
                     </div>
-                    {isLoading && <Spinner />}
-                    {!isLoading && (
-                        <button                            
-                            type="submit"
-                            className="btn-primary">
-                            Registrar
-                        </button>
-                    )}
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="btn-primary mx-auto">
+                        Registrar
+                    </button>
 
                     {error !== undefined && !isLoading && (
                         <ErrorMessage className="text-center" />

@@ -1,11 +1,12 @@
-import { useContext, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import { useHistory, useParams } from "react-router-dom"
 import ErrorMessage from "../../components/generics/ErrorMessage"
 import Spinner from "../../components/generics/Spinner"
 import ServiceRequestStatus from "../../enums/service-request-status"
 import useFetch from "../../hooks/use-fetch"
 import ServiceRequestWithCity from "../../responses/service-request-with-city"
 import { AuthContext } from "../../store/AuthContext"
+import { FlashContext } from "../../store/FlashContext"
 import getKindOfService from "../../utils/kind-of-service-mapper"
 import getServiceRequestStatus from "../../utils/service-request-status-mapper"
 
@@ -15,7 +16,9 @@ const ServiceProviderRequestDetailsPage = () => {
     }>()
 
     const { data: authData } = useContext(AuthContext)
-
+    const { setFlashMessage } = useContext(FlashContext)
+    const history = useHistory()
+    const [newStatus, setNewStatus] = useState<number | undefined>()
     const {
         isLoading,
         error,
@@ -24,8 +27,36 @@ const ServiceProviderRequestDetailsPage = () => {
     } = useFetch<ServiceRequestWithCity>()
 
     const {
-        sendRequest: changeStatus,        
+        isLoading: statusChangeIsLoading,
+        error: statusChangeError,
+        sendRequest: changeStatus,
     } = useFetch()
+
+    useEffect(() => {
+        if (!statusChangeIsLoading && statusChangeError) {
+            const title = "Error"
+            const message = "Ha ocurrido un error al procesar su solicitud. Por favor intente más tarde"
+            setFlashMessage(title, message)
+            history.push("/services")
+        }
+
+        if (!statusChangeIsLoading && !statusChangeError) {
+            if (newStatus === ServiceRequestStatus.REJECTED) {
+                const title = "Solicitud de servicio rechazada"
+                const message = "La solicitud de servicio se ha marcado como rechazada"
+                setFlashMessage(title, message)
+                history.push("/services")
+            }
+            if (newStatus === ServiceRequestStatus.ACTIVE) {
+                const title = "Solicitud de servicio aceptada"
+                const message = "Ha aceptado realizar esta solicitud de servicio"
+                setFlashMessage(title, message)
+                history.push("/services")
+            }
+        }
+
+
+    }, [statusChangeIsLoading, statusChangeError, history, newStatus, setFlashMessage])
 
     useEffect(() => {
         sendRequest(`http://127.0.0.1:8000/providers/${authData.id}/requests/${requestId}`)
@@ -42,7 +73,7 @@ const ServiceProviderRequestDetailsPage = () => {
             body: JSON.stringify(payload)
         })
     }
-    
+
     return (
         <div className="shadow-md bg-white m-5 p-5 lg:w-2/3 lg:mx-auto">
             {data && (
@@ -52,7 +83,7 @@ const ServiceProviderRequestDetailsPage = () => {
                         <p className="font-bold"> Tipo de servicio </p>
                         <p> {getKindOfService(data.kindOfService!)} </p>
                         <p className="font-bold">Ciudad</p>
-                        <p>Xalapa</p>
+                        <p> {data.deliveryAddress!.city!.name} </p>
                         <p className="font-bold">Detalles adicionales</p>
                         <p>
                             {data.description}
@@ -64,13 +95,26 @@ const ServiceProviderRequestDetailsPage = () => {
                         <p className="font-bold">Estado</p>
                         <p> {getServiceRequestStatus(data.status!)} </p>
                     </div>
-                    <div className="flex justify-around">                        
+                    <div className="flex justify-around">
                         {data.status === ServiceRequestStatus.PENDING_OF_ACCEPTANCE ? (
-                            <button
-                                className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear"
-                                onClick={ () => changeRequestStatus(ServiceRequestStatus.REJECTED) }>
-                                Rechazar
-                            </button>
+                            <>
+                                <button
+                                    className="btn-primary"
+                                    onClick={() => {
+                                        changeRequestStatus(ServiceRequestStatus.ACTIVE)
+                                        setNewStatus(ServiceRequestStatus.ACTIVE)
+                                    }}>
+                                    Aceptar
+                                </button>
+                                <button
+                                    className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear"
+                                    onClick={() => {
+                                        changeRequestStatus(ServiceRequestStatus.REJECTED)
+                                        setNewStatus(ServiceRequestStatus.REJECTED)
+                                    }}>
+                                    Rechazar
+                                </button>
+                            </>
                         ) : null}
                     </div>
                 </>

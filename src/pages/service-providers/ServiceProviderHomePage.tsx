@@ -8,12 +8,14 @@ import useFetch from "../../hooks/use-fetch"
 import PriceRate from "../../responses/price-rate"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 import Review from "../../responses/review"
+import useFlashMessage from "../../hooks/use-flash-message"
+import Alert from "../../components/generics/Alert"
 
 const ServiceProviderHomePage = () => {
     const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)    
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
-    
+    const { message, setFlashMessage } = useFlashMessage()
     const { data } = useContext(AuthContext)
 
     const {
@@ -23,11 +25,20 @@ const ServiceProviderHomePage = () => {
         sendRequest: fetchPriceRates
     } = useFetch<PriceRate[]>()
 
-    useEffect(() => {
-        getPriceRates()
-    }, [])
-
     const getPriceRates = () => {
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+    }
+
+    useEffect(() => {
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+    }, [])
+    
+    const submitFormHandler = (statusCode: number|undefined)  => {
+        if(statusCode === 200) {
+            setFlashMessage("Tarifa registrada", "Su nueva tarifa ha sido registrada con éxito")
+        } else {
+            setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
+        }
         fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
     }
 
@@ -63,6 +74,7 @@ const ServiceProviderHomePage = () => {
     
     return (
         <>
+            <Alert show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
             <div className="shadow-md bg-white flex-grow-0 mb-5">
                 <InfoOVerview 
                     data={userInfo}
@@ -91,7 +103,7 @@ const ServiceProviderHomePage = () => {
             </div>
             { showNewPriceRateForm && (
                 <NewPriceRateForm                
-                submitFormHandler={getPriceRates}
+                submitFormHandler={submitFormHandler}
                 closeModalHandler={closePriceRateModal} />
             ) }
         </>

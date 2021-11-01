@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthContextProvider from './store/AuthContext';
+import FlashContextProvider from './store/FlashContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <App />
+      <FlashContextProvider>
+        <App />
+      </FlashContextProvider>      
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
