@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,  
+  Route,
 } from "react-router-dom";
 import './App.css';
 import MainTabLayout from "./components/generics/MainTabLayout";
@@ -16,18 +16,20 @@ import ServiceProviderDetailsPage from "./pages/service-requesters/ServiceProvid
 import ServiceProvidersSearchPage from "./pages/service-requesters/ServiceProvidersSearchPage";
 import ServiceRequestDetailsPage from "./pages/service-requesters/ServiceRequesterRequestDetailsPage";
 import ServiceRequesterHomePage from "./pages/service-requesters/ServiceRequesterHomePage";
-import {AuthContext} from "./store/AuthContext";
+import { AuthContext } from "./store/AuthContext";
 import ServiceProviderRequestDetailsPage from "./pages/service-providers/ServiceProviderRequestDetailsPage";
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import LoginRoute from "./components/routes/LoginRoute";
 
 function App() {
   const authContext = useContext(AuthContext)
 
-  const renderHomePage = () => {    
-    if(authContext.data.userType === UserType.SERVICE_PROVIDER) {
+  const renderHomePage = () => {
+    if (authContext.data.userType === UserType.SERVICE_PROVIDER) {
       return <ServiceProviderHomePage />
     }
 
-    if(authContext.data.userType === UserType.SERVICE_REQUESTER) {
+    if (authContext.data.userType === UserType.SERVICE_REQUESTER) {
       return <ServiceRequesterHomePage />
     }
     return null
@@ -36,48 +38,48 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>                    
-          <Route path="/" exact>
+        <Switch>
+          <ProtectedRoute path="/" exact>
             <MainTabLayout>
               {renderHomePage()}
-            </MainTabLayout>            
-          </Route>
-          <Route path="/login">
+            </MainTabLayout>
+          </ProtectedRoute>
+          <LoginRoute path="/login">
             <LoginPage />
-          </Route>
-          <Route path="/registry">
+          </LoginRoute>
+          <LoginRoute path="/registry">
             <RegistryPage />
-          </Route>
-          <Route path="/service-requesters/:requesterId/service-requests/:requestId">
+          </LoginRoute>
+          <ProtectedRoute userType={UserType.SERVICE_REQUESTER} path="/service-requesters/:requesterId/service-requests/:requestId">
             <MainTabLayout>
               <ServiceRequestDetailsPage />
             </MainTabLayout>
-          </Route>
-          <Route path="/providers" exact>
+          </ProtectedRoute>
+          <ProtectedRoute userType={UserType.SERVICE_REQUESTER} path="/providers" exact>
             <MainTabLayout>
               <ServiceProvidersSearchPage />
             </MainTabLayout>
-          </Route>
-          <Route path="/service-providers/:providerId" exact>
+          </ProtectedRoute>
+          <ProtectedRoute userType={UserType.SERVICE_REQUESTER} path="/service-providers/:providerId" exact>
             <MainTabLayout>
               <ServiceProviderDetailsPage />
             </MainTabLayout>
-          </Route>
-          <Route path="/service-providers/:providerId/service-request">
+          </ProtectedRoute>
+          <ProtectedRoute userType={UserType.SERVICE_REQUESTER} path="/service-providers/:providerId/service-request">
             <MainTabLayout>
               <NewServiceRequestPage />
             </MainTabLayout>
-          </Route>
-          <Route path="/services">
+          </ProtectedRoute>
+          <ProtectedRoute userType={UserType.SERVICE_PROVIDER} path="/services">
             <MainTabLayout>
               <ServicesPage />
             </MainTabLayout>
-          </Route>
-          <Route path="/service-providers/:providerId/service-requests/:requestId">
+          </ProtectedRoute>
+          <ProtectedRoute userType={UserType.SERVICE_PROVIDER} path="/service-providers/:providerId/service-requests/:requestId">
             <MainTabLayout>
               <ServiceProviderRequestDetailsPage />
             </MainTabLayout>
-          </Route>
+          </ProtectedRoute>
         </Switch>
       </Router>
     </div>
