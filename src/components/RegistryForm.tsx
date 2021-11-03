@@ -9,6 +9,7 @@ import StateResponse from '../models/state-response';
 import useFetch from '../hooks/use-fetch';
 import Alert from './generics/Alert';
 import useFlashMessage from '../hooks/use-flash-message';
+import RegistryInfo from '../responses/registry-info';
 
 const RegistryForm: React.FC<{
   className?: string,
@@ -25,7 +26,7 @@ const RegistryForm: React.FC<{
     isLoading: registryRequestIsLoading,
     sendRequest: sendRegistryRequest,
     responseStatus
-  } = useFetch()
+  } = useFetch<RegistryInfo>()
   const [selectedUserType, setSelectedUserType] = useState<number>(0)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
   const {setFlashMessage} = useFlashMessage()
@@ -107,7 +108,7 @@ const RegistryForm: React.FC<{
       })}
       onSubmit={(values) => {
         values.userType = +values.userType
-        sendRegistryRequest<any>("http://127.0.0.1:8000/users", {
+        sendRegistryRequest("http://127.0.0.1:8000/users", {
           method: "POST",
           body: JSON.stringify(values)
         })
@@ -161,7 +162,7 @@ const RegistryForm: React.FC<{
                 name="businessName"
                 placeholder="Nombre del negocio"
                 type="text" />
-              <input type="file" accept='image/*' />
+              <input type="file" id="businessPicture" accept='image/*' />
             </>
           ) : null}
           <button disabled={statesFetchingIsLoading} type="submit" className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center my-10">
