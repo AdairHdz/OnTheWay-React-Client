@@ -16,6 +16,7 @@ const ServicesPage = () => {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
         isLoading: serviceRequestsFetchingIsLoading,
+        responseStatus: serviceRequestResponseStatus,
         sendRequest: fetchServiceRequests
     } = useFetch<ServiceRequestDetails[]>()
     return (
@@ -39,7 +40,12 @@ const ServicesPage = () => {
                 </Formik>
             </div>
             <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-            <ServiceProviderRequestsList serviceRequests={serviceRequests} className="bg-white shadow m-5 flex-grow p-3" serviceRequestError={serviceRequestsFetchingError} serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
+            <ServiceProviderRequestsList
+            serviceRequests={serviceRequests}
+            className="bg-white shadow m-5 flex-grow p-3"
+            serviceRequestError={serviceRequestsFetchingError}
+            responseStatus={serviceRequestResponseStatus}
+            serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
         </div>
     )
 }
