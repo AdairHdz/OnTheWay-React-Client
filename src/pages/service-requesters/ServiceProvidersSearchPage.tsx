@@ -7,6 +7,7 @@ import SelectInput from "../../components/generics/SelectInput"
 import SliderInput from "../../components/generics/SliderInput"
 import Spinner from "../../components/generics/Spinner"
 import ServiceProviderItem from "../../components/service-provider/ServiceProviderItem"
+import KindOfService from "../../enums/kind-of-service"
 import useFetch from "../../hooks/use-fetch"
 import StateResponse from "../../models/state-response"
 import City from "../../responses/city"
@@ -60,7 +61,7 @@ const ServiceProvidersSearchPage = () => {
                     innerRef={formRef}
                     initialValues={
                         {
-                            kindOfService: 0,
+                            kindOfService: KindOfService.GROCERY_SHOPPING,
                             state: "",
                             city: "",
                             maxPriceRate: 1
@@ -69,7 +70,7 @@ const ServiceProvidersSearchPage = () => {
                     validationSchema={Yup.object({
                         kindOfService: Yup.number()
                             .required("Campo obligatorio")
-                            .oneOf([0, 1, 2, 3, 4], ""),
+                            .oneOf([1, 2, 3, 4, 5], ""),
                         state: Yup.string()
                             .required("Campo obligatorio")
                             .uuid("Por favor seleccione un Estado"),
@@ -86,11 +87,11 @@ const ServiceProvidersSearchPage = () => {
                     }}>
                     <Form className="flex flex-col justify-between lg:justify-around lg:flex-row lg:items-center">
                         <SelectInput id="kindOfService" name="kindOfService" label="Tipo de servicio">
-                            <option value="0">Compra de víveres</option>
-                            <option value="1">Compra de fármacos</option>
-                            <option value="2">Entrega</option>
-                            <option value="3">Pago de servicios</option>
-                            <option value="3">Otro</option>
+                            <option value={KindOfService.GROCERY_SHOPPING}>Compra de víveres</option>
+                            <option value={KindOfService.DRUG_SHOPPING}>Compra de fármacos</option>
+                            <option value={KindOfService.DELIVERY}>Entrega</option>
+                            <option value={KindOfService.SERVICE_PAYMENT}>Pago de servicios</option>
+                            <option value={KindOfService.OTHER}>Otro</option>
                         </SelectInput>
                         <SelectInput id="state" name="state" label="Estado" changeHandler={(value: string) => {setStateId(value)}}>
                             <option>Seleccione un Estado</option>
