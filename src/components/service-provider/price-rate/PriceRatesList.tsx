@@ -17,6 +17,7 @@ const PriceRatesList: React.FC<{
     isLoading: boolean,
     error: HTTPRequestError | undefined,
     sendRequest: () => void,
+    responseStatus: number|undefined
     openModalHandler?: () => void
 }> = (props) => {
 
@@ -32,6 +33,20 @@ const PriceRatesList: React.FC<{
         setDropdownIsActive((prevState => !prevState))
     }
 
+    const renderPriceRatesError = () => {
+        if(props.error && !props.isLoading) {
+            if(props.responseStatus && props.responseStatus === 404) {
+                return (
+                    <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que aún no hay tarifas registradas" />
+                )
+            }
+            return <ErrorMessage />
+        }
+
+        return null
+    }
+
     return (
         <>
             <div className="w-full md:mt-5 md:w-11/12 md:mx-auto px-5 py-5 max-h-screen overflow-y-scroll">
@@ -43,7 +58,7 @@ const PriceRatesList: React.FC<{
                         toggleHandler={toggleHandler} />
                 )}
                 {dropdownIsActive && <PriceRateFiltersForm />}
-                {props.error && !props.isLoading && <ErrorMessage />}
+                {renderPriceRatesError()}
 
                 {props.isLoading && <Spinner />}
                 {props.data && props.data.map(priceRate => (

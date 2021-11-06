@@ -12,10 +12,25 @@ const ServiceRequesterRequestsList: React.FC<{
     className?: string,
     serviceRequests: ServiceRequestDetails[],
     serviceRequestError: HTTPRequestError|undefined,
-    serviceRequestFetchingIsLoading: boolean
+    serviceRequestFetchingIsLoading: boolean,
+    responseStatus: number|undefined
 }> = (props) => {
 
     const { data } = useContext(AuthContext)
+
+    const renderServiceRequestError = () => {
+        if(props.serviceRequestError && !props.serviceRequestFetchingIsLoading) {
+            if(props.responseStatus && props.responseStatus === 404) {
+                return (
+                    <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que no tiene solicitudes de servicio en la fecha especificada" />
+                )
+            }
+            return <ErrorMessage />
+        }
+        return null
+    }
+
     return (
         <div className={`flex flex-col gap-3 ${props.className}`}>
             {props.serviceRequests && props.serviceRequests.map((serviceRequest) => (
@@ -25,7 +40,7 @@ const ServiceRequesterRequestsList: React.FC<{
             ))}
             {props.serviceRequests && <Paginator className="mx-auto gap-3" />}
             {props.serviceRequestFetchingIsLoading && <Spinner />}
-            {props.serviceRequestError && !props.serviceRequestFetchingIsLoading && <ErrorMessage />}
+            { renderServiceRequestError() }
         </div>
     )
 }

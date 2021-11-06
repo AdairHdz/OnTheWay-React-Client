@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react"
-import useFetch from "../../hooks/use-fetch"
+import { useEffect } from "react"
 import HTTPRequestError from "../../models/http-request-error"
 import Review from "../../responses/review"
-import {AuthContext} from "../../store/AuthContext"
 import ErrorMessage from "../generics/ErrorMessage"
 import Paginator from "../generics/Paginator"
 import Spinner from "../generics/Spinner"
@@ -12,6 +10,7 @@ const ReviewsList: React.FC<{
     data: Review[],
     error: HTTPRequestError|undefined,
     isLoading: boolean,
+    responseStatus: number|undefined
     sendRequest: () => void
 }> = (props) => {        
 
@@ -19,9 +18,19 @@ const ReviewsList: React.FC<{
         props.sendRequest()
     }, [])
      
-    useEffect(() => {
+    const renderReviewsError = () => {
+        if(props.error && !props.isLoading) {
+            if(props.responseStatus && props.responseStatus === 404) {
+                return (
+                    <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que aún no hay reseñas" />
+                )
+            }
+            <ErrorMessage />
+        }
+        return null
+    }
 
-    }, [])
     return (
         <>
             <div className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-scroll max-h-screen">                
@@ -40,9 +49,7 @@ const ReviewsList: React.FC<{
 
                 {props.isLoading && <Spinner />}
 
-                {props.error && !props.isLoading && (
-                    <ErrorMessage />
-                )}
+                { renderReviewsError() }
             </div>            
             
         </>

@@ -24,7 +24,8 @@ const ServiceProvidersSearchPage = () => {
         data: serviceProviders,
         sendRequest: fetchServiceProviders,
         error: serviceProvidersFetchingError,
-        isLoading: serviceProvidersFetchingIsLoading
+        isLoading: serviceProvidersFetchingIsLoading,
+        responseStatus: serviceProvidersResponseStatus
     } = useFetch<ServiceProviderSearchResult[]>()
 
     const {
@@ -52,6 +53,17 @@ const ServiceProvidersSearchPage = () => {
         city: string,
         maxPriceRate: number
       }>>(null)
+
+      const renderSearchError = () => {
+          if(serviceProvidersFetchingError && !serviceProvidersFetchingIsLoading) {
+            if(serviceProvidersResponseStatus && serviceProvidersResponseStatus === 404) {
+                return <ErrorMessage errorTitle="Sin resultados"
+                    errorMessage="Parece ser que no hay proveedores de servicios que cumplan con los criterios que especificó" />
+            }
+            return <ErrorMessage />
+          }
+          return null
+      }
 
     return (
         <>
@@ -115,7 +127,7 @@ const ServiceProvidersSearchPage = () => {
             </div>
             <div className="shadow-md m-5 p-5 bg-white" >
                 {serviceProvidersFetchingIsLoading && <Spinner />}
-                {serviceProvidersFetchingError && !serviceProvidersFetchingIsLoading && <ErrorMessage />}
+                { renderSearchError() }
                 {serviceProviders && serviceProviders.map((serviceProvider) => {
                     return (
                         <Link key={serviceProvider.id} to={`/service-providers/${serviceProvider.id}`}>

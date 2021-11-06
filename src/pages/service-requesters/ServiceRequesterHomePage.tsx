@@ -16,7 +16,8 @@ const ServiceProviderHomePage = () => {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
         isLoading: serviceRequestsFetchingIsLoading,
-        sendRequest: fetchServiceRequests
+        sendRequest: fetchServiceRequests,
+        responseStatus: serviceRequestResponseStatus
     } = useFetch<ServiceRequestDetails[]>()
 
     const {message} = useFlashMessage()    
@@ -42,7 +43,12 @@ const ServiceProviderHomePage = () => {
                 </Formik>                
             </div>
             <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-            <ServiceRequesterRequestsList serviceRequests={serviceRequests} className="bg-white shadow m-5 flex-grow p-3" serviceRequestError={serviceRequestsFetchingError} serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
+            <ServiceRequesterRequestsList
+                serviceRequests={serviceRequests}
+                className="bg-white shadow m-5 flex-grow p-3"
+                serviceRequestError={serviceRequestsFetchingError}
+                serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading}
+                responseStatus={serviceRequestResponseStatus} />
         </div>
     )
 }

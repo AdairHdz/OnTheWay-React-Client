@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from "react"
 import Address from "../../responses/address"
 import { AuthContext } from "../../store/AuthContext"
 import City from "../../responses/city"
-import { useParams } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import ErrorMessage from "../generics/ErrorMessage"
 import Spinner from "../generics/Spinner"
 import useFlashMessage from "../../hooks/use-flash-message"
@@ -20,7 +20,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { providerId } = useParams<{
         providerId: string
     }>()
-
+    const history = useHistory()
     const { message, setFlashMessage } = useFlashMessage()    
 
     const submitFormHandler = (statusCode: number|undefined) => {
@@ -55,7 +55,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const {
         sendRequest: sendServiceRequest,
         isLoading: serviceRequestIsLoading,
-        error: serviceRequestError
+        error: serviceRequestError,
+        responseStatus: serviceRequestResponseStatus
     } = useFetch<any>()
 
     const { data } = useContext(AuthContext)
@@ -71,6 +72,21 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const getAddresses = () => {
         fetchAddresses(`http://127.0.0.1:8000/requesters/${data.id}/addresses?cityId=${selectedCity}`)
     }
+
+
+    useEffect(() => {
+        if(serviceRequestResponseStatus === undefined) {
+            return
+        }
+
+        if(serviceRequestResponseStatus === 200) {
+            setFlashMessage("Solicitud de servicio enviada", "Su solicitud de servicio ha sido enviada de forma exitosa")
+            history.push("/")
+            return
+        }
+        setFlashMessage("Error", "No hemos podido enviar su solicitud de servicio. Por favor, intente más tarde")
+        history.push("/")
+    }, [serviceRequestResponseStatus, history])
 
     useEffect(() => {
         fetchAddresses(`http://127.0.0.1:8000/requesters/${data.id}/addresses?cityId=${selectedCity}`)
@@ -113,8 +129,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: "a2"
-                        }
-                        console.log(payload)
+                        }                        
                         sendServiceRequest(`http://127.0.0.1:8000/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)

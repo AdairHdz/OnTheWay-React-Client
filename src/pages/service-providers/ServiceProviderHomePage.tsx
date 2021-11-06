@@ -22,7 +22,8 @@ const ServiceProviderHomePage = () => {
         data: priceRates,
         isLoading: priceRatesRequestIsLoading,
         error: priceRatesFetchingError,
-        sendRequest: fetchPriceRates
+        sendRequest: fetchPriceRates,
+        responseStatus: priceRatesResponseStatus
     } = useFetch<PriceRate[]>()
 
     const getPriceRates = () => {
@@ -61,7 +62,8 @@ const ServiceProviderHomePage = () => {
         data: reviews,
         error: reviewsError,
         isLoading: reviewsIsLoading,
-        sendRequest: fetchReviews
+        sendRequest: fetchReviews,
+        responseStatus: reviewsResponseStatus
     } = useFetch<Review[]>()
 
     const getReviews = () => {
@@ -90,6 +92,7 @@ const ServiceProviderHomePage = () => {
                         data={priceRates}
                         isLoading={priceRatesRequestIsLoading}
                         error={priceRatesFetchingError}
+                        responseStatus={priceRatesResponseStatus}
                         sendRequest={getPriceRates} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
@@ -98,6 +101,7 @@ const ServiceProviderHomePage = () => {
                         data={reviews}
                         error={reviewsError}
                         isLoading={reviewsIsLoading}
+                        responseStatus={reviewsResponseStatus}
                         sendRequest={getReviews} />
                 </div>
             </div>
