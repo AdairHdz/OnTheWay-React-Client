@@ -36,7 +36,10 @@ const PriceRateItem: React.FC<{
             </div>            
             <p className="text-lg font-bold"> {props.priceRate.city.name} </p>
             <p className="font-bold"> {props.priceRate.startingHour} - {props.priceRate.endingHour} </p>
-            <p className="font-thin"> {kindOfService} </p>
+            <div className="flex gap-5">
+                <p className="font-thin"> {kindOfService} </p>
+                <p className="underline"> ${ props.priceRate.price } MXN </p>
+            </div>
         </div>
     )
 }

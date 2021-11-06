@@ -48,7 +48,7 @@ const NewAddressForm: React.FC<{
             <p className="font-bold text-lg text-center mb-8">Añadir dirección</p>
             <Formik
                 initialValues={{
-                    indoorNumber: "",
+                    indoorNumber: null,
                     outdoorNumber: "",
                     street: "",
                     suburb: "",
@@ -58,7 +58,7 @@ const NewAddressForm: React.FC<{
                     outdoorNumber: Yup.string()
                         .required("Campo obligatorio"),
                     indoorNumber: Yup.string()
-                        .optional(),
+                        .nullable(),
                     street: Yup.string()
                         .required("Campo obligatorio"),
                     suburb: Yup.string()
@@ -69,6 +69,7 @@ const NewAddressForm: React.FC<{
 
                 })}
                 onSubmit={(values) => {
+                    console.log(values)
                     registerAddress(`http://127.0.0.1:8000/requesters/${data.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)

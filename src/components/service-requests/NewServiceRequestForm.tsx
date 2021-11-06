@@ -14,6 +14,7 @@ import ErrorMessage from "../generics/ErrorMessage"
 import Spinner from "../generics/Spinner"
 import useFlashMessage from "../../hooks/use-flash-message"
 import Alert from "../generics/Alert"
+import KindOfService from "../../enums/kind-of-service"
 
 const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { providerId } = useParams<{
@@ -90,7 +91,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                 </p>
                 <Formik
                     initialValues={{
-                        kindOfService: 0,
+                        kindOfService: 1,
                         city: "",
                         address: ""
                     }}
@@ -111,8 +112,9 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceRequesterId: data.id!,
                             serviceProviderId: providerId,
                             cost: priceRate.price,
-                            description: "a"
+                            description: "a2"
                         }
+                        console.log(payload)
                         sendServiceRequest(`http://127.0.0.1:8000/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)
@@ -121,11 +123,11 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                     <Form>
                         <SelectInput id="kindOfService" name="kindOfService" label="Tipo de servicio" changeHandler={(value: string) => { setSelectedKindOfService(value) }}>
                             <option>Seleccione un tipo de servicio</option>
-                            <option value={0}>Pago de servicios</option>
-                            <option value={1}>Compra de fármacos</option>
-                            <option value={2}>Compra de víveres</option>
-                            <option value={3}>Entrega</option>
-                            <option value={4}>Otro</option>
+                            <option value={KindOfService.SERVICE_PAYMENT}>Pago de servicios</option>
+                            <option value={KindOfService.DRUG_SHOPPING}>Compra de fármacos</option>
+                            <option value={KindOfService.GROCERY_SHOPPING}>Compra de víveres</option>
+                            <option value={KindOfService.DELIVERY}>Entrega</option>
+                            <option value={KindOfService.OTHER}>Otro</option>
                         </SelectInput>
                         <SelectInput id="city" name="city" label="Ciudad" changeHandler={(value: string) => { setSelectedCity(value) }}>
                             <option>Seleccione una ciudad</option>

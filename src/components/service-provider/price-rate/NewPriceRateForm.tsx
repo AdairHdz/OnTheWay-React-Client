@@ -11,6 +11,8 @@ import { useContext, useEffect } from "react"
 import { AuthContext } from "../../../store/AuthContext"
 import useFetch from "../../../hooks/use-fetch"
 import ErrorMessage from "../../generics/ErrorMessage"
+import City from "../../../responses/city"
+import KindOfService from "../../../enums/kind-of-service"
 
 // const parseTime = (time: string): string => {
 //     const parsedTime = new Date('1970-01-01T' + time + 'Z')
@@ -33,6 +35,11 @@ const NewPriceRateForm: React.FC<{
         responseStatus
     } = useFetch()
 
+    const {
+        data: cities,
+        sendRequest: fetchCities,        
+    } = useFetch<City[]>()
+
 
     useEffect(() => {        
         if(responseStatus !== undefined) {
@@ -41,6 +48,10 @@ const NewPriceRateForm: React.FC<{
         }
 
     }, [responseStatus])
+
+    useEffect(() => {
+        fetchCities(`http://127.0.0.1:8000/states/${data.stateId}/cities`)
+    }, [])
 
     return (
         <Modal>
@@ -58,8 +69,8 @@ const NewPriceRateForm: React.FC<{
                     saturday: false,
                     sunday: false,
                     city: "",
-                    kindOfService: 0,
-                    priceRate: "",
+                    kindOfService: 1,
+                    price: 0,
                     startingHour: "",
                     endingHour: ""
                 }}
@@ -83,8 +94,8 @@ const NewPriceRateForm: React.FC<{
                         .uuid("Valor no válido"),
                     kindOfService: Yup.number()
                         .required("Por favor seleccione un tipo de servicio")
-                        .oneOf([0, 1, 2, 3, 4], "Valor no válido"),
-                    priceRate: Yup.number()
+                        .oneOf([1, 2, 3, 4, 5], "Valor no válido"),
+                    price: Yup.number()
                         .required("Por favor fije una tarifa")
                         .min(1, "Por favor fije una tarifa mayor a $0")
                         .max(100, "Lo sentimos; las tarifas mayores a $100 no están permitidas"),
@@ -95,12 +106,13 @@ const NewPriceRateForm: React.FC<{
                 })}
                 onSubmit={(values) => {
                     values.kindOfService = +values.kindOfService
+                    values.price = +values.price
                     const {
                         city: cityId,
                         startingHour,
                         endingHour,
                         kindOfService,
-                        priceRate
+                        price
                     } = values
 
                     let workingDays: number[] = []
@@ -131,10 +143,11 @@ const NewPriceRateForm: React.FC<{
                         startingHour,
                         endingHour,
                         kindOfService,
-                        priceRate,
+                        price,
                         workingDays
                     }
-                    
+                            
+                    console.log(requestBody)
                     sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
@@ -175,21 +188,24 @@ const NewPriceRateForm: React.FC<{
                         id="city"
                         name="city" >
                         <option disabled value="">Ciudad</option>
-                        <option value="4e22c768-6e2c-4626-94a9-099b3732f9ac">Xalapa</option>
+                        {cities && cities.map((city) => (
+                            <option value={city.id} key={city.id}> {city.name} </option>
+                        ))}
+                        
                     </SelectInput>
                     <SelectInput
                         id="kindOfService"
                         name="kindOfService" >
                         <option disabled value="">Tipo de servicio</option>
-                        <option value="0">Pago de servicios</option>
-                        <option value="1">Compra de fármacos</option>
-                        <option value="2">Compra de víveres</option>
-                        <option value="3">Entrega</option>
-                        <option value="4">Otro</option>
+                        <option value={KindOfService.SERVICE_PAYMENT}>Pago de servicios</option>
+                        <option value={KindOfService.DRUG_SHOPPING}>Compra de fármacos</option>
+                        <option value={KindOfService.GROCERY_SHOPPING}>Compra de víveres</option>
+                        <option value={KindOfService.DELIVERY}>Entrega</option>
+                        <option value={KindOfService.OTHER}>Otro</option>
                     </SelectInput>
                     <StandardInput
-                        id="priceRate"
-                        name="priceRate"
+                        id="price"
+                        name="price"
                         type="number"
                         placeholder="Tarifa" />
                     <div className="flex justify-between p-5 mb-5">

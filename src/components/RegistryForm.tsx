@@ -10,6 +10,7 @@ import useFetch from '../hooks/use-fetch';
 import Alert from './generics/Alert';
 import useFlashMessage from '../hooks/use-flash-message';
 import RegistryInfo from '../responses/registry-info';
+import UserType from '../enums/user-type';
 
 const RegistryForm: React.FC<{
   className?: string,
@@ -27,7 +28,7 @@ const RegistryForm: React.FC<{
     sendRequest: sendRegistryRequest,
     responseStatus
   } = useFetch<RegistryInfo>()
-  const [selectedUserType, setSelectedUserType] = useState<number>(0)
+  const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
   const {setFlashMessage} = useFlashMessage()
   const handleChange = (value: string) => {
@@ -74,7 +75,7 @@ const RegistryForm: React.FC<{
         emailAddress: "",
         password: "",
         stateId: "",
-        userType: 0,
+        userType: UserType.SERVICE_PROVIDER,
         businessName: ""
       }}
       validationSchema={Yup.object({
@@ -101,7 +102,7 @@ const RegistryForm: React.FC<{
           .uuid("Por favor seleccione un estado"),
         userType: Yup.number()
           .required("Este campo es obligatorio")
-          .oneOf([1, 0], "Por favor seleccione un tipo de usuario"),
+          .oneOf([1, 2], "Por favor seleccione un tipo de usuario"),
         businessName: Yup.string()
           .optional()
           .matches(/[A-z]{1,30}/, "Por favor ingrese solo letras"),
@@ -152,10 +153,10 @@ const RegistryForm: React.FC<{
             name="userType"
             changeHandler={handleChange}>
             <option value="" disabled>Tipo de usuario</option>
-            <option value="0">Proveedor de servicio</option>
-            <option value="1">Solicitante de servicio</option>
+            <option value={UserType.SERVICE_PROVIDER}>Proveedor de servicio</option>
+            <option value={UserType.SERVICE_REQUESTER}>Solicitante de servicio</option>
           </SelectInput>
-          {selectedUserType === 0 ? (
+          {selectedUserType === UserType.SERVICE_PROVIDER ? (
             <>
               <StandardInput
                 id="businessName"
