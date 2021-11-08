@@ -16,7 +16,7 @@ const StandardInput: React.FC<{
         <div className="mb-5">
             {props.label && (
                 <>
-                    <label htmlFor={props.name}>
+                    <label className="block text-left" htmlFor={props.name}>
                         {props.label}
                     </label>
                     <br />

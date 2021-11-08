@@ -1,11 +1,9 @@
 import Image from "../assets/images/white-logo.png"
-import LoginForm from "../components/LoginForm"
+import AccountVerificationForm from "../components/AccountVerificationForm"
 import Alert from "../components/generics/Alert"
 import useFlashMessage from "../hooks/use-flash-message"
 
-
-const LoginPage = () => {
-
+const AccountVerificationPage = () => {    
     const {message} = useFlashMessage()
 
     return (
@@ -13,12 +11,12 @@ const LoginPage = () => {
             <div className="bg-blue-600 hidden md:w-1/2 h-full md:flex">
                 <img src={Image} className="hidden md:block m-auto" alt="" />
             </div>            
-            <div className="w-full h-full md:w-1/2 flex relative">                
+            <div className="w-full h-full md:w-1/2 flex relative bg-white">
                 <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-                <LoginForm />
+                <AccountVerificationForm />
             </div>
         </div>
     )
 }
 
-export default LoginPage
+export default AccountVerificationPage

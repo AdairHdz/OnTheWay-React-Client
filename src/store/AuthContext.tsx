@@ -5,13 +5,15 @@ import Login from "../responses/login"
 type AuthContextType = {
     data: Login
     login: (loginResponse: Login) => void,
-    logout: () => void,    
+    logout: () => void,
+    activateAccount: () => void
 }
 
 const defaultValues = {
     data: new Login(),
     login: (loginResponse: Login) => {},
-    logout: () => {},    
+    logout: () => {},
+    activateAccount: () => {}
 }
 
 export const AuthContext = React.createContext<AuthContextType>(defaultValues)
@@ -38,10 +40,18 @@ const AuthContextProvider: React.FC = (props) => {
         localStorage.removeItem("user-data")
     }    
 
+    const activateAccount = () => {
+        const userDataJSON = localStorage.getItem("user-data")
+        const userData: Login = JSON.parse(userDataJSON!)        
+        userData.verified = true
+        localStorage.setItem("user-data", JSON.stringify(userData))
+    }
+
     const authContextValues: AuthContextType = {
         data,
         login,
-        logout,        
+        logout,
+        activateAccount
     }
 
     return (
