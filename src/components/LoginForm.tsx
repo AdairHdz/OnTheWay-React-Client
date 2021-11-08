@@ -21,21 +21,33 @@ const LoginForm: React.FC<{
         data,
         error,
         isLoading,
-        sendRequest
+        sendRequest,
+        responseStatus
     } = useFetch<Login>()
 
     useEffect(() => {        
         if (data) {
             authContext.login(data)            
+            if(!data.verified) {            
+                history.push("/verify-account")
+                return
+            }
+            
             history.push("/")
+            return
+        }        
+
+        if(responseStatus === 452) {
+            setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
             return
         }
 
         if (error && !isLoading) {
+            console.log(data)
             setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
             return
         }
-    }, [data, error, isLoading, authContext, history, setFlashMessage])
+    }, [data, error, isLoading, authContext, history])
 
     return (
         <Formik

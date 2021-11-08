@@ -20,6 +20,7 @@ import { AuthContext } from "./store/AuthContext";
 import ServiceProviderRequestDetailsPage from "./pages/service-providers/ServiceProviderRequestDetailsPage";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import LoginRoute from "./components/routes/LoginRoute";
+import AccountVerificationPage from "./pages/AccountVerificationPage";
 
 function App() {
   const authContext = useContext(AuthContext)
@@ -80,6 +81,9 @@ function App() {
               <ServiceProviderRequestDetailsPage />
             </MainTabLayout>
           </ProtectedRoute>
+          <Route path="/verify-account">
+            <AccountVerificationPage />
+          </Route>
         </Switch>
       </Router>
     </div>

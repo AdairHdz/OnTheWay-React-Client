@@ -4,13 +4,15 @@ import SelectInput from './generics/SelectInput';
 import StandardInput from './generics/StandardInput';
 import BlackLogo from "../assets/images/logo.png"
 import { useHistory } from 'react-router';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import StateResponse from '../models/state-response';
 import useFetch from '../hooks/use-fetch';
 import Alert from './generics/Alert';
 import useFlashMessage from '../hooks/use-flash-message';
 import RegistryInfo from '../responses/registry-info';
 import UserType from '../enums/user-type';
+import Login from '../responses/login';
+import { AuthContext } from '../store/AuthContext';
 
 const RegistryForm: React.FC<{
   className?: string,
@@ -23,11 +25,15 @@ const RegistryForm: React.FC<{
     sendRequest: fetchStates
   } = useFetch<StateResponse[]>()
   const {
+    data: registryResponse,
     error: registryError,
     isLoading: registryRequestIsLoading,
     sendRequest: sendRegistryRequest,
     responseStatus
   } = useFetch<RegistryInfo>()
+  
+  const {login} = useContext(AuthContext)
+
   const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
   const {setFlashMessage} = useFlashMessage()
@@ -43,9 +49,13 @@ const RegistryForm: React.FC<{
   }, [statesWereAlreadyFetched, fetchStates, states])
 
   useEffect(() => {
-    if(responseStatus === 200) {
-      setFlashMessage("Registro exitoso", "El registro se ha realizado de forma exitosa. Luego de verificar su cuenta, podrá iniciar sesión.")
-      history.push("/login")
+    if(responseStatus === 200 && registryResponse) {
+      setFlashMessage("Registro exitoso", "Por favor, ingrese el código de verificación que hemos enviado a su dirección de correo electrónico")
+      const loginInfo = new Login();
+      loginInfo.userId = registryResponse.id
+      loginInfo.emailAddress = registryResponse.emailAddress
+      login(loginInfo)
+      history.push("/verify-account")
       return
     }
 
@@ -54,7 +64,7 @@ const RegistryForm: React.FC<{
       history.push("/login")
       return
     }
-  }, [history, responseStatus, setFlashMessage, registryError, registryRequestIsLoading])
+  }, [history, responseStatus, registryError, registryRequestIsLoading])
 
   const formRef = useRef<FormikProps<{
     names: string
@@ -166,7 +176,8 @@ const RegistryForm: React.FC<{
               <input type="file" id="businessPicture" accept='image/*' />
             </>
           ) : null}
-          <button disabled={statesFetchingIsLoading} type="submit" className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center my-10">
+          <button disabled={statesFetchingIsLoading} type="submit"
+            className={`mx-auto ${registryRequestIsLoading ? "btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" : "btn-primary mx-auto"}`} >
             Registrarme
           </button>
         </Form>
