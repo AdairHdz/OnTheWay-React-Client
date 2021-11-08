@@ -112,7 +112,15 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         address: ""
                     }}
                     validationSchema={Yup.object({
-
+                        kindOfService: Yup.number()
+                            .required("Este campo es obligatorio")
+                            .oneOf([1, 2, 3, 4, 5], "Por favor, seleccione un tipo de servicio válido"),
+                        city: Yup.string()
+                            .required("Este campo es obligatorio")
+                            .uuid("Por favor, seleccione una ciudad con un identificador válido"),
+                        address: Yup.string()
+                            .required("Este campo es obligatorio")
+                            .uuid("Por favor, seleccione una dirección con un identificador válido")
                     })}
                     onSubmit={(values) => {
                         const payload: {
