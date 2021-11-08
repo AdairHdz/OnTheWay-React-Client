@@ -9,13 +9,12 @@ import PriceRate from "../../responses/price-rate"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 import Review from "../../responses/review"
 import useFlashMessage from "../../hooks/use-flash-message"
-import Alert from "../../components/generics/Alert"
 
 const ServiceProviderHomePage = () => {
     const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)    
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
-    const { message, setFlashMessage } = useFlashMessage()
+    const { setFlashMessage } = useFlashMessage()
     const { data } = useContext(AuthContext)
 
     const {
@@ -41,6 +40,7 @@ const ServiceProviderHomePage = () => {
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
         }
         fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        setShowNewPriceRateForm(false)
     }
 
     const {
@@ -75,8 +75,7 @@ const ServiceProviderHomePage = () => {
     }, [])
     
     return (
-        <>
-            <Alert show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
+        <>            
             <div className="shadow-md bg-white flex-grow-0 mb-5">
                 <InfoOVerview 
                     data={userInfo}
@@ -93,7 +92,8 @@ const ServiceProviderHomePage = () => {
                         isLoading={priceRatesRequestIsLoading}
                         error={priceRatesFetchingError}
                         responseStatus={priceRatesResponseStatus}
-                        sendRequest={getPriceRates} />
+                        sendRequest={getPriceRates}
+                        deletePriceRateHandler={getPriceRates} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>  

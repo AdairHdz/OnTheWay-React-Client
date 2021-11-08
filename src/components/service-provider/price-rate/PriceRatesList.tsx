@@ -18,7 +18,8 @@ const PriceRatesList: React.FC<{
     error: HTTPRequestError | undefined,
     sendRequest: () => void,
     responseStatus: number|undefined
-    openModalHandler?: () => void
+    openModalHandler?: () => void,
+    deletePriceRateHandler?: () => void
 }> = (props) => {
 
     const { data } = useContext(AuthContext)
@@ -63,6 +64,7 @@ const PriceRatesList: React.FC<{
                 {props.isLoading && <Spinner />}
                 {props.data && props.data.map(priceRate => (
                     <PriceRateItem key={priceRate.id}
+                        deletePriceRateHandler={props.deletePriceRateHandler}
                         priceRate={priceRate} />
                 ))
                 }
