@@ -8,7 +8,6 @@ import { useContext, useEffect } from "react"
 import { AuthContext } from "../../../store/AuthContext"
 import Spinner from "../../generics/Spinner"
 import useFlashMessage from "../../../hooks/use-flash-message"
-import Alert from "../../generics/Alert"
 
 const PriceRateItem: React.FC<{
     priceRate: PriceRate,
@@ -67,8 +66,7 @@ const PriceRateItem: React.FC<{
     }, [responseStatus, error])
 
     return (
-        <div className="shadow-md rounded-lg p-5 text-gray-800 mb-5 text-left">
-            <Alert show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
+        <div className="shadow-md rounded-lg p-5 text-gray-800 mb-5 text-left">            
             <div className="flex justify-between">
                 <div className="flex gap-2">
                     {props.priceRate.workingDays.map(workingDay => <WorkingDayBadge key={workingDay} workingDay={workingDay} />)}
