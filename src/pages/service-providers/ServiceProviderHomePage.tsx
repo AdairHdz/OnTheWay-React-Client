@@ -9,9 +9,10 @@ import PriceRate from "../../responses/price-rate"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 import Review from "../../responses/review"
 import useFlashMessage from "../../hooks/use-flash-message"
+import Modal from "../../components/generics/Modal"
 
 const ServiceProviderHomePage = () => {
-    const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)    
+    const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
     const { setFlashMessage } = useFlashMessage()
@@ -32,9 +33,9 @@ const ServiceProviderHomePage = () => {
     useEffect(() => {
         fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
     }, [])
-    
-    const submitFormHandler = (statusCode: number|undefined)  => {
-        if(statusCode === 200) {
+
+    const submitFormHandler = (statusCode: number | undefined) => {
+        if (statusCode === 200) {
             setFlashMessage("Tarifa registrada", "Su nueva tarifa ha sido registrada con éxito")
         } else {
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
@@ -73,11 +74,11 @@ const ServiceProviderHomePage = () => {
     useEffect(() => {
         getReviews()
     }, [])
-    
+
     return (
-        <>            
+        <>
             <div className="shadow-md bg-white flex-grow-0 mb-5">
-                <InfoOVerview 
+                <InfoOVerview
                     data={userInfo}
                     error={userInfoError}
                     isLoading={userInfoIsLoading}
@@ -96,7 +97,7 @@ const ServiceProviderHomePage = () => {
                         deletePriceRateHandler={getPriceRates} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
-                    <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>  
+                    <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>
                     <ReviewsList
                         data={reviews}
                         error={reviewsError}
@@ -105,11 +106,11 @@ const ServiceProviderHomePage = () => {
                         sendRequest={getReviews} />
                 </div>
             </div>
-            { showNewPriceRateForm && (
-                <NewPriceRateForm                
-                submitFormHandler={submitFormHandler}
-                closeModalHandler={closePriceRateModal} />
-            ) }
+            <Modal closeModalHandler={closePriceRateModal} show={showNewPriceRateForm}>
+                <NewPriceRateForm
+                    submitFormHandler={submitFormHandler}
+                    closeModalHandler={closePriceRateModal} />
+            </Modal>
         </>
 
     )

@@ -1,5 +1,3 @@
-import { faTimes } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Form, Formik } from "formik"
 import Modal from "../generics/Modal"
 import * as Yup from "yup"
@@ -41,10 +39,7 @@ const NewAddressForm: React.FC<{
     }, [responseStatus, addressRegistrationError])
 
     return (
-        <Modal>
-            <div className="flex justify-end items-start mb-5">
-                <FontAwesomeIcon icon={faTimes} onClick={props.closeModalHandler} className="cursor-pointer" />
-            </div>            
+        <>
             <p className="font-bold text-lg text-center mb-8">Añadir dirección</p>
             <Formik
                 initialValues={{
@@ -68,8 +63,7 @@ const NewAddressForm: React.FC<{
                         .uuid("Por favor seleccione una ciudad")
 
                 })}
-                onSubmit={(values) => {
-                    console.log(values)
+                onSubmit={(values) => {                    
                     registerAddress(`http://127.0.0.1:8000/requesters/${data.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)
@@ -89,7 +83,7 @@ const NewAddressForm: React.FC<{
                     <button className="btn-primary mx-auto" type="submit">Añadir</button>
                 </Form>
             </Formik>
-        </Modal>
+        </>
     )
 }
 

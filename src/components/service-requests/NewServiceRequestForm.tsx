@@ -15,21 +15,22 @@ import Spinner from "../generics/Spinner"
 import useFlashMessage from "../../hooks/use-flash-message"
 import Alert from "../generics/Alert"
 import KindOfService from "../../enums/kind-of-service"
+import Modal from "../generics/Modal"
 
 const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { providerId } = useParams<{
         providerId: string
     }>()
     const history = useHistory()
-    const { message, setFlashMessage } = useFlashMessage()    
+    const { message, setFlashMessage } = useFlashMessage()
 
-    const submitFormHandler = (statusCode: number|undefined) => {
-        if(statusCode === 200) {
+    const submitFormHandler = (statusCode: number | undefined) => {
+        if (statusCode === 200) {
             getAddresses()
-            setFlashMessage("Dirección registrada", "La nueva dirección se ha registrado correctamente")            
+            setFlashMessage("Dirección registrada", "La nueva dirección se ha registrado correctamente")
         } else {
             setFlashMessage("Error", "No hemos podido registrar su nueva dirección. Por favor, intente más tarde")
-        }        
+        }
         setShowModal(false)
     }
 
@@ -75,11 +76,11 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
 
 
     useEffect(() => {
-        if(serviceRequestResponseStatus === undefined) {
+        if (serviceRequestResponseStatus === undefined) {
             return
         }
 
-        if(serviceRequestResponseStatus === 200) {
+        if (serviceRequestResponseStatus === 200) {
             setFlashMessage("Solicitud de servicio enviada", "Su solicitud de servicio ha sido enviada de forma exitosa")
             history.push("/")
             return
@@ -137,7 +138,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: "a2"
-                        }                        
+                        }
                         sendServiceRequest(`http://127.0.0.1:8000/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)
@@ -183,11 +184,11 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         {serviceRequestError && !serviceRequestIsLoading && (
                             <ErrorMessage errorMessage={serviceRequestError.message + ""} />
                         )}
-                        {showModal && (
+                        <Modal show={showModal} closeModalHandler={() => {setShowModal(false)}}>
                             <NewAddressForm
                                 submitFormHandler={submitFormHandler}
                                 closeModalHandler={() => { setShowModal(false) }} />
-                        )}
+                        </Modal>
                     </Form>
                 </Formik>
             </div></>

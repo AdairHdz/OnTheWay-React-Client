@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import ErrorMessage from "../../components/generics/ErrorMessage"
+import Modal from "../../components/generics/Modal"
 import Spinner from "../../components/generics/Spinner"
+import NewReviewForm from "../../components/reviews/NewReviewForm"
 import ServiceRequestStatus from "../../enums/service-request-status"
 import useFetch from "../../hooks/use-fetch"
 import ServiceRequestWithCity from "../../responses/service-request-with-city"
@@ -18,7 +20,7 @@ const ServiceRequesterRequestDetailsPage = () => {
     const { data: authData } = useContext(AuthContext)
     const { setFlashMessage } = useContext(FlashContext)
     const history = useHistory()
-    const [newStatus, setNewStatus] = useState<number|undefined>()
+    const [newStatus, setNewStatus] = useState<number | undefined>()
     const {
         isLoading,
         error,
@@ -29,27 +31,29 @@ const ServiceRequesterRequestDetailsPage = () => {
     const {
         isLoading: statusChangeIsLoading,
         error: statusChangeError,
-        sendRequest: changeStatus,        
+        sendRequest: changeStatus,
     } = useFetch()
 
-    useEffect(() => {              
-        if(!statusChangeIsLoading && statusChangeError) {            
+    const [showReviewForm, setShowReviewForm] = useState(false)
+
+    useEffect(() => {
+        if (!statusChangeIsLoading && statusChangeError) {
             const title = "Error"
             const message = "Ha ocurrido un error al procesar su solicitud. Por favor intente más tarde"
             setFlashMessage(title, message)
             history.push("/")
         }
 
-        if(!statusChangeIsLoading && !statusChangeError) {            
+        if (!statusChangeIsLoading && !statusChangeError) {
 
-            if(newStatus === ServiceRequestStatus.CONCLUDED) {
+            if (newStatus === ServiceRequestStatus.CONCLUDED) {
                 const title = "Solicitud de servicio concluida"
                 const message = "La solicitud de servicio se ha marcado como concluida"
                 setFlashMessage(title, message)
                 history.push("/")
             }
 
-            if(newStatus === ServiceRequestStatus.CANCELED) {
+            if (newStatus === ServiceRequestStatus.CANCELED) {
                 const title = "Solicitud de servicio cancelada"
                 const message = "La solicitud de servicio se ha marcado como cancelada"
                 setFlashMessage(title, message)
@@ -57,8 +61,8 @@ const ServiceRequesterRequestDetailsPage = () => {
             }
         }
 
-        
-    }, [statusChangeIsLoading, statusChangeError, history, newStatus, setFlashMessage])
+
+    }, [statusChangeIsLoading, statusChangeError, history, newStatus])
 
     useEffect(() => {
         sendRequest(`http://127.0.0.1:8000/requesters/${authData.id}/requests/${requestId}`)
@@ -76,20 +80,20 @@ const ServiceRequesterRequestDetailsPage = () => {
         })
     }
 
-    const renderButton = () => {                                                        
-        switch(data.status) {
+    const renderButton = () => {
+        switch (data.status) {
             case ServiceRequestStatus.ACTIVE:
-                return <button className="btn-primary" onClick={ () => {
+                return <button className="btn-primary" onClick={() => {
                     changeRequestStatus(ServiceRequestStatus.CONCLUDED)
                     setNewStatus(ServiceRequestStatus.CONCLUDED)
-                } }>Marcar como completado</button>                
+                }}>Marcar como completado</button>
             case ServiceRequestStatus.CONCLUDED:
-                return <button className="btn-primary">Calificar servicio</button>
+                return <button className="btn-primary" onClick={() => setShowReviewForm(true)}>Calificar servicio</button>
             case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
-                return <button className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" onClick={ () => {
+                return <button className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" onClick={() => {
                     changeRequestStatus(ServiceRequestStatus.CANCELED)
                     setNewStatus(ServiceRequestStatus.CANCELED)
-                } }>Cancelar</button>            
+                }}>Cancelar</button>
         }
     }
     return (
@@ -113,13 +117,16 @@ const ServiceRequesterRequestDetailsPage = () => {
                         <p className="font-bold">Estado</p>
                         <p> {getServiceRequestStatus(data.status!)} </p>
                     </div>
-                    <div className="flex justify-around">                        
+                    <div className="flex justify-around">
                         {renderButton()}
                     </div>
                 </>
             )}
             {error && !isLoading && <ErrorMessage />}
             {isLoading && <Spinner />}
+            <Modal show={showReviewForm} closeModalHandler={() => { setShowReviewForm(false) }}>
+                <NewReviewForm serviceProviderId={data?.serviceProvider?.id || ""} />
+            </Modal>
         </div>
     )
 }

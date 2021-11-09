@@ -1,12 +1,9 @@
 import { Form, Formik } from "formik"
 import SelectInput from "../../generics/SelectInput"
 import StandardInput from "../../generics/StandardInput"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTimes } from "@fortawesome/free-solid-svg-icons"
 import CheckboxInputWithLetter from "../../generics/CheckboxInputWithLetter"
 import TimeInput from "../../generics/TimeInput"
 import * as Yup from "yup"
-import Modal from "../../generics/Modal"
 import { useContext, useEffect } from "react"
 import { AuthContext } from "../../../store/AuthContext"
 import useFetch from "../../../hooks/use-fetch"
@@ -24,7 +21,7 @@ import KindOfService from "../../../enums/kind-of-service"
 // }
 
 const NewPriceRateForm: React.FC<{
-    submitFormHandler: (statusCode: number|undefined) => void,
+    submitFormHandler: (statusCode: number | undefined) => void,
     closeModalHandler: () => void
 }> = (props) => {
     const { data } = useContext(AuthContext)
@@ -37,12 +34,12 @@ const NewPriceRateForm: React.FC<{
 
     const {
         data: cities,
-        sendRequest: fetchCities,        
+        sendRequest: fetchCities,
     } = useFetch<City[]>()
 
 
-    useEffect(() => {        
-        if(responseStatus !== undefined) {
+    useEffect(() => {
+        if (responseStatus !== undefined) {
             props.submitFormHandler(responseStatus)
             return
         }
@@ -54,10 +51,7 @@ const NewPriceRateForm: React.FC<{
     }, [])
 
     return (
-        <Modal>
-            <div className="flex justify-end items-start mb-5">
-                <FontAwesomeIcon icon={faTimes} onClick={props.closeModalHandler} className="cursor-pointer" />
-            </div>
+        <>
             <p className="text-center text-lg mb-5">Nueva tarifa</p>
             <Formik
                 initialValues={{
@@ -146,8 +140,7 @@ const NewPriceRateForm: React.FC<{
                         price,
                         workingDays
                     }
-                            
-                    console.log(requestBody)
+
                     sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
@@ -191,7 +184,7 @@ const NewPriceRateForm: React.FC<{
                         {cities && cities.map((city) => (
                             <option value={city.id} key={city.id}> {city.name} </option>
                         ))}
-                        
+
                     </SelectInput>
                     <SelectInput
                         id="kindOfService"
@@ -236,7 +229,7 @@ const NewPriceRateForm: React.FC<{
                     )}
                 </Form>
             </Formik>
-        </Modal>
+        </>
     )
 }
 
