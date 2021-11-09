@@ -21,6 +21,7 @@ import ServiceProviderRequestDetailsPage from "./pages/service-providers/Service
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import LoginRoute from "./components/routes/LoginRoute";
 import AccountVerificationPage from "./pages/AccountVerificationPage";
+import StatisticsPage from "./pages/service-providers/StatisticsPage";
 
 function App() {
   const authContext = useContext(AuthContext)
@@ -84,6 +85,11 @@ function App() {
           <Route path="/verify-account">
             <AccountVerificationPage />
           </Route>
+          <ProtectedRoute userType={UserType.SERVICE_PROVIDER} path="/statistics">
+            <MainTabLayout>
+              <StatisticsPage />
+            </MainTabLayout>
+          </ProtectedRoute>
         </Switch>
       </Router>
     </div>
