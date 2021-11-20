@@ -7,7 +7,7 @@ import InfoOVerview from "../../components/service-provider/InfoOverview"
 import PriceRatesList from "../../components/service-provider/price-rate/PriceRatesList"
 import useFetch from "../../hooks/use-fetch"
 import PriceRate from "../../responses/price-rate"
-import Review from "../../responses/review"
+import PaginatedReview from "../../responses/paginated-review"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 
 const ServiceProviderDetailsPage = () => {
@@ -53,10 +53,10 @@ const ServiceProviderDetailsPage = () => {
         error: reviewsError,
         isLoading: reviewsIsLoading,
         sendRequest: fetchReviews
-    } = useFetch<Review[]>()
+    } = useFetch<PaginatedReview>()
 
     const getReviews = () => {
-        fetchReviews(`http://127.0.0.1:8000/providers/${providerId}/reviews?page=1&pageSize=5`)
+        fetchReviews(`http://127.0.0.1:8000/providers/${providerId}/reviews?page=1&pageSize=25`)
     }
 
     useEffect(() => {
@@ -86,11 +86,11 @@ const ServiceProviderDetailsPage = () => {
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>
                     <ReviewsList
-                        data={reviews}
+                        reviews={reviews}
                         error={reviewsError}
                         isLoading={reviewsIsLoading}
                         responseStatus={priceRatesResponseStatus}
-                        sendRequest={getReviews} />
+                        fetchReviews={getReviews} />
                 </div>
                 <button
                     className="bg-yellow-500 text-white rounded-full h-10 w-10 lg:w-16 lg:h-16 absolute bottom-20 right-10 lg:right-20 flex justify-center items-center cursor-pointer"

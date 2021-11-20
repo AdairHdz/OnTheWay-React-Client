@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
 import ErrorMessage from "../../components/generics/ErrorMessage"
+import Paginator from "../../components/generics/Paginator"
 import SelectInput from "../../components/generics/SelectInput"
 import SliderInput from "../../components/generics/SliderInput"
 import Spinner from "../../components/generics/Spinner"
@@ -11,7 +12,7 @@ import KindOfService from "../../enums/kind-of-service"
 import useFetch from "../../hooks/use-fetch"
 import StateResponse from "../../models/state-response"
 import City from "../../responses/city"
-import ServiceProviderSearchResult from "../../responses/service-provider-search-result"
+import PaginatedServiceProvider from "../../responses/paginated-service-provider"
 
 const ServiceProvidersSearchPage = () => {
 
@@ -26,7 +27,7 @@ const ServiceProvidersSearchPage = () => {
         error: serviceProvidersFetchingError,
         isLoading: serviceProvidersFetchingIsLoading,
         responseStatus: serviceProvidersResponseStatus
-    } = useFetch<ServiceProviderSearchResult[]>()
+    } = useFetch<PaginatedServiceProvider>()
 
     const {
         data: cities,
@@ -65,6 +66,10 @@ const ServiceProvidersSearchPage = () => {
           return null
       }
 
+      const getServiceProvidersByURLCriteria = (urlCriteria: string) => {
+        fetchServiceProviders(`http://127.0.0.1:8000/${urlCriteria}`)
+      }
+
     return (
         <>
             <div className="shadow-md m-5 p-5 bg-white" >
@@ -95,7 +100,7 @@ const ServiceProvidersSearchPage = () => {
                             .max(100, "No se permiten tarifas mayores a $100.00 MXN")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceProviders(`http://127.0.0.1:8000/providers?page=1&pageSize=5&maxPriceRate=${values.maxPriceRate}&cityId=${values.city}&kindOfService=${values.kindOfService}`)
+                        getServiceProvidersByURLCriteria(`providers?page=1&pageSize=10&maxPriceRate=${values.maxPriceRate}&cityId=${values.city}&kindOfService=${values.kindOfService}`)
                     }}>
                     <Form className="flex flex-col justify-between lg:justify-around lg:flex-row lg:items-center">
                         <SelectInput id="kindOfService" name="kindOfService" label="Tipo de servicio">
@@ -128,7 +133,7 @@ const ServiceProvidersSearchPage = () => {
             <div className="shadow-md m-5 p-5 bg-white" >
                 {serviceProvidersFetchingIsLoading && <Spinner />}
                 { renderSearchError() }
-                {serviceProviders && serviceProviders.map((serviceProvider) => {
+                {serviceProviders && serviceProviders.data && serviceProviders.data.map((serviceProvider) => {
                     return (
                         <Link key={serviceProvider.id} to={`/service-providers/${serviceProvider.id}`}>
                             <ServiceProviderItem
@@ -139,7 +144,19 @@ const ServiceProvidersSearchPage = () => {
                                 
                         </Link>
                     )
-                })}                
+                })}
+                {serviceProviders && serviceProviders.data && <Paginator
+                    paginationLinks={{
+                        links: serviceProviders.links,
+                        page: serviceProviders.page,
+                        pages: serviceProviders.pages,
+                        perPage: serviceProviders.perPage,
+                        total: serviceProviders.total
+                    }}
+                    goToLastPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.last!) } }
+                    goToFirstPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.first!) } }
+                    goToNextPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.next!) } }
+                    goToPreviousPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.prev!) } } />}
             </div>
         </>
     )

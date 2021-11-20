@@ -1,22 +1,24 @@
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import HTTPRequestError from "../../models/http-request-error"
-import Review from "../../responses/review"
+import PaginatedReview from "../../responses/paginated-review"
 import ErrorMessage from "../generics/ErrorMessage"
 import Paginator from "../generics/Paginator"
 import Spinner from "../generics/Spinner"
 import ReviewItem from "./ReviewItem"
+import { AuthContext } from "../../store/AuthContext"
 
 const ReviewsList: React.FC<{
-    data: Review[],
+    reviews: PaginatedReview,
     error: HTTPRequestError|undefined,
     isLoading: boolean,
     responseStatus: number|undefined
-    sendRequest: () => void
+    fetchReviews: (url: string) => void
 }> = (props) => {        
 
+    const {data} = useContext(AuthContext)
     useEffect(() => {        
-        props.sendRequest()
-    }, [])
+        props.fetchReviews(`providers/${data.id}/reviews?page=1&pageSize=5`)
+    }, [])    
      
     const renderReviewsError = () => {
         if(props.error && !props.isLoading) {
@@ -34,16 +36,27 @@ const ReviewsList: React.FC<{
     return (
         <>
             <div className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-scroll max-h-screen">                
-                {props.data && (
+                {props.reviews !== undefined && (
                     <>                    
-                        {props.data.map(review => (
+                        {props.reviews.data && props.reviews.data.map(review => (
                             <ReviewItem key={review.id}
                                 date={review.dateOfReview}
                                 details={review.details}
                                 score={review.score}
                                 serviceRequester={review.requesterName} title={review.title} />
                         ))}
-                        <Paginator />
+                        <Paginator                            
+                            paginationLinks={{
+                                links: props.reviews.links,
+                                page: props.reviews.page,
+                                pages: props.reviews.pages,
+                                perPage: props.reviews.perPage,
+                                total: props.reviews.total
+                            }}
+                            goToPreviousPageHandler={ () => { props.fetchReviews(props.reviews.links!.prev!) } }
+                            goToNextPageHandler={ () => { props.fetchReviews(props.reviews.links!.next!) } }
+                            goToFirstPageHandler={ () => { props.fetchReviews(props.reviews.links!.first!) } }
+                            goToLastPageHandler={ () => { props.fetchReviews(props.reviews.links!.last!) } } />
                     </>
                 )}
 

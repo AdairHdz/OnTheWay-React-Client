@@ -72,7 +72,7 @@ const PriceRatesList: React.FC<{
                         priceRate={priceRate} />
                 ))
                 }
-                {props.data && <Paginator />}
+                {/* {props.data && <Paginator />} */}
                 {data.userType === UserType.SERVICE_PROVIDER ? (
                     <div
                         className="bg-yellow-500 text-white rounded-full h-10 w-10 absolute bottom-20 right-10 flex justify-center items-center cursor-pointer"
