@@ -15,7 +15,7 @@ const LoginForm: React.FC<{
 
     const authContext = useContext(AuthContext)
     const history = useHistory()
-    const { setFlashMessage } = useFlashMessage()
+    const { setFlashMessage, message } = useFlashMessage()
 
     const {
         data,
@@ -35,15 +35,9 @@ const LoginForm: React.FC<{
             
             history.push("/")
             return
-        }        
+        }                
 
-        if(responseStatus === 452) {
-            setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
-            return
-        }
-
-        if (error && !isLoading) {
-            console.log(data)
+        if (error && !isLoading) {            
             setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
             return
         }

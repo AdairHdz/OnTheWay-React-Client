@@ -37,7 +37,7 @@ const ServiceProviderRequestsList: React.FC<{
                     <ServiceRequestItem kindOfService={serviceRequest.kindOfService!} date={serviceRequest.date} status={serviceRequest.status!} />
                 </Link>
             ))}
-            {props.serviceRequests && <Paginator className="mx-auto gap-3" />}
+            {/* {props.serviceRequests && <Paginator className="mx-auto gap-3" />} */}
             {props.serviceRequestFetchingIsLoading && <Spinner />}
             { renderServiceRequestError() }
         </div>

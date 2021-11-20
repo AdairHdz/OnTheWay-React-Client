@@ -18,8 +18,7 @@ const RegistryForm: React.FC<{
   className?: string,
 }> = (props) => {
   const history = useHistory()
-  const {
-    error: statesFetchingError,
+  const {    
     isLoading: statesFetchingIsLoading,
     data: states,
     sendRequest: fetchStates
@@ -36,7 +35,7 @@ const RegistryForm: React.FC<{
 
   const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
-  const {setFlashMessage} = useFlashMessage()
+  const {setFlashMessage, message} = useFlashMessage()
   const handleChange = (value: string) => {
     setSelectedUserType(parseInt(value))
   }
@@ -58,6 +57,11 @@ const RegistryForm: React.FC<{
       history.push("/verify-account")
       return
     }
+
+    if(responseStatus === 452) {
+      setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
+      return
+  }
 
     if(registryError && !registryRequestIsLoading) {
       setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")
@@ -124,9 +128,8 @@ const RegistryForm: React.FC<{
           body: JSON.stringify(values)
         })
       }} >
-      <>
-        <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={(statesFetchingError && !statesFetchingIsLoading)} title="Error" message="Ocurrió un error" />
-        <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={(registryError && !registryRequestIsLoading)} title="Error" message="Ocurrió un error" />
+      <>        
+        <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || "Error"} message={message?.message || "Ocurrió un error desconocido"} />
         <Form className={`w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg py-2 px-12 lg:m-auto bg-white ${props.className}`}>
           <img src={BlackLogo} className="mx-auto my-10" alt="" />
           <p className="font-bold text-2xl text-center mb-5">Registro</p>

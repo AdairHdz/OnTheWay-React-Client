@@ -17,6 +17,7 @@ const StackChart: React.FC<{
             return weekdayMapper(weekday)            
         })
 
+        console.log(weekdaysArray)
         setWeekdays(weekdaysArray)
     }, [props.requestedServicesPerWeekday])
 

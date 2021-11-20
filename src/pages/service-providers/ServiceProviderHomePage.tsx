@@ -7,9 +7,9 @@ import { AuthContext } from "../../store/AuthContext"
 import useFetch from "../../hooks/use-fetch"
 import PriceRate from "../../responses/price-rate"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
-import Review from "../../responses/review"
 import useFlashMessage from "../../hooks/use-flash-message"
 import Modal from "../../components/generics/Modal"
+import PaginatedReview from "../../responses/paginated-review"
 
 const ServiceProviderHomePage = () => {
     const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)
@@ -65,15 +65,15 @@ const ServiceProviderHomePage = () => {
         isLoading: reviewsIsLoading,
         sendRequest: fetchReviews,
         responseStatus: reviewsResponseStatus
-    } = useFetch<Review[]>()
+    } = useFetch<PaginatedReview>()
 
-    const getReviews = () => {
-        fetchReviews(`http://127.0.0.1:8000/providers/${data.id}/reviews?page=1&pageSize=5`)
+    const getReviews = (url: string) => {
+        fetchReviews(`http://127.0.0.1:8000/${url}`)
     }
 
-    useEffect(() => {
-        getReviews()
-    }, [])
+    // useEffect(() => {
+    //     getReviews('page=1&pageSize=25')
+    // }, [])
 
     return (
         <>
@@ -99,11 +99,11 @@ const ServiceProviderHomePage = () => {
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>
                     <ReviewsList
-                        data={reviews}
+                        reviews={reviews}
                         error={reviewsError}
                         isLoading={reviewsIsLoading}
                         responseStatus={reviewsResponseStatus}
-                        sendRequest={getReviews} />
+                        fetchReviews={getReviews} />
                 </div>
             </div>
             <Modal closeModalHandler={closePriceRateModal} show={showNewPriceRateForm}>
