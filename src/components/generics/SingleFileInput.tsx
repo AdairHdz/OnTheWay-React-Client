@@ -1,16 +1,15 @@
 import { useField } from "formik"
 import FileName from "../../models/file-name"
 
-const FileInput: React.FC<{
+const SingleFileInput: React.FC<{
     id: string,
     name: string,
     label?: string,
-    accept?: string,
-    multiple?: boolean
-    inputHandler?: (files: FileList|null, filesNames: FileName[]) => void
+    accept: string,
+    inputHandler?: (files: File|null, fileName: FileName) => void
 }> = (props) => {    
 
-    const [fieldProps, metadata, helpers] = useField({name: props.name})
+    const [fieldProps, metadata] = useField({name: props.name})
 
     return (
         <div className="mb-5">
@@ -26,21 +25,18 @@ const FileInput: React.FC<{
                 {...fieldProps}
                 id={props.id}
                 name={props.name}
-                accept={`${props.accept ? props.accept : 'image/*,.mp4'}`}
-                multiple={props.multiple ? props.multiple : true}
+                accept={props.accept}
                 onChange={(e) => {
-                    const value = e.currentTarget.files
-                    let filesArray: FileName[] = []
-                    if(value !== null) {                        
-                        for(let i = 0; i < value.length; i++) {
-                            let file = {
-                                name: value.item(i)!.name
-                            }
-                            filesArray.push(file)
-                        }                        
+                    const value = e.currentTarget.files                    
+                    if(value === null) {
+                        return                        
+                    }
+                    let selectedFile: FileName
+                    selectedFile = {
+                        name: value.item(0)!.name
                     }
                     if(props.inputHandler) {
-                        props.inputHandler(value, filesArray)
+                        props.inputHandler(value.item(0), selectedFile)
                     }
                 }}                
                 type="file" />
@@ -53,4 +49,4 @@ const FileInput: React.FC<{
     )
 }
 
-export default FileInput
+export default SingleFileInput

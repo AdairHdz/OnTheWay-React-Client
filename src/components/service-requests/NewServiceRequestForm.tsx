@@ -16,6 +16,7 @@ import useFlashMessage from "../../hooks/use-flash-message"
 import Alert from "../generics/Alert"
 import KindOfService from "../../enums/kind-of-service"
 import Modal from "../generics/Modal"
+import TextArea from "../generics/TextArea"
 
 const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { providerId } = useParams<{
@@ -110,19 +111,25 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                     initialValues={{
                         kindOfService: 1,
                         city: "",
-                        address: ""
+                        address: "",
+                        description: ""
                     }}
-                    validationSchema={Yup.object({
-                        kindOfService: Yup.number()
-                            .required("Este campo es obligatorio")
-                            .oneOf([1, 2, 3, 4, 5], "Por favor, seleccione un tipo de servicio válido"),
-                        city: Yup.string()
-                            .required("Este campo es obligatorio")
-                            .uuid("Por favor, seleccione una ciudad con un identificador válido"),
-                        address: Yup.string()
-                            .required("Este campo es obligatorio")
-                            .uuid("Por favor, seleccione una dirección con un identificador válido")
-                    })}
+                    validationSchema={Yup.object(
+                        {
+                            kindOfService: Yup.number()
+                                .required("Este campo es obligatorio")
+                                .oneOf([1, 2, 3, 4, 5], "Por favor, seleccione un tipo de servicio válido"),
+                            city: Yup.string()
+                                .required("Este campo es obligatorio")
+                                .uuid("Por favor, seleccione una ciudad con un identificador válido"),
+                            address: Yup.string()
+                                .required("Este campo es obligatorio")
+                                .uuid("Por favor, seleccione una dirección con un identificador válido"),
+                            description: Yup.string()
+                                .trim()
+                                .max(254, "Por favor inserte un texto de longitud menor a 254 caracteres")
+                        },                        
+                    )}
                     onSubmit={(values) => {
                         const payload: {
                             kindOfService: number
@@ -137,8 +144,9 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceRequesterId: data.id!,
                             serviceProviderId: providerId,
                             cost: priceRate.price,
-                            description: "a2"
+                            description: values.description
                         }
+                        console.log(payload)
                         sendServiceRequest(`http://127.0.0.1:8000/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)
@@ -174,17 +182,18 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                                 </span>
                             </div>
                         </div>
+                        <TextArea id="description" name="description" label="Detalles adicionales" />
                         {priceRateFetchingIsLoading && <Spinner />}
                         {priceRateFetchingError && !priceRateFetchingIsLoading && (
                             <ErrorMessage />
                         )}
                         {priceRate && <p className="text-xl font-bold text-center mb-5">Total: ${priceRate.price} MXN</p>}
-                        <button className="btn-primary mx-auto w-1/2 lg:w-1/3">Enviar</button>
+                        <button className="btn-primary mx-auto w-1/2 lg:w-1/3" type="submit">Enviar</button>
                         {serviceRequestIsLoading && <Spinner />}
                         {serviceRequestError && !serviceRequestIsLoading && (
                             <ErrorMessage errorMessage={serviceRequestError.message + ""} />
                         )}
-                        <Modal show={showModal} closeModalHandler={() => {setShowModal(false)}}>
+                        <Modal show={showModal} closeModalHandler={() => { setShowModal(false) }}>
                             <NewAddressForm
                                 submitFormHandler={submitFormHandler}
                                 closeModalHandler={() => { setShowModal(false) }} />

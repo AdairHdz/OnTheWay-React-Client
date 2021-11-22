@@ -13,12 +13,15 @@ import RegistryInfo from '../responses/registry-info';
 import UserType from '../enums/user-type';
 import Login from '../responses/login';
 import { AuthContext } from '../store/AuthContext';
+import FileInput from './generics/FileInput';
+import FileName from '../models/file-name';
+import SingleFileInput from './generics/SingleFileInput';
 
 const RegistryForm: React.FC<{
   className?: string,
 }> = (props) => {
   const history = useHistory()
-  const {    
+  const {
     isLoading: statesFetchingIsLoading,
     data: states,
     sendRequest: fetchStates
@@ -30,15 +33,59 @@ const RegistryForm: React.FC<{
     sendRequest: sendRegistryRequest,
     responseStatus
   } = useFetch<RegistryInfo>()
-  
-  const {login} = useContext(AuthContext)
+
+  const {
+    sendRequest: saveBusinessPicture
+  } = useFetch()
+
+  const { login } = useContext(AuthContext)
 
   const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)
   const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
-  const {setFlashMessage, message} = useFlashMessage()
+  const [savedUser, setSavedUser] = useState<boolean>(false)
+  const { setFlashMessage, message } = useFlashMessage()
   const handleChange = (value: string) => {
     setSelectedUserType(parseInt(value))
   }
+
+  const [filesName, setFilesName] = useState<FileName>()
+  const [file, setFile] = useState<File | null>()
+
+  const handleFile = (file: File | null, fileName: FileName) => {
+    if (file === null) {
+      return
+    }
+
+    setFilesName(fileName)
+    setFile(file)
+  }
+
+  const sendBusinessPicture = () => {    
+      setFlashMessage("Registro exitoso", "Por favor, ingrese el código de verificación que hemos enviado a su dirección de correo electrónico")
+      const loginInfo = new Login();
+      loginInfo.userId = registryResponse.id
+      loginInfo.emailAddress = registryResponse.emailAddress
+      login(loginInfo)      
+    if (!file) {
+      history.push("/verify-account")
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("image", file)
+    console.log(formData)
+    saveBusinessPicture(`http://127.0.0.1:8000/providers/${registryResponse.specificUserId}/image`, {
+      method: "PUT",
+      body: formData
+    })
+    history.push("/verify-account")
+  }
+
+  useEffect(() => {
+    if (savedUser) {
+      sendBusinessPicture()
+    }
+  }, [savedUser])
 
   useEffect(() => {
     if (!statesWereAlreadyFetched) {
@@ -48,24 +95,18 @@ const RegistryForm: React.FC<{
   }, [statesWereAlreadyFetched, fetchStates, states])
 
   useEffect(() => {
-    if(responseStatus === 200 && registryResponse) {
-      setFlashMessage("Registro exitoso", "Por favor, ingrese el código de verificación que hemos enviado a su dirección de correo electrónico")
-      const loginInfo = new Login();
-      loginInfo.userId = registryResponse.id
-      loginInfo.emailAddress = registryResponse.emailAddress
-      login(loginInfo)
-      history.push("/verify-account")
+    if (responseStatus === 200 && registryResponse) {
+      setSavedUser(true)
       return
     }
 
-    if(responseStatus === 452) {
+    if (responseStatus === 452) {
       setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
       return
-  }
+    }
 
-    if(registryError && !registryRequestIsLoading) {
-      setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")
-      history.push("/login")
+    if (registryError && !registryRequestIsLoading) {
+      setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")      
       return
     }
   }, [history, responseStatus, registryError, registryRequestIsLoading])
@@ -123,12 +164,17 @@ const RegistryForm: React.FC<{
       })}
       onSubmit={(values) => {
         values.userType = +values.userType
+        const bodyRequest = {
+          ...values,
+          businessPicture: filesName?.name
+        }
+        console.log(bodyRequest)
         sendRegistryRequest("http://127.0.0.1:8000/users", {
           method: "POST",
-          body: JSON.stringify(values)
+          body: JSON.stringify(bodyRequest)
         })
       }} >
-      <>        
+      <>
         <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || "Error"} message={message?.message || "Ocurrió un error desconocido"} />
         <Form className={`w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg py-2 px-12 lg:m-auto bg-white ${props.className}`}>
           <img src={BlackLogo} className="mx-auto my-10" alt="" />
@@ -176,7 +222,11 @@ const RegistryForm: React.FC<{
                 name="businessName"
                 placeholder="Nombre del negocio"
                 type="text" />
-              <input type="file" id="businessPicture" accept='image/*' />
+              <SingleFileInput
+                id="evidenceFiles"
+                name="evidenceFiles"
+                inputHandler={handleFile}
+                accept='image/*' />              
             </>
           ) : null}
           <button disabled={statesFetchingIsLoading} type="submit"

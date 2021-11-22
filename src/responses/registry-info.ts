@@ -1,5 +1,6 @@
 class RegistryInfo {
     id = ""
+    specificUserId = ""
     names = ""
     lastName = ""
     emailAddress  =""
