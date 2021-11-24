@@ -9,6 +9,7 @@ import useFetch from "../../hooks/use-fetch"
 import PriceRate from "../../responses/price-rate"
 import PaginatedReview from "../../responses/paginated-review"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
+import QueryParam from "../../models/query-param"
 
 const ServiceProviderDetailsPage = () => {
     const history = useHistory()
@@ -40,12 +41,24 @@ const ServiceProviderDetailsPage = () => {
         responseStatus: priceRatesResponseStatus
     } = useFetch<PriceRate[]>()
 
-    const getPriceRates = () => {
+    const getPriceRates = (params: QueryParam[]) => {
+        if(params.length !== 0) {
+            let finalQueryString = '?'            
+            
+            params.forEach((param, index) => {
+                finalQueryString += `${param.key}=${param.value}`
+                if(params.length - index  > 1) {
+                    finalQueryString += '&'
+                }
+            })            
+            fetchPriceRates(`http://127.0.0.1:8000/providers/${providerId}/priceRates${finalQueryString}`)
+            return
+        }
         fetchPriceRates(`http://127.0.0.1:8000/providers/${providerId}/priceRates`)
     }
 
     useEffect(() => {
-        getPriceRates()
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${providerId}/priceRates`)
     }, [])
 
     const {
@@ -56,7 +69,7 @@ const ServiceProviderDetailsPage = () => {
     } = useFetch<PaginatedReview>()
 
     const getReviews = () => {
-        fetchReviews(`http://127.0.0.1:8000/providers/${providerId}/reviews?page=1&pageSize=25`)
+        fetchReviews(`http://127.0.0.1:8000/providers/${providerId}/reviews?page=1&pageSize=10`)
     }
 
     useEffect(() => {
@@ -81,7 +94,7 @@ const ServiceProviderDetailsPage = () => {
                         isLoading={priceRatesRequestIsLoading}
                         error={priceRatesFetchingError}
                         responseStatus={priceRatesResponseStatus}
-                        sendRequest={getPriceRates} />
+                        fetchPriceRates={getPriceRates} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>

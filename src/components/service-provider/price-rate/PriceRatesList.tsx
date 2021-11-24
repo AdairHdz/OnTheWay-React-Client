@@ -13,22 +13,19 @@ import { AuthContext } from "../../../store/AuthContext"
 import UserType from "../../../enums/user-type"
 import Alert from "../../generics/Alert"
 import useFlashMessage from "../../../hooks/use-flash-message"
+import QueryParam from "../../../models/query-param"
 
 const PriceRatesList: React.FC<{
     data: PriceRate[],
     isLoading: boolean,
     error: HTTPRequestError | undefined,
-    sendRequest: () => void,
+    fetchPriceRates: (params: QueryParam[]) => void,
     responseStatus: number | undefined
     openModalHandler?: () => void,
     deletePriceRateHandler?: () => void
 }> = (props) => {
 
     const { data } = useContext(AuthContext)
-
-    useEffect(() => {
-        props.sendRequest()
-    }, [])
 
     const [dropdownIsActive, setDropdownIsActive] = useState(false)
     const {message} = useFlashMessage()
@@ -62,7 +59,8 @@ const PriceRatesList: React.FC<{
                         textWhenInactive="Más filtros"
                         toggleHandler={toggleHandler} />
                 )}
-                {dropdownIsActive && <PriceRateFiltersForm />}
+                {dropdownIsActive && <PriceRateFiltersForm
+                    changeHandler={ props.fetchPriceRates } />}
                 {renderPriceRatesError()}
 
                 {props.isLoading && <Spinner />}

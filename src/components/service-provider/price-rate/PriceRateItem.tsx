@@ -8,6 +8,7 @@ import { useContext, useEffect } from "react"
 import { AuthContext } from "../../../store/AuthContext"
 import Spinner from "../../generics/Spinner"
 import useFlashMessage from "../../../hooks/use-flash-message"
+import UserType from "../../../enums/user-type"
 
 const PriceRateItem: React.FC<{
     priceRate: PriceRate,
@@ -72,7 +73,8 @@ const PriceRateItem: React.FC<{
                     {props.priceRate.workingDays.map(workingDay => <WorkingDayBadge key={workingDay} workingDay={workingDay} />)}
                 </div>
                 {isLoading && <Spinner /> }
-                {!isLoading  && <FontAwesomeIcon icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} /> }
+                {!isLoading && data.userType === UserType.SERVICE_PROVIDER 
+                    && <FontAwesomeIcon icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} /> }
             </div>
             <p className="text-lg font-bold"> {props.priceRate.city.name} </p>
             <p className="font-bold"> {props.priceRate.startingHour} - {props.priceRate.endingHour} </p>

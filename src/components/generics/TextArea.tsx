@@ -27,7 +27,7 @@ const TextArea: React.FC<{
                 name={props.name}
                 placeholder={props.placeholder}
                 onChange={(e) => {
-                    const value = e.target.value
+                    const value = e.target.value                    
                     helpers.setValue(value)
                     if(props.inputHandler) {
                         props.inputHandler(value)

@@ -10,6 +10,7 @@ import ServiceProviderInfoOverview from "../../responses/service-provider-info-o
 import useFlashMessage from "../../hooks/use-flash-message"
 import Modal from "../../components/generics/Modal"
 import PaginatedReview from "../../responses/paginated-review"
+import QueryParam from "../../models/query-param"
 
 const ServiceProviderHomePage = () => {
     const [showNewPriceRateForm, setShowNewPriceRateForm] = useState(false)
@@ -26,7 +27,19 @@ const ServiceProviderHomePage = () => {
         responseStatus: priceRatesResponseStatus
     } = useFetch<PriceRate[]>()
 
-    const getPriceRates = () => {
+    const getPriceRates = (params: QueryParam[]) => {
+        if(params.length !== 0) {
+            let finalQueryString = '?'            
+            
+            params.forEach((param, index) => {
+                finalQueryString += `${param.key}=${param.value}`
+                if(params.length - index  > 1) {
+                    finalQueryString += '&'
+                }
+            })            
+            fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates${finalQueryString}`)
+            return
+        }
         fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
     }
 
@@ -69,11 +82,7 @@ const ServiceProviderHomePage = () => {
 
     const getReviews = (url: string) => {
         fetchReviews(`http://127.0.0.1:8000/${url}`)
-    }
-
-    // useEffect(() => {
-    //     getReviews('page=1&pageSize=25')
-    // }, [])
+    }    
 
     return (
         <>
@@ -93,8 +102,8 @@ const ServiceProviderHomePage = () => {
                         isLoading={priceRatesRequestIsLoading}
                         error={priceRatesFetchingError}
                         responseStatus={priceRatesResponseStatus}
-                        sendRequest={getPriceRates}
-                        deletePriceRateHandler={getPriceRates} />
+                        fetchPriceRates={getPriceRates}
+                        deletePriceRateHandler={() => {}} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>
