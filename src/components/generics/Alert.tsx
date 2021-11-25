@@ -21,18 +21,18 @@ const Alert: React.FC<{
         }
     }, [props.show])
 
-    useEffect(() => {
-        let messageTimeout: NodeJS.Timeout
-        if(props.show) {                        
-            messageTimeout = setTimeout(() => {
-                resetFlashMessage()
-            }, props.screenTime ? props.screenTime : 5000)
-        }
+    // useEffect(() => {
+    //     let messageTimeout: NodeJS.Timeout
+    //     if(props.show) {                        
+    //         messageTimeout = setTimeout(() => {
+    //             resetFlashMessage()
+    //         }, props.screenTime ? props.screenTime : 5000)
+    //     }
 
-        return () => {
-            clearTimeout(messageTimeout)
-        }
-    })
+    //     return () => {
+    //         clearTimeout(messageTimeout)
+    //     }
+    // })
 
     const closeHandler = () => {
         resetFlashMessage()

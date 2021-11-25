@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { FlashContext } from "../store/FlashContext"
 import FlashMessage from "../utils/history-params/flash-message"
 
@@ -14,7 +14,7 @@ const useFlashMessage = (): {
     } = useContext(FlashContext)
 
     const setFlashMessage = (title: string, message: string) => {
-        clearFlashMessage()
+        // clearFlashMessage()
         setMessage(title, message)
     }
 
@@ -28,7 +28,21 @@ const useFlashMessage = (): {
     //             clearFlashMessage()
     //         }
     //     }
-    // }, [message, clearFlashMessage])
+    // }, [message])
+
+    useEffect(() => {                
+        if(message) {
+            let messageTimeout = setTimeout(() => {
+                resetFlashMessage()
+            }, 5000)
+    
+            const cleaningFunction = () => {            
+                clearTimeout(messageTimeout)
+            }
+            return cleaningFunction    
+        }
+        // return cleaningFunction
+    }, [message])
 
     return {
         message,
