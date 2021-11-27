@@ -13,27 +13,26 @@ const StackChart: React.FC<{
     const [serviceRequests, setServiceRequests] = useState<number[]>([])
 
     useEffect(() => {
-        let weekdaysArray = props.requestedServicesPerWeekday.map(({weekday}) => {
-            return weekdayMapper(weekday)            
-        })
-
-        console.log(weekdaysArray)
+        let weekdaysArray = props.requestedServicesPerWeekday.map((requestedServicePerWeekday) => {
+            return weekdayMapper(requestedServicePerWeekday.weekday)
+        })    
         setWeekdays(weekdaysArray)
     }, [props.requestedServicesPerWeekday])
 
     useEffect(() => {
         let serviceRequestsQuantity: number[] = []
-        serviceRequestsQuantity = props.requestedServicesPerWeekday.map(({requestedServices}) => {
-            return serviceRequestsQuantity.push(requestedServices)
-        })
+        serviceRequestsQuantity = props.requestedServicesPerWeekday.map((requestedServicePerWeekday) => {
+            console.log(`Cantidad: ${requestedServicePerWeekday.requestedServices} en el día: ${weekdayMapper(requestedServicePerWeekday.weekday)}`)
+            return requestedServicePerWeekday.requestedServices
+        })        
         setServiceRequests(serviceRequestsQuantity)
     }, [props.requestedServicesPerWeekday])
 
     const data = {
         labels: weekdays,
         datasets: [
-            {   
-                label:"",
+            {
+                label: "",
                 data: serviceRequests,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -58,7 +57,10 @@ const StackChart: React.FC<{
     return (
         <div className={props.className}>
             <p className="text-center text-2xl"> {props.title} </p>
-            <Bar data={data} />
+            <Bar data={data} className='mb-5' />
+            {props.requestedServicesPerWeekday?.map((requestedServicePerWeekday) => {
+                return <p> {`${weekdayMapper(requestedServicePerWeekday.weekday)}: ${requestedServicePerWeekday.requestedServices}`} </p>
+            })}            
         </div>
     )
 };
