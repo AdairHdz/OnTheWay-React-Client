@@ -73,8 +73,8 @@ const StatisticsPage = () => {
                 )}
                 {!statisticsFetchingError && (
                     <>
-                        <PieChart title="Solicitudes de servicio por tipo de servicio" requestedServicesPerKindOfService={requestedServicesPerKindOfService} className="p-5 mb-10 lg:mb-0 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />
-                        <StackChart title="Solicitudes de servicio por días de la semana" requestedServicesPerWeekday={requestedServicesPerWeekday} className="p-5 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />
+                        <PieChart title="Solicitudes de servicio por tipo de servicio" requestedServicesPerKindOfService={requestedServicesPerKindOfService} className="p-5 mb-10 lg:mb-0 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />                        
+                        <StackChart title="Solicitudes de servicio por días de la semana" requestedServicesPerWeekday={requestedServicesPerWeekday} className="p-5 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />                        
                     </>
                 )}
             </div>

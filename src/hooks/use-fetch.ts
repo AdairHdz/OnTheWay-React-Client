@@ -22,9 +22,14 @@ const useFetch = <T>(): {
         try {
             let request
             if(init) {
-                request = await fetch(url, init)
+                request = await fetch(url, {
+                    ...init,
+                    credentials: "include"
+                })
             } else {
-                request = await fetch(url)
+                request = await fetch(url, {
+                    credentials: "include",                    
+                })
             }
             setResponseStatus(request.status)
             if(request.ok) {

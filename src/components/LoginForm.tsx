@@ -63,7 +63,7 @@ const LoginForm: React.FC<{
                     method: "POST",
                     body: JSON.stringify(values)
                 }
-                sendRequest("http://127.0.0.1:50000/login", init)
+                sendRequest("http://127.0.0.1:8000/users/login", init)
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">
                 <Form className="m-auto w-full px-12">
