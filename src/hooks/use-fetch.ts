@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import HTTPRequestError from "../models/http-request-error"
+import { AuthContext } from "../store/AuthContext"
 
 const useFetch = <T>(): {
     error: HTTPRequestError|undefined,
@@ -9,6 +10,7 @@ const useFetch = <T>(): {
     responseStatus: number|undefined
 } => {
 
+    const {token} = useContext(AuthContext)
     const [error, setError] = useState<HTTPRequestError|undefined>(undefined)
     const [responseStatus, setResponseStatus] = useState<number|undefined>(undefined)
 
@@ -24,10 +26,16 @@ const useFetch = <T>(): {
             if(init) {
                 request = await fetch(url, {
                     ...init,
+                    headers: new Headers({
+                        "Authorization": `Bearer ${token}`
+                    }),
                     credentials: "include"
                 })
             } else {
                 request = await fetch(url, {
+                    headers: new Headers({
+                        "Authorization": `Bearer ${token}`
+                    }),
                     credentials: "include",                    
                 })
             }
