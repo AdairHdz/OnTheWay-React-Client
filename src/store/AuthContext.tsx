@@ -3,7 +3,8 @@ import Login from "../responses/login"
 
 
 type AuthContextType = {
-    data: Login
+    data: Login,
+    token: string|undefined,
     login: (loginResponse: Login) => void,
     logout: () => void,
     activateAccount: () => void
@@ -11,6 +12,7 @@ type AuthContextType = {
 
 const defaultValues = {
     data: new Login(),
+    token: undefined,
     login: (loginResponse: Login) => {},
     logout: () => {},
     activateAccount: () => {}
@@ -21,7 +23,7 @@ export const AuthContext = React.createContext<AuthContextType>(defaultValues)
 
 const AuthContextProvider: React.FC = (props) => {
     const [data, setData] = useState<Login>(new Login())
-
+    const [token, setToken] = useState<string|undefined>()
 
     useEffect(() => {
         const userData = localStorage.getItem("user-data")
@@ -33,6 +35,9 @@ const AuthContextProvider: React.FC = (props) => {
 
     const login = (loginResponse: Login) => {
         setData(loginResponse)
+        if(loginResponse.token) {
+            setToken(loginResponse.token)
+        }
         localStorage.setItem("user-data", JSON.stringify(loginResponse))
     }
 
@@ -49,10 +54,26 @@ const AuthContextProvider: React.FC = (props) => {
 
     const authContextValues: AuthContextType = {
         data,
+        token,
         login,
         logout,
         activateAccount
     }
+
+    useEffect(() => {
+        if(token === undefined) {
+            console.log("No token. Refreshing token...")
+            fetch(`http://127.0.0.1:8000/users/${data.userId}/token/refresh`, {
+                method: "POST",
+                credentials: "include"
+            }).then((response) => response.json())
+            .then(data => {
+                setToken(data.token)
+            })            
+            return
+        }
+        console.log(token)
+    })
 
     return (
         <AuthContext.Provider value={authContextValues}>
