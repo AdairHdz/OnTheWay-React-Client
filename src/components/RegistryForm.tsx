@@ -75,7 +75,7 @@ const RegistryForm: React.FC<{
     const formData = new FormData()
     formData.append("image", file)
     console.log(formData)
-    saveBusinessPicture(`http://127.0.0.1:8000/providers/${registryResponse.userId}/image`, {
+    saveBusinessPicture(`http://127.0.0.1:8000/providers/${registryResponse.id}/image`, {
       method: "PUT",
       body: formData
     })
