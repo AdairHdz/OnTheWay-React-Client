@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik"
 import { useContext, useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import * as Yup from "yup"
 import useFetch from "../../hooks/use-fetch"
 import useFlashMessage from "../../hooks/use-flash-message"
@@ -19,7 +19,9 @@ const NewReviewForm: React.FC<{
 
     const {data} = useContext(AuthContext)
     const history = useHistory()
-
+    const { requestId } = useParams<{
+        requestId: string
+    }>()
     const [score, setScore] = useState(1)
     const [filesNames, setFilesNames] = useState<FileName[]>([])
     const [files, setFiles] = useState<FileList|null>()
@@ -90,9 +92,11 @@ const NewReviewForm: React.FC<{
                     const body = {
                         ...values,
                         evidence: filesNames,
-                        serviceRequesterId: data.id,
-                        score
+                        serviceRequesterId: data.id,                        
+                        score,
+                        serviceRequestId: requestId
                     }
+                    console.log(body)
                     saveReview(`http://127.0.0.1:8000/providers/${props.serviceProviderId}/reviews`, {
                         method: "POST",
                         body: JSON.stringify(body)
