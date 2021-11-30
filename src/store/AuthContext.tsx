@@ -50,6 +50,7 @@ const AuthContextProvider: React.FC = (props) => {
         const userData: Login = JSON.parse(userDataJSON!)        
         userData.verified = true
         localStorage.setItem("user-data", JSON.stringify(userData))
+        setData(userData)
     }
 
     const authContextValues: AuthContextType = {
@@ -61,8 +62,7 @@ const AuthContextProvider: React.FC = (props) => {
     }
 
     useEffect(() => {
-        if(token === undefined) {
-            console.log("No token. Refreshing token...")
+        if(token === undefined) {            
             fetch(`http://127.0.0.1:8000/users/${data.userId}/token/refresh`, {
                 method: "POST",
                 credentials: "include"
@@ -70,9 +70,7 @@ const AuthContextProvider: React.FC = (props) => {
             .then(data => {
                 setToken(data.token)
             })            
-            return
-        }
-        console.log(token)
+        }        
     })
 
     return (
