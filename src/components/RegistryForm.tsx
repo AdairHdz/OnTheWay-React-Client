@@ -63,8 +63,9 @@ const RegistryForm: React.FC<{
   const sendBusinessPicture = () => {    
       setFlashMessage("Registro exitoso", "Por favor, ingrese el código de verificación que hemos enviado a su dirección de correo electrónico")
       const loginInfo = new Login();
-      loginInfo.userId = registryResponse.id
+      loginInfo.userId = registryResponse.userId
       loginInfo.emailAddress = registryResponse.emailAddress
+      loginInfo.token = registryResponse.token
       login(loginInfo)      
     if (!file) {
       history.push("/verify-account")
@@ -74,7 +75,7 @@ const RegistryForm: React.FC<{
     const formData = new FormData()
     formData.append("image", file)
     console.log(formData)
-    saveBusinessPicture(`http://127.0.0.1:8000/providers/${registryResponse.specificUserId}/image`, {
+    saveBusinessPicture(`http://127.0.0.1:8000/providers/${registryResponse.userId}/image`, {
       method: "PUT",
       body: formData
     })
@@ -167,8 +168,7 @@ const RegistryForm: React.FC<{
         const bodyRequest = {
           ...values,
           businessPicture: filesName?.name
-        }
-        console.log(bodyRequest)
+        }        
         sendRegistryRequest("http://127.0.0.1:8000/users", {
           method: "POST",
           body: JSON.stringify(bodyRequest)

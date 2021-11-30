@@ -1,11 +1,12 @@
 class RegistryInfo {
     id = ""
-    specificUserId = ""
+    userId = ""
     names = ""
     lastName = ""
     emailAddress  =""
     userType: number|undefined
     stateId = ""
+    token = ""
 }
 
 export default RegistryInfo
