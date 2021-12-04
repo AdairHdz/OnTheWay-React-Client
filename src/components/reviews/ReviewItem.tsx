@@ -1,12 +1,21 @@
+import { useEffect } from "react"
+import Evidence from "../../responses/evidence"
 import StarRate from "../generics/StarRate"
 
 const ReviewItem: React.FC<{
+    id: string,
     title: string,
     serviceRequester: string,
     date: string,
     score: number
-    details: string
+    details: string,
+    evidence: Evidence[]
 }> = (props) => {
+
+    useEffect(() => {
+        console.log(props.evidence)
+    })
+
     return (
         <div className="shadow-md rounded-lg p-8 text-gray-800 mb-5 text-left">
             <p className="font-bold mb-1">
@@ -24,6 +33,15 @@ const ReviewItem: React.FC<{
             <p className="text-justify">
                 {props.details}
             </p>
+            <div>
+                {props.evidence?.map(evidence => (
+                    <a target="_blank"
+                        rel="noreferrer"
+                        href={`http://127.0.0.1:8000/reviews/${props.id}/${evidence.fileName}`}
+                        className="text-blue-600 block"
+                        > {evidence.fileName} </a>
+                ))}
+            </div>
         </div>
     )
 }

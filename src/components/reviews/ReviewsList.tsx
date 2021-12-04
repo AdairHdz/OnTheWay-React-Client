@@ -19,6 +19,12 @@ const ReviewsList: React.FC<{
     useEffect(() => {        
         props.fetchReviews(`providers/${data.id}/reviews?page=1&pageSize=5`)
     }, [])    
+
+    useEffect(() => {
+        if(props.reviews) {
+            console.log(props.reviews)
+        }
+    }, [props.reviews])
      
     const renderReviewsError = () => {
         if(props.error && !props.isLoading) {
@@ -40,10 +46,12 @@ const ReviewsList: React.FC<{
                     <>                    
                         {props.reviews.data && props.reviews.data.map(review => (
                             <ReviewItem key={review.id}
+                                id={review.id}
                                 date={review.dateOfReview}
                                 details={review.details}
                                 score={review.score}
-                                serviceRequester={review.requesterName} title={review.title} />
+                                serviceRequester={review.requesterName} title={review.title}
+                                evidence={review.evidence} />
                         ))}
                         <Paginator                            
                             paginationLinks={{
