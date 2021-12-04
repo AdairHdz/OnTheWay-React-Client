@@ -22,6 +22,7 @@ import ProtectedRoute from "./components/routes/ProtectedRoute";
 import LoginRoute from "./components/routes/LoginRoute";
 import AccountVerificationPage from "./pages/AccountVerificationPage";
 import StatisticsPage from "./pages/service-providers/StatisticsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const authContext = useContext(AuthContext)
@@ -90,6 +91,9 @@ function App() {
               <StatisticsPage />
             </MainTabLayout>
           </ProtectedRoute>
+          <Route path="/*">
+            <NotFoundPage />
+          </Route>
         </Switch>
       </Router>
     </div>
