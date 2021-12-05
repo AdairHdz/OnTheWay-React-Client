@@ -182,26 +182,31 @@ const RegistryForm: React.FC<{
           <StandardInput
             id="names"
             name="names"
+            label='Nombre(s)'
             placeholder="Nombres"
             type="text" />
           <StandardInput
             id="lastName"
             name="lastName"
+            label='Apellido(s)'
             placeholder="Apellidos"
             type="text" />
           <StandardInput
             id="emailAddress"
             name="emailAddress"
+            label='Correo electrónico'
             placeholder="Correo electrónico"
             type="email" />
           <StandardInput
             id="password"
             name="password"
+            label='Contraseña'
             placeholder="Contraseña"
             type="password" />
           <SelectInput
             id="stateId"
-            name="stateId">
+            name="stateId"
+            label='Estado'>
             <option value="" disabled>Estado</option>
             {states ? states.map((state) => {
               return <option value={state.id} key={state.id}> {state.name} </option>
@@ -210,6 +215,7 @@ const RegistryForm: React.FC<{
           <SelectInput
             id="userType"
             name="userType"
+            label='Tipo de usuario'
             changeHandler={handleChange}>
             <option value="" disabled>Tipo de usuario</option>
             <option value={UserType.SERVICE_PROVIDER}>Proveedor de servicio</option>
@@ -220,17 +226,19 @@ const RegistryForm: React.FC<{
               <StandardInput
                 id="businessName"
                 name="businessName"
+                label='Nombre de negocio'
                 placeholder="Nombre del negocio"
                 type="text" />
               <SingleFileInput
                 id="evidenceFiles"
                 name="evidenceFiles"
+                label='Imagen de negocio'
                 inputHandler={handleFile}
                 accept='image/*' />              
             </>
           ) : null}
           <button disabled={statesFetchingIsLoading} type="submit"
-            className={`mx-auto ${registryRequestIsLoading ? "btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" : "btn-primary mx-auto"}`} >
+            className={`mx-auto mb-5 ${registryRequestIsLoading ? "btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" : "btn-primary mx-auto"}`} >
             Registrarme
           </button>
         </Form>
