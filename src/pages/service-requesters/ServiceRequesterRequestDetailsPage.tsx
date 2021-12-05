@@ -88,6 +88,9 @@ const ServiceRequesterRequestDetailsPage = () => {
                     setNewStatus(ServiceRequestStatus.CONCLUDED)
                 }}>Marcar como completado</button>
             case ServiceRequestStatus.CONCLUDED:
+                if(data.hasBeenReviewed) {
+                    return null    
+                }
                 return <button className="btn-primary" onClick={() => setShowReviewForm(true)}>Calificar servicio</button>
             case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
                 return <button className="btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" onClick={() => {
