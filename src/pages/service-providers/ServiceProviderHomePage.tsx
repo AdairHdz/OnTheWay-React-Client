@@ -17,7 +17,7 @@ const ServiceProviderHomePage = () => {
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
     const { setFlashMessage } = useFlashMessage()
-    const { data } = useContext(AuthContext)
+    const { data, token } = useContext(AuthContext)
 
     const {
         data: priceRates,
@@ -45,7 +45,7 @@ const ServiceProviderHomePage = () => {
 
     useEffect(() => {
         fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
-    }, [])
+    }, [token])
 
     const submitFormHandler = (statusCode: number | undefined) => {
         if (statusCode === 200) {
@@ -70,7 +70,7 @@ const ServiceProviderHomePage = () => {
 
     useEffect(() => {
         getUserInfo()
-    }, [])
+    }, [token])
 
     const {
         data: reviews,
@@ -78,7 +78,7 @@ const ServiceProviderHomePage = () => {
         isLoading: reviewsIsLoading,
         sendRequest: fetchReviews,
         responseStatus: reviewsResponseStatus
-    } = useFetch<PaginatedReview>()
+    } = useFetch<PaginatedReview>()    
 
     const getReviews = (url: string) => {
         fetchReviews(`http://127.0.0.1:8000/${url}`)
