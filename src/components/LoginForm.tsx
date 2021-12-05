@@ -72,17 +72,19 @@ const LoginForm: React.FC<{
                     <StandardInput
                         id="emailAddress"
                         name="emailAddress"
+                        label='Correo electrónico'
                         placeholder="Correo electrónico"
                         type="email" />
                     <StandardInput
                         id="password"
                         name="password"
+                        label='Contraseña'
                         placeholder="Contraseña"
                         type="password" />
                     <Link to="/" className="text-center block text-sm mt-10">
                         ¿Olvidaste tu contraseña?
                     </Link>
-                    <button type="submit" disabled={isLoading} className="bg-yellow-500 rounded-sm block mx-auto py-1 px-5 text-white text-center my-10">
+                    <button type="submit" disabled={isLoading} className="btn-primary mx-auto my-10">
                         Iniciar sesión
                     </button>
                     <Link to="/registry" className="text-center block text-sm text-blue-500">

@@ -18,8 +18,7 @@ const StandardInput: React.FC<{
                 <>
                     <label className="block text-left" htmlFor={props.name}>
                         {props.label}
-                    </label>
-                    <br />
+                    </label>                    
                 </>                
             )}            
             <input
