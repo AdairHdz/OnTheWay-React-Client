@@ -1,13 +1,13 @@
 import Evidence from "./evidence"
 
-class Review {
-    id = ""
-    title = ""
-    dateOfReview = ""
-    details = ""
-    score = 0
-    requesterName = ""
-    evidence: Evidence[] = []
+type Review = {
+    id: string,
+    title: string,
+    dateOfReview: string,
+    details: string,
+    score: number,
+    requesterName: string,
+    evidence: Evidence[]
 }
 
 export default Review
