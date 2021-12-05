@@ -51,7 +51,7 @@ const PriceRatesList: React.FC<{
     return (
         <>
             <Alert show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-            <div className="w-full md:mt-5 md:w-11/12 md:mx-auto px-5 py-5 max-h-screen overflow-y-scroll">
+            <div className="w-full md:mt-5 md:w-11/12 md:mx-auto px-5 py-5 max-h-screen overflow-y-auto">
                 {!props.error && !props.isLoading && (
                     <DropdownButton
                         isActive={dropdownIsActive}
