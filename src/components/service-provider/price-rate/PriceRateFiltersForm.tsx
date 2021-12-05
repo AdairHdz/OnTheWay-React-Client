@@ -18,7 +18,7 @@ const PriceRateFiltersForm: React.FC<{
     } = useFetch<City[]>()
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${userAuthData.stateId}/cities`)
+        fetchCities(`http://127.0.0.1:8000/states/${userAuthData?.stateId}/cities`)
     }, [])
     return (
         <Formik

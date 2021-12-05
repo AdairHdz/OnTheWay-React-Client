@@ -10,7 +10,7 @@ interface ProtectedRouteProps extends RouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
     const { data } = useContext(AuthContext)    
 
-    if(data.userId === undefined) {
+    if(data?.userId === undefined) {
         return <Redirect to="/login" />
     }
 

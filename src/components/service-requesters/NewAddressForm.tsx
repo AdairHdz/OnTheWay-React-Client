@@ -20,7 +20,7 @@ const NewAddressForm: React.FC<{
     } = useFetch<City[]>()
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data.stateId}/cities`)
+        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
     }, [])
 
     const {
@@ -64,7 +64,7 @@ const NewAddressForm: React.FC<{
 
                 })}
                 onSubmit={(values) => {                    
-                    registerAddress(`http://127.0.0.1:8000/requesters/${data.id}/addresses`, {
+                    registerAddress(`http://127.0.0.1:8000/requesters/${data?.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)
                     })                    

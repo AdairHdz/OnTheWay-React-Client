@@ -17,7 +17,7 @@ const ServiceProviderHomePage = () => {
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
     const { setFlashMessage } = useFlashMessage()
-    const { data } = useContext(AuthContext)
+    const { data, token } = useContext(AuthContext)
 
     const {
         data: priceRates,
@@ -37,15 +37,15 @@ const ServiceProviderHomePage = () => {
                     finalQueryString += '&'
                 }
             })            
-            fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates${finalQueryString}`)
+            fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates${finalQueryString}`)
             return
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
     }
 
     useEffect(() => {
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
-    }, [])
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
+    }, [token])
 
     const submitFormHandler = (statusCode: number | undefined) => {
         if (statusCode === 200) {
@@ -53,7 +53,7 @@ const ServiceProviderHomePage = () => {
         } else {
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
         setShowNewPriceRateForm(false)
     }
 
@@ -65,12 +65,12 @@ const ServiceProviderHomePage = () => {
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
-        fetchUserInfo(`http://127.0.0.1:8000/providers/${data.id}`)
+        fetchUserInfo(`http://127.0.0.1:8000/providers/${data?.id}`)
     }
 
     useEffect(() => {
         getUserInfo()
-    }, [])
+    }, [token])
 
     const {
         data: reviews,
@@ -78,7 +78,7 @@ const ServiceProviderHomePage = () => {
         isLoading: reviewsIsLoading,
         sendRequest: fetchReviews,
         responseStatus: reviewsResponseStatus
-    } = useFetch<PaginatedReview>()
+    } = useFetch<PaginatedReview>()    
 
     const getReviews = (url: string) => {
         fetchReviews(`http://127.0.0.1:8000/${url}`)

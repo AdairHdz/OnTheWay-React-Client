@@ -10,7 +10,7 @@ const Navbar = () => {
     const { data } = useContext(AuthContext)
 
     const renderUserMenuOptions = () => {
-        if (data.userType === UserType.SERVICE_PROVIDER) {
+        if (data?.userType === UserType.SERVICE_PROVIDER) {
             return (
                 <>
                     <NavLink activeClassName="bg-blue-800 rounded-md" to="/services">
@@ -27,7 +27,7 @@ const Navbar = () => {
             )
         }
 
-        if (data.userType === UserType.SERVICE_REQUESTER) {
+        if (data?.userType === UserType.SERVICE_REQUESTER) {
             return (
                 <>
                     <NavLink activeClassName="bg-blue-800 rounded-md" to="/providers">

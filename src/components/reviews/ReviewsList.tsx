@@ -15,10 +15,10 @@ const ReviewsList: React.FC<{
     fetchReviews: (url: string) => void
 }> = (props) => {        
 
-    const {data} = useContext(AuthContext)
+    const {data, token} = useContext(AuthContext)
     useEffect(() => {        
-        props.fetchReviews(`providers/${data.id}/reviews?page=1&pageSize=5`)
-    }, [])    
+        props.fetchReviews(`providers/${data?.id}/reviews?page=1&pageSize=5`)
+    }, [token])    
 
     useEffect(() => {
         if(props.reviews) {

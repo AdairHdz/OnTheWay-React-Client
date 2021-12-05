@@ -65,8 +65,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { data } = useContext(AuthContext)
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data.stateId}/cities`)
-    }, [data.stateId])
+        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
+    }, [data?.stateId])
 
     const [showModal, setShowModal] = useState(false)
     const [selectedCity, setSelectedCity] = useState<string>("")
@@ -85,7 +85,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }
 
     const getAddresses = () => {
-        fetchAddresses(`http://127.0.0.1:8000/requesters/${data.id}/addresses?cityId=${selectedCity}`)
+        fetchAddresses(`http://127.0.0.1:8000/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
     }
 
 
@@ -104,8 +104,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }, [serviceRequestResponseStatus, history])
 
     useEffect(() => {
-        fetchAddresses(`http://127.0.0.1:8000/requesters/${data.id}/addresses?cityId=${selectedCity}`)
-    }, [selectedCity, data.id])
+        fetchAddresses(`http://127.0.0.1:8000/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
+    }, [selectedCity, data?.id])
 
     useEffect(() => {
         if (selectedKindOfService && selectedCity) {
@@ -154,7 +154,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         } = {
                             kindOfService: +values.kindOfService,
                             deliveryAddressId: values.address,
-                            serviceRequesterId: data.id!,
+                            serviceRequesterId: data?.id!,
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: values.description

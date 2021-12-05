@@ -28,11 +28,11 @@ function App() {
   const authContext = useContext(AuthContext)
 
   const renderHomePage = () => {
-    if (authContext.data.userType === UserType.SERVICE_PROVIDER) {
+    if (authContext.data?.userType === UserType.SERVICE_PROVIDER) {
       return <ServiceProviderHomePage />
     }
 
-    if (authContext.data.userType === UserType.SERVICE_REQUESTER) {
+    if (authContext.data?.userType === UserType.SERVICE_REQUESTER) {
       return <ServiceRequesterHomePage />
     }
     return null

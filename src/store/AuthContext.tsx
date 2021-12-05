@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
+import UserSession from "../models/user-session"
 import Login from "../responses/login"
 
 
 type AuthContextType = {
-    data: Login,
+    data: UserSession|undefined,
     token: string|undefined,
     login: (loginResponse: Login) => void,
     logout: () => void,
@@ -11,7 +12,7 @@ type AuthContextType = {
 }
 
 const defaultValues = {
-    data: new Login(),
+    data: undefined,
     token: undefined,
     login: (loginResponse: Login) => {},
     logout: () => {},
@@ -22,34 +23,44 @@ export const AuthContext = React.createContext<AuthContextType>(defaultValues)
 
 
 const AuthContextProvider: React.FC = (props) => {
-    const [data, setData] = useState<Login>(new Login())
+    const [data, setData] = useState<UserSession>()
     const [token, setToken] = useState<string|undefined>()
 
     useEffect(() => {
         const userData = localStorage.getItem("user-data")
         if(userData) {
-            const parsedData: Login = JSON.parse(userData)
+            const parsedData: UserSession = JSON.parse(userData)
             setData(parsedData)
         }
     }, [])
 
     const login = (loginResponse: Login) => {
-        setData(loginResponse)
+        const userSession = {
+            id: loginResponse.id,
+            userId: loginResponse.userId,
+            names: loginResponse.names,
+            lastName: loginResponse.lastName,
+            stateId: loginResponse.stateId,
+            emailAddress: loginResponse.emailAddress,
+            userType: loginResponse.userType,
+            verified: loginResponse.verified
+        }
+        setData(userSession)
         if(loginResponse.token) {
             setToken(loginResponse.token)
         }
-        localStorage.setItem("user-data", JSON.stringify(loginResponse))
+        localStorage.setItem("user-data", JSON.stringify(userSession))
     }
 
     const logout = () => {
         localStorage.removeItem("user-data")
-        setData(new Login())
+        setData(undefined)
         setToken(undefined)
     }    
 
     const activateAccount = () => {
         const userDataJSON = localStorage.getItem("user-data")
-        const userData: Login = JSON.parse(userDataJSON!)        
+        const userData: UserSession = JSON.parse(userDataJSON!)        
         userData.verified = true
         localStorage.setItem("user-data", JSON.stringify(userData))
         setData(userData)
@@ -64,12 +75,12 @@ const AuthContextProvider: React.FC = (props) => {
     }
 
     useEffect(() => {
-        if(token === undefined) {            
+        if(token === undefined && data?.userId) {
             fetch(`http://127.0.0.1:8000/users/${data.userId}/token/refresh`, {
                 method: "POST",
                 credentials: "include"
             }).then((response) => response.json())
-            .then(data => {
+            .then(data => {                
                 setToken(data.token)
             })            
         }        

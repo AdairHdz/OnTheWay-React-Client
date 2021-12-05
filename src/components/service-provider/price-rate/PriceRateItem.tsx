@@ -48,7 +48,7 @@ const PriceRateItem: React.FC<{
     }
 
     const deletePriceRate = () => {        
-        sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates/${props.priceRate.id}`, {
+        sendRequest(`http://127.0.0.1:8000/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
             method: "DELETE"
         })        
     }
@@ -73,7 +73,7 @@ const PriceRateItem: React.FC<{
                     {props.priceRate.workingDays.map(workingDay => <WorkingDayBadge key={workingDay} workingDay={workingDay} />)}
                 </div>
                 {isLoading && <Spinner /> }
-                {!isLoading && data.userType === UserType.SERVICE_PROVIDER 
+                {!isLoading && data?.userType === UserType.SERVICE_PROVIDER 
                     && <FontAwesomeIcon icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} /> }
             </div>
             <p className="text-lg font-bold"> {props.priceRate.city.name} </p>

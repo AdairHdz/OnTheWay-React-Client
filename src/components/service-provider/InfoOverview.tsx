@@ -63,7 +63,7 @@ const InfoOVerview: React.FC<{
                                 </div>
 
                             </div>
-                            {userData.userType !== UserType.SERVICE_PROVIDER && (
+                            {userData?.userType !== UserType.SERVICE_PROVIDER && (
                                 <div className="p-5">
                                     <button
                                         className="btn-primary"
@@ -78,7 +78,7 @@ const InfoOVerview: React.FC<{
                                 </div>
                             )}
                         </div>
-                        {userData.userType === UserType.SERVICE_PROVIDER && (
+                        {userData?.userType === UserType.SERVICE_PROVIDER && (
                             <div className="p-5 flex flex-col justify-between">
                                 <button
                                     className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
