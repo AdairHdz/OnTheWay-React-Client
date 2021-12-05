@@ -7,25 +7,29 @@ import { useContext, useEffect } from "react"
 import useFetch from "../../hooks/use-fetch"
 import { AuthContext } from "../../store/AuthContext"
 import { useHistory } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMotorcycle } from "@fortawesome/free-solid-svg-icons"
+import UserType from "../../enums/user-type"
 
 const InfoOVerview: React.FC<{
     data: ServiceProviderInfoOverview,
-    error: HTTPRequestError|undefined,
+    error: HTTPRequestError | undefined,
     isLoading: boolean,
     sendRequest: () => void
-}> = (props) => {    
-    
+}> = (props) => {
+
     const {
         sendRequest: sendLogoutRequest
     } = useFetch()
 
     const {
-        logout
+        logout,
+        data: userData
     } = useContext(AuthContext)
 
     const history = useHistory()
 
-    const logoutHandler = () => {        
+    const logoutHandler = () => {
         sendLogoutRequest(`http://127.0.0.1:8000/users/logout`, {
             method: "POST"
         })
@@ -33,12 +37,12 @@ const InfoOVerview: React.FC<{
         history.push("/login")
     }
 
-    useEffect(() => {                
+    useEffect(() => {
         props.sendRequest()
     }, [])
-    
+
     return (
-        <div className="flex flex-col md:flex-row">            
+        <div className="flex flex-col md:flex-row">
             <img
                 src={props.data?.businessPicture.includes(".") ? `http://127.0.0.1:8000/images/${props.data.businessPicture}` : "https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=130&w=220"}
                 alt=""
@@ -49,22 +53,41 @@ const InfoOVerview: React.FC<{
                 )}
                 {props.isLoading && <Spinner />}
                 {props.data && (
-                    <>                    
-                        <div className="flex flex-grow items-center">
-                            <div className="p-5 align text-left">
-                                <p className="font-bold text-xl mb-3"> {props.data?.businessName} </p>
-                                <p className="text-md mb-5"> {`${props.data?.names} ${props.data?.lastname}`} </p>
-                                <StarRate rate={props.data?.averageScore || 0} />
+                    <>
+                        <div className="flex flex-col justify-around p-5">
+                            <div className="flex flex-grow items-center">
+                                <div className="p-5 align text-left">
+                                    <p className="font-bold text-xl mb-3"> {props.data?.businessName} </p>
+                                    <p className="text-md mb-5"> {`${props.data?.names} ${props.data?.lastname}`} </p>
+                                    <StarRate rate={props.data?.averageScore || 0} />
+                                </div>
+
                             </div>
+                            {userData.userType !== UserType.SERVICE_PROVIDER && (
+                                <div className="p-5">
+                                    <button
+                                        className="btn-primary"
+                                        onClick={() => {
+                                            history.push(`/service-providers/${props.data.id}/service-request`)
+                                        }}>
+                                        <span className="inline-block text-center">
+                                            <span className="mr-3">Solicitar servicio</span>
+                                            <FontAwesomeIcon icon={faMotorcycle} className="lg:text-lg" />
+                                        </span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                        <div className="p-5">
-                            <button
-                                className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
-                                type="button"
-                                onClick={logoutHandler}>
+                        {userData.userType === UserType.SERVICE_PROVIDER && (
+                            <div className="p-5 flex flex-col justify-between">
+                                <button
+                                    className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
+                                    type="button"
+                                    onClick={logoutHandler}>
                                     Cerrar sesión
-                            </button>
-                        </div>
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

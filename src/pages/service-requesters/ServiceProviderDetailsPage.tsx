@@ -104,16 +104,7 @@ const ServiceProviderDetailsPage = () => {
                         isLoading={reviewsIsLoading}
                         responseStatus={priceRatesResponseStatus}
                         fetchReviews={getReviews} />
-                </div>
-                <button
-                    className="bg-yellow-500 text-white rounded-full h-10 w-10 lg:w-16 lg:h-16 absolute bottom-20 right-10 lg:right-20 flex justify-center items-center cursor-pointer"
-                    onClick={() => {
-                        history.push(`/service-providers/${providerId}/service-request`)
-                    }}>
-                    <span className="inline-block text-center">
-                        <FontAwesomeIcon icon={faMotorcycle} className="lg:text-lg"/>
-                    </span>
-                </button>
+                </div>                
             </div>
         </>
 
