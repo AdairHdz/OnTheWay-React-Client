@@ -11,7 +11,7 @@ const LabeledIcon: React.FC<{
             <FontAwesomeIcon
                 icon={props.component}
                 className="text-white" />
-            <p className="text-sm font-thin text-center w-auto text-white md:hidden">
+            <p className="text-sm font-thin text-center w-auto text-white">
                 {props.text}
             </p>
         </div>
