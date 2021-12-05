@@ -85,7 +85,7 @@ const ServiceProviderHomePage = () => {
     }    
 
     return (
-        <>
+        <>            
             <div className="shadow-md bg-white flex-grow-0 mb-5">
                 <InfoOVerview
                     data={userInfo}

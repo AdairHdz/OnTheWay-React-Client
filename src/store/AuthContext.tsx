@@ -43,6 +43,8 @@ const AuthContextProvider: React.FC = (props) => {
 
     const logout = () => {
         localStorage.removeItem("user-data")
+        setData(new Login())
+        setToken(undefined)
     }    
 
     const activateAccount = () => {

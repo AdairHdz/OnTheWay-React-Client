@@ -1,11 +1,12 @@
 import StarRate from "../generics/StarRate"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit } from "@fortawesome/free-solid-svg-icons"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 import Spinner from "../generics/Spinner"
 import ErrorMessage from "../generics/ErrorMessage"
 import HTTPRequestError from "../../models/http-request-error"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
+import useFetch from "../../hooks/use-fetch"
+import { AuthContext } from "../../store/AuthContext"
+import { useHistory } from "react-router-dom"
 
 const InfoOVerview: React.FC<{
     data: ServiceProviderInfoOverview,
@@ -14,6 +15,23 @@ const InfoOVerview: React.FC<{
     sendRequest: () => void
 }> = (props) => {    
     
+    const {
+        sendRequest: sendLogoutRequest
+    } = useFetch()
+
+    const {
+        logout
+    } = useContext(AuthContext)
+
+    const history = useHistory()
+
+    const logoutHandler = () => {        
+        sendLogoutRequest(`http://127.0.0.1:8000/users/logout`, {
+            method: "POST"
+        })
+        logout()
+        history.push("/login")
+    }
 
     useEffect(() => {                
         props.sendRequest()
@@ -40,9 +58,12 @@ const InfoOVerview: React.FC<{
                             </div>
                         </div>
                         <div className="p-5">
-                            <FontAwesomeIcon
-                                icon={faEdit}
-                                className="text-2xl text-gray-600" />
+                            <button
+                                className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
+                                type="button"
+                                onClick={logoutHandler}>
+                                    Cerrar sesión
+                            </button>
                         </div>
                     </>
                 )}
