@@ -1,4 +1,3 @@
-// import PaginationLinks from "./pagination-links";
 import PaginationLinks from "./pagination-links";
 import Review from "./review";
 

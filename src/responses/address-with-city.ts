@@ -1,11 +1,11 @@
 import City from "./city"
 
-class AddressWithCity {
-    id = ""
-    indoorNumber = ""
-    outdoorNumber = ""
-    street = ""
-    suburb = ""
+type AddressWithCity = {
+    id: string,
+    indoorNumber: string,
+    outdoorNumber: string,
+    street: string,
+    suburb: string,
     city: City|undefined
 }
 

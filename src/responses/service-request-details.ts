@@ -1,8 +1,8 @@
-class ServiceRequestDetails {
-    id = ""
-    date = ""
-    kindOfService: number|undefined = undefined
-    status: number|undefined = undefined
+type ServiceRequestDetails = {
+    id: string,
+    date: string,
+    kindOfService: number|undefined
+    status: number|undefined
 }
 
 export default ServiceRequestDetails

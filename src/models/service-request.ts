@@ -1,5 +1,5 @@
-class ServiceRequest {
-    id = ""
+type ServiceRequest = {
+    id: string
 }
 
 export default ServiceRequest
