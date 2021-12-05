@@ -54,9 +54,7 @@ const LoginForm: React.FC<{
                     .required("Este campo es obligatorio")
                     .email("Por favor inserte una dirección de correo válida"),
                 password: Yup.string()
-                    .required("Este campo es obligatorio")
-                    .min(8, "Por favor inserte una contraseña de al menos 8 caracteres")
-                    .max(50, "Por favor inserte una contraseña de menos de 50 caracteres"),
+                    .required("Este campo es obligatorio")                    
             })}
             onSubmit={(values) => {
                 const init = {

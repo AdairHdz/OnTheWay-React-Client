@@ -34,14 +34,14 @@ const ReviewsList: React.FC<{
                         errorMessage="Parece ser que aún no hay reseñas" />
                 )
             }
-            <ErrorMessage />
+            return <ErrorMessage />
         }
         return null
     }
 
     return (
         <>
-            <div className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-scroll max-h-screen">                
+            <div className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-auto max-h-screen">                
                 {props.reviews !== undefined && (
                     <>                    
                         {props.reviews.data && props.reviews.data.map(review => (

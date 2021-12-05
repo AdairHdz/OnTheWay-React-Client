@@ -65,7 +65,8 @@ const ServiceProviderDetailsPage = () => {
         data: reviews,
         error: reviewsError,
         isLoading: reviewsIsLoading,
-        sendRequest: fetchReviews
+        sendRequest: fetchReviews,
+        responseStatus: reviewsStatus
     } = useFetch<PaginatedReview>()
 
     const getReviews = () => {
@@ -102,7 +103,7 @@ const ServiceProviderDetailsPage = () => {
                         reviews={reviews}
                         error={reviewsError}
                         isLoading={reviewsIsLoading}
-                        responseStatus={priceRatesResponseStatus}
+                        responseStatus={reviewsStatus}
                         fetchReviews={getReviews} />
                 </div>                
             </div>

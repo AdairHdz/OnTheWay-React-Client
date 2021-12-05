@@ -49,7 +49,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
         data: priceRate,
         sendRequest: fetchPriceRate,
         isLoading: priceRateFetchingIsLoading,
-        error: priceRateFetchingError
+        error: priceRateFetchingError,
+        responseStatus: priceRateFetchingStatus
     } = useFetch<{
         price: number
     }>()
@@ -70,6 +71,18 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const [showModal, setShowModal] = useState(false)
     const [selectedCity, setSelectedCity] = useState<string>("")
     const [selectedKindOfService, setSelectedKindOfService] = useState<string>("")
+
+    const renderServiceRequestError = () => {
+        if(priceRateFetchingError && !priceRateFetchingIsLoading) {            
+            if(priceRateFetchingStatus === 404) {                  
+                return <ErrorMessage errorTitle="Sin resultados"
+                    errorMessage={"Este proveedor de servicios no cuenta con una tarifa activa para " +
+                        "los criterios proporcionados."} className="mb-5" />
+            }
+            return <ErrorMessage errorMessage={serviceRequestError?.message} className="mb-5" />
+        }
+        return null
+    }
 
     const getAddresses = () => {
         fetchAddresses(`http://127.0.0.1:8000/requesters/${data.id}/addresses?cityId=${selectedCity}`)
@@ -184,15 +197,15 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         </div>
                         <TextArea id="description" name="description" label="Detalles adicionales" />
                         {priceRateFetchingIsLoading && <Spinner />}
-                        {priceRateFetchingError && !priceRateFetchingIsLoading && (
-                            <ErrorMessage />
-                        )}
+                        {renderServiceRequestError()}
                         {priceRate && <p className="text-xl font-bold text-center mb-5">Total: ${priceRate.price} MXN</p>}
-                        <button className="btn-primary mx-auto w-1/2 lg:w-1/3" type="submit">Enviar</button>
-                        {serviceRequestIsLoading && <Spinner />}
-                        {serviceRequestError && !serviceRequestIsLoading && (
-                            <ErrorMessage errorMessage={serviceRequestError.message + ""} />
+                        {priceRateFetchingStatus === 200 && (
+                            <button className="mx-auto w-1/2 lg:w-1/3 btn-primary" type="submit">Enviar</button>
                         )}
+                        {serviceRequestIsLoading && <Spinner />}     
+                        {serviceRequestError && !serviceRequestIsLoading && (
+                            <ErrorMessage errorMessage={serviceRequestError.message} />
+                        )}                   
                         <Modal show={showModal} closeModalHandler={() => { setShowModal(false) }}>
                             <NewAddressForm
                                 submitFormHandler={submitFormHandler}
