@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import HTTPRequestError from "../models/http-request-error"
 import { AuthContext } from "../store/AuthContext"
 
@@ -15,9 +15,10 @@ const useFetch = <T>(): {
     const [responseStatus, setResponseStatus] = useState<number|undefined>(undefined)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [data, setData] = useState<any>()
+    const [data, setData] = useState<any>()    
     
     const sendRequest = async <Type>(url: string, init?: RequestInit): Promise<any> => {
+        
         setIsLoading(true)
         setData(undefined)
         setError(undefined)

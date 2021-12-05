@@ -65,7 +65,7 @@ const ServiceRequesterRequestDetailsPage = () => {
     }, [statusChangeIsLoading, statusChangeError, history, newStatus])
 
     useEffect(() => {
-        sendRequest(`http://127.0.0.1:8000/requesters/${authData.id}/requests/${requestId}`)
+        sendRequest(`http://127.0.0.1:8000/requesters/${authData?.id}/requests/${requestId}`)
     }, [])
 
     const changeRequestStatus = (newStatus: number) => {

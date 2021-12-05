@@ -7,7 +7,7 @@ interface LoginRouteProps extends RouteProps {  }
 const LoginRoute: React.FC<LoginRouteProps> = (props) => {
     const { data } = useContext(AuthContext)
     
-    if(data.id) {
+    if(data?.id) {
         return <Redirect to="/" />
     }
     return (

@@ -47,7 +47,7 @@ const NewPriceRateForm: React.FC<{
     }, [responseStatus])
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data.stateId}/cities`)
+        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
     }, [])
 
     return (
@@ -141,7 +141,7 @@ const NewPriceRateForm: React.FC<{
                         workingDays
                     }
 
-                    sendRequest(`http://127.0.0.1:8000/providers/${data.id}/priceRates`, {
+                    sendRequest(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })

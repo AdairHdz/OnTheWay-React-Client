@@ -71,7 +71,7 @@ const PriceRatesList: React.FC<{
                 ))
                 }
                 {/* {props.data && <Paginator />} */}
-                {data.userType === UserType.SERVICE_PROVIDER ? (
+                {data?.userType === UserType.SERVICE_PROVIDER ? (
                     <div
                         className="bg-yellow-500 text-white rounded-full h-10 w-10 absolute bottom-20 right-10 flex justify-center items-center cursor-pointer"
                         onClick={props.openModalHandler}>
@@ -80,7 +80,7 @@ const PriceRatesList: React.FC<{
                         </span>
                     </div>
                 ) : null}
-                {(data.userType === UserType.SERVICE_REQUESTER) && props.openModalHandler ? (
+                {(data?.userType === UserType.SERVICE_REQUESTER) && props.openModalHandler ? (
                     <div
                         className="bg-yellow-500 text-white rounded-full h-10 w-10 absolute bottom-20 right-10 flex justify-center items-center cursor-pointer"
                         onClick={() => { }}>

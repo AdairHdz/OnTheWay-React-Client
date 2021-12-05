@@ -31,7 +31,7 @@ const ServicesPage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceRequests(`http://127.0.0.1:8000/providers/${data.id}/requests?date=${values.date}`)
+                        fetchServiceRequests(`http://127.0.0.1:8000/providers/${data?.id}/requests?date=${values.date}`)
                     }}>
                     <Form>
                         <StandardInput type="date" id="date" name="date" label="Fecha" />

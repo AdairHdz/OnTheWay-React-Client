@@ -92,7 +92,7 @@ const NewReviewForm: React.FC<{
                     const body = {
                         ...values,
                         evidence: filesNames,
-                        serviceRequesterId: data.id,                        
+                        serviceRequesterId: data?.id,                        
                         score,
                         serviceRequestId: requestId
                     }

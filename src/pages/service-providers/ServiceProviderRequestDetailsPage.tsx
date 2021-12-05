@@ -59,7 +59,7 @@ const ServiceProviderRequestDetailsPage = () => {
     }, [statusChangeIsLoading, statusChangeError, history, newStatus, setFlashMessage])
 
     useEffect(() => {
-        sendRequest(`http://127.0.0.1:8000/providers/${authData.id}/requests/${requestId}`)
+        sendRequest(`http://127.0.0.1:8000/providers/${authData?.id}/requests/${requestId}`)
     }, [])
 
     const changeRequestStatus = (newStatus: number) => {

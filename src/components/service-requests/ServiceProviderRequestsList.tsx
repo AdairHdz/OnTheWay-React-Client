@@ -33,7 +33,7 @@ const ServiceProviderRequestsList: React.FC<{
     return (
         <div className={`flex flex-col gap-3 ${props.className}`}>
             {props.serviceRequests && props.serviceRequests.map((serviceRequest) => (
-                <Link key={serviceRequest.id} to={`/service-providers/${data.id}/service-requests/${serviceRequest.id}`} >
+                <Link key={serviceRequest.id} to={`/service-providers/${data?.id}/service-requests/${serviceRequest.id}`} >
                     <ServiceRequestItem kindOfService={serviceRequest.kindOfService!} date={serviceRequest.date} status={serviceRequest.status!} />
                 </Link>
             ))}

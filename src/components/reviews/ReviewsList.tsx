@@ -17,7 +17,7 @@ const ReviewsList: React.FC<{
 
     const {data} = useContext(AuthContext)
     useEffect(() => {        
-        props.fetchReviews(`providers/${data.id}/reviews?page=1&pageSize=5`)
+        props.fetchReviews(`providers/${data?.id}/reviews?page=1&pageSize=5`)
     }, [])    
 
     useEffect(() => {

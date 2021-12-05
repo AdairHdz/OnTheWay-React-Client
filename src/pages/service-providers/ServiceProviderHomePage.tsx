@@ -37,14 +37,14 @@ const ServiceProviderHomePage = () => {
                     finalQueryString += '&'
                 }
             })            
-            fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates${finalQueryString}`)
+            fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates${finalQueryString}`)
             return
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
     }
 
     useEffect(() => {
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
     }, [])
 
     const submitFormHandler = (statusCode: number | undefined) => {
@@ -53,7 +53,7 @@ const ServiceProviderHomePage = () => {
         } else {
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data.id}/priceRates`)
+        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
         setShowNewPriceRateForm(false)
     }
 
@@ -65,7 +65,7 @@ const ServiceProviderHomePage = () => {
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
-        fetchUserInfo(`http://127.0.0.1:8000/providers/${data.id}`)
+        fetchUserInfo(`http://127.0.0.1:8000/providers/${data?.id}`)
     }
 
     useEffect(() => {
