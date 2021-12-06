@@ -62,7 +62,7 @@ const ServiceProviderHomePage = () => {
                 </Formik>
             </div>
             <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-            <div className="bg-white shadow m-5 flex-grow p-3">
+            <div className="bg-white shadow m-5 flex-grow p-3 overflow-y-auto">
                 <div className="flex justify-end mb-5">
                     <button
                         className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
