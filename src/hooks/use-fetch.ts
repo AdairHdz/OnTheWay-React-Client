@@ -21,11 +21,11 @@ const useFetch = <T>(): {
         
         setIsLoading(true)
         setData(undefined)
-        setError(undefined)
+        setError(undefined)        
         try {
             let request
             if(init) {
-                request = await fetch(url, {
+                request = await fetch(`${process.env.REACT_APP_BASE_API_URL}:${process.env.REACT_APP_BASE_API_PORT}${url}`, {
                     ...init,
                     headers: new Headers({
                         "Authorization": `Bearer ${token}`
@@ -33,7 +33,7 @@ const useFetch = <T>(): {
                     credentials: "include"
                 })
             } else {
-                request = await fetch(url, {
+                request = await fetch(`${process.env.REACT_APP_BASE_API_URL}:${process.env.REACT_APP_BASE_API_PORT}${url}`, {
                     headers: new Headers({
                         "Authorization": `Bearer ${token}`
                     }),

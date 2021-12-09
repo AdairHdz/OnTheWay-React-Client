@@ -37,23 +37,25 @@ const ServiceProviderHomePage = () => {
                     finalQueryString += '&'
                 }
             })            
-            fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates${finalQueryString}`)
+            fetchPriceRates(`/providers/${data?.id}/priceRates${finalQueryString}`)
             return
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${data?.id}/priceRates`)
     }
 
     useEffect(() => {
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${data?.id}/priceRates`)
     }, [token])
 
     const submitFormHandler = (statusCode: number | undefined) => {
         if (statusCode === 200) {
             setFlashMessage("Tarifa registrada", "Su nueva tarifa ha sido registrada con éxito")
-        } else {
+        } else if(statusCode === 453) {
+            setFlashMessage("Tarifa repetida", "Ya cuenta con una tarifa registrada que tenga los datos introducidos")
+        } else {            
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
         }
-        fetchPriceRates(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${data?.id}/priceRates`)
         setShowNewPriceRateForm(false)
     }
 
@@ -65,7 +67,7 @@ const ServiceProviderHomePage = () => {
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
-        fetchUserInfo(`http://127.0.0.1:8000/providers/${data?.id}`)
+        fetchUserInfo(`/providers/${data?.id}`)
     }
 
     useEffect(() => {
@@ -81,7 +83,7 @@ const ServiceProviderHomePage = () => {
     } = useFetch<PaginatedReview>()    
 
     const getReviews = (url: string) => {
-        fetchReviews(`http://127.0.0.1:8000/${url}`)
+        fetchReviews(`/${url}`)
     }    
 
     return (
@@ -103,7 +105,9 @@ const ServiceProviderHomePage = () => {
                         error={priceRatesFetchingError}
                         responseStatus={priceRatesResponseStatus}
                         fetchPriceRates={getPriceRates}
-                        deletePriceRateHandler={() => {}} />
+                        deletePriceRateHandler={() => {
+                            fetchPriceRates(`/providers/${data?.id}/priceRates`)
+                        }} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
                     <p className="text-2xl mb-5 font-bold p-5 text-center">Reseñas</p>

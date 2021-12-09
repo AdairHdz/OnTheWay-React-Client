@@ -11,15 +11,6 @@ import ErrorMessage from "../../generics/ErrorMessage"
 import City from "../../../responses/city"
 import KindOfService from "../../../enums/kind-of-service"
 
-// const parseTime = (time: string): string => {
-//     const parsedTime = new Date('1970-01-01T' + time + 'Z')
-//         .toLocaleTimeString('en-US',
-//             {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
-//         );
-
-//         return parsedTime.replaceAll(" ", "")
-// }
-
 const NewPriceRateForm: React.FC<{
     submitFormHandler: (statusCode: number | undefined) => void,
     closeModalHandler: () => void
@@ -47,7 +38,7 @@ const NewPriceRateForm: React.FC<{
     }, [responseStatus])
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
+        fetchCities(`/states/${data?.stateId}/cities`)
     }, [])
 
     return (
@@ -141,7 +132,7 @@ const NewPriceRateForm: React.FC<{
                         workingDays
                     }
 
-                    sendRequest(`http://127.0.0.1:8000/providers/${data?.id}/priceRates`, {
+                    sendRequest(`/providers/${data?.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })

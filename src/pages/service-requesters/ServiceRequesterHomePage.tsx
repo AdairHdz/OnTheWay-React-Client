@@ -32,7 +32,7 @@ const ServiceProviderHomePage = () => {
     const history = useHistory()
 
     const logoutHandler = () => {
-        sendLogoutRequest(`http://127.0.0.1:8000/users/logout`, {
+        sendLogoutRequest(`/users/logout`, {
             method: "POST"
         })
         logout()
@@ -53,7 +53,7 @@ const ServiceProviderHomePage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceRequests(`http://127.0.0.1:8000/requesters/${data?.id}/requests?date=${values.date}`)
+                        fetchServiceRequests(`/requesters/${data?.id}/requests?date=${values.date}`)
                     }}>
                     <Form>
                         <StandardInput type="date" id="date" name="date" label="Fecha" />
