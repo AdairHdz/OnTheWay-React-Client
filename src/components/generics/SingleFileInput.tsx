@@ -1,15 +1,14 @@
 import { useField } from "formik"
-import FileName from "../../models/file-name"
 
 const SingleFileInput: React.FC<{
     id: string,
     name: string,
     label?: string,
-    accept: string,
-    inputHandler?: (files: File|null, fileName: FileName) => void
+    accept: string,    
+    inputHandler: (files: File|null) => void,    
 }> = (props) => {    
 
-    const [fieldProps, metadata] = useField({name: props.name})
+    const [fieldProps, metadata, helpers] = useField({name: props.name})
 
     return (
         <div className="mb-5">
@@ -21,25 +20,16 @@ const SingleFileInput: React.FC<{
                     <br />
                 </>                
             )}            
-            <input                
+            <input            
                 {...fieldProps}
                 id={props.id}
                 name={props.name}
-                accept={props.accept}
+                accept={props.accept}                                
+                type="file"                
                 onChange={(e) => {
-                    const value = e.currentTarget.files                    
-                    if(value === null) {
-                        return                        
-                    }
-                    let selectedFile: FileName
-                    selectedFile = {
-                        name: value.item(0)!.name
-                    }
-                    if(props.inputHandler) {
-                        props.inputHandler(value.item(0), selectedFile)
-                    }
-                }}                
-                type="file" />
+                    props.inputHandler(e.currentTarget.files!.item(0))
+                    helpers.setValue(e.currentTarget.value)                    
+                }} />
             {(metadata.error && metadata.touched) ? (
                 <p className="input-error-text">
                     {metadata.error}

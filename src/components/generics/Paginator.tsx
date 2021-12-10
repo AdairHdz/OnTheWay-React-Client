@@ -12,11 +12,23 @@ const Paginator: React.FC<{
 }> = (props) => {
     return (
         <div className={`flex justify-around items-center text-blue-600 my-5 ${props.className}`}>
-            <PaginatorButton disabled={props.paginationLinks.page === 1} buttonType={PaginatorButtonType.FIRST_PAGE} clickHandler={props.goToFirstPageHandler} />
-            <PaginatorButton disabled={props.paginationLinks.page === 1} buttonType={PaginatorButtonType.PREVIOUS_PAGE} clickHandler={props.goToPreviousPageHandler} />            
+            <PaginatorButton
+                disabled={props.paginationLinks.page === 1}
+                buttonType={PaginatorButtonType.FIRST_PAGE}
+                clickHandler={props.goToFirstPageHandler} />
+            <PaginatorButton
+                disabled={props.paginationLinks.page === 1}
+                buttonType={PaginatorButtonType.PREVIOUS_PAGE}
+                clickHandler={props.goToPreviousPageHandler} />
             <span> { props.paginationLinks.page } </span>
-            <PaginatorButton disabled={props.paginationLinks.page === props.paginationLinks.pages} buttonType={PaginatorButtonType.NEXT_PAGE} clickHandler={props.goToNextPageHandler} />
-            <PaginatorButton disabled={props.paginationLinks.page === props.paginationLinks.pages} buttonType={PaginatorButtonType.LAST_PAGE} clickHandler={props.goToLastPageHandler} />            
+            <PaginatorButton
+                disabled={props.paginationLinks.page === props.paginationLinks.pages}
+                buttonType={PaginatorButtonType.NEXT_PAGE}
+                clickHandler={props.goToNextPageHandler} />
+            <PaginatorButton
+                disabled={props.paginationLinks.page === props.paginationLinks.pages}
+                buttonType={PaginatorButtonType.LAST_PAGE}
+                clickHandler={props.goToLastPageHandler} />            
         </div>
     )
 }

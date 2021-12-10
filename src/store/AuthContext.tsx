@@ -76,7 +76,7 @@ const AuthContextProvider: React.FC = (props) => {
 
     useEffect(() => {
         if(token === undefined && data?.userId) {
-            fetch(`http://127.0.0.1:8000/users/${data.userId}/token/refresh`, {
+            fetch(`${process.env.REACT_APP_BASE_API_URL}:${process.env.REACT_APP_BASE_API_PORT}/users/${data.userId}/token/refresh`, {
                 method: "POST",
                 credentials: "include"
             }).then((response) => response.json())

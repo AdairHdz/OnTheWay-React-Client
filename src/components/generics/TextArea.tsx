@@ -21,7 +21,9 @@ const TextArea: React.FC<{
                 </>                
             )}            
             <textarea
-                className="w-full border-0 border-b-2 border-gray-300 focus:outline-none resize-none"
+                className={`
+                    w-full border-0 border-b-2 
+                    border-gray-300 focus:outline-none resize-none`}
                 {...fieldProps}
                 id={props.id}                
                 name={props.name}

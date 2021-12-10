@@ -32,7 +32,11 @@ const WorkingDayBadge: React.FC<{
     }
 
     return (
-        <div className="rounded-full p-2 bg-blue-600 text-white text-center w-8 h-8 flex items-center justify-center">
+        <div className={`
+            rounded-full p-2 bg-blue-600
+            text-white text-center w-8 h-8
+            flex items-center justify-center`
+        }>
             <p> {letterToBePrinted} </p>
         </div>
     )

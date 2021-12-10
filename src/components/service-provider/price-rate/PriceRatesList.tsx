@@ -49,8 +49,13 @@ const PriceRatesList: React.FC<{
 
     return (
         <>
-            <Alert show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
-            <div className="w-full md:mt-5 md:w-11/12 md:mx-auto px-5 py-5 max-h-screen overflow-y-auto">
+            <Alert
+                show={message !== undefined} title={message?.title || ""}
+                message={message?.message || ""} />
+            <div className={`
+                w-full md:mt-5 md:w-11/12 md:mx-auto
+                px-5 py-5 max-h-screen overflow-y-auto`
+            }>
                 {!props.error && !props.isLoading && (
                     <DropdownButton
                         isActive={dropdownIsActive}
@@ -71,7 +76,12 @@ const PriceRatesList: React.FC<{
                 }                
                 {data?.userType === UserType.SERVICE_PROVIDER ? (
                     <div
-                        className="bg-yellow-500 text-white rounded-full h-10 w-10 absolute bottom-20 right-10 flex justify-center items-center cursor-pointer"
+                        className={`
+                            bg-yellow-500 text-white
+                            rounded-full h-10 w-10 absolute
+                            bottom-20 right-10 flex justify-center
+                            items-center cursor-pointer`
+                        }
                         onClick={props.openModalHandler}>
                         <span className="inline-block text-center">
                             <FontAwesomeIcon icon={faPlus} />
@@ -80,7 +90,11 @@ const PriceRatesList: React.FC<{
                 ) : null}
                 {(data?.userType === UserType.SERVICE_REQUESTER) && props.openModalHandler ? (
                     <div
-                        className="bg-yellow-500 text-white rounded-full h-10 w-10 absolute bottom-20 right-10 flex justify-center items-center cursor-pointer"
+                        className={`
+                            bg-yellow-500 text-white rounded-full
+                            h-10 w-10 absolute bottom-20 right-10 flex
+                            justify-center items-center cursor-pointer`
+                        }
                         onClick={() => { }}>
                         <span className="inline-block text-center">
                             <FontAwesomeIcon icon={faMotorcycle} />

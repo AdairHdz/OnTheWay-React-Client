@@ -42,7 +42,10 @@ const Navbar = () => {
         return null
     }
     return (
-        <div className="bg-blue-600 order-last flex justify-around md:h-screen md:flex-col md:order-first md:py-0 md:px-3">
+        <div className={`
+            bg-blue-600 order-last
+            flex justify-around md:h-screen md:flex-col
+            md:order-first md:py-0 md:px-3`}>
             <NavLink activeClassName="bg-blue-800 rounded-md" to="/" exact>
                 <LabeledIcon
                     component={faHome}

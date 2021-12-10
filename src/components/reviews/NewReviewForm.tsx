@@ -117,8 +117,17 @@ const NewReviewForm: React.FC<{
                         id="evidenceFiles"
                         name="evidenceFiles"
                         inputHandler={handleFiles} />
-                    <button type="submit" className={`mx-auto mb-5 ${saveReviewIsLoading ? 'btn-outlined' : 'btn-primary'}`} disabled={saveReviewIsLoading} >Calificar</button>
-                    {saveReviewHasError && <ErrorMessage errorTitle="Error" errorMessage="No se pudo guardar la reseña. Por favor, intente más tarde" />}
+                    <button
+                        type="submit"
+                        className={`
+                            mx-auto mb-5 ${saveReviewIsLoading ? 'btn-outlined' : 'btn-primary'}`
+                        }
+                        disabled={saveReviewIsLoading} >Calificar</button>
+                    {saveReviewHasError && (
+                        <ErrorMessage
+                            errorTitle="Error"
+                            errorMessage="No se pudo guardar la reseña. Por favor, intente más tarde" />
+                    )}
                 </Form>
             </Formik>
         </>

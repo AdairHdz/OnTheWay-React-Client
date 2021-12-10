@@ -95,7 +95,11 @@ const AccountVerificationForm = () => {
                 </p>
                 <button 
                     disabled={!canRequestNewCode}
-                    className={`btn-primary-outlined mx-auto ${canRequestNewCode ? "hover:bg-yellow-500 hover:text-white transition-colors ease-linear" : "cursor-wait"}`}
+                    className={
+                        `btn-primary-outlined mx-auto ${canRequestNewCode ?
+                        "hover:bg-yellow-500 hover:text-white transition-colors ease-linear" :
+                        "cursor-wait"}`
+                    }
                     onClick={sendNewActivationCode}>
                     Enviar nuevo código
                 </button>

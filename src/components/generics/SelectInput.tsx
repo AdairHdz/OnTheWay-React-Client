@@ -20,7 +20,9 @@ const SelectInput: React.FC<{
                 </>
             )}
             <select
-                className="w-full border-0 border-b-2 border-gray-300 bg-white focus:outline-none"            
+                className={`
+                    w-full border-0 border-b-2
+                    border-gray-300 bg-white focus:outline-none`}
                 {...fieldProps}
                 {...props}                
                 onChange={(value) => {

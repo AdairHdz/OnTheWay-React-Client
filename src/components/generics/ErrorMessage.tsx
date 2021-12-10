@@ -8,7 +8,9 @@ const ErrorMessage: React.FC<{
 }> = (props) => {
     return (
         <div className={`mx-auto my-auto ${props.className} text-center`}>
-            <FontAwesomeIcon icon={faExclamationCircle} className="text-5xl text-gray-400 text-center" />
+            <FontAwesomeIcon
+                icon={faExclamationCircle}
+                className="text-5xl text-gray-400 text-center" />
             <p className="font-bold text-xl text-center">
                 {props.errorTitle ? props.errorTitle : "Ocurrió un error"}
             </p>

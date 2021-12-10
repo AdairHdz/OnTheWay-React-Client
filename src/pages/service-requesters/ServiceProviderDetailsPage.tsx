@@ -1,7 +1,5 @@
-import { faMotorcycle } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useState } from "react"
-import { useHistory, useParams } from "react-router-dom"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
 import ReviewsList from "../../components/reviews/ReviewsList"
 import InfoOVerview from "../../components/service-provider/InfoOverview"
 import PriceRatesList from "../../components/service-provider/price-rate/PriceRatesList"
@@ -11,8 +9,7 @@ import PaginatedReview from "../../responses/paginated-review"
 import ServiceProviderInfoOverview from "../../responses/service-provider-info-overview"
 import QueryParam from "../../models/query-param"
 
-const ServiceProviderDetailsPage = () => {
-    const history = useHistory()
+const ServiceProviderDetailsPage = () => {    
     const { providerId } = useParams<{
         providerId: string
     }>()

@@ -13,7 +13,6 @@ import RegistryInfo from '../responses/registry-info';
 import UserType from '../enums/user-type';
 import Login from '../responses/login';
 import { AuthContext } from '../store/AuthContext';
-import FileName from '../models/file-name';
 import SingleFileInput from './generics/SingleFileInput';
 
 const RegistryForm: React.FC<{
@@ -37,25 +36,19 @@ const RegistryForm: React.FC<{
     sendRequest: saveBusinessPicture
   } = useFetch()
 
+
   const { login } = useContext(AuthContext)
 
-  const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)
-  const [statesWereAlreadyFetched, setStatesWereAlreadyFetched] = useState<boolean>(false)
+  const [selectedUserType, setSelectedUserType] = useState<number>(UserType.SERVICE_PROVIDER)  
   const [savedUser, setSavedUser] = useState<boolean>(false)
   const { setFlashMessage, message } = useFlashMessage()
   const handleChange = (value: string) => {
     setSelectedUserType(parseInt(value))
   }
+  
+  const [file, setFile] = useState<File | null>()    
 
-  const [filesName, setFilesName] = useState<FileName>()
-  const [file, setFile] = useState<File | null>()
-
-  const handleFile = (file: File | null, fileName: FileName) => {
-    if (file === null) {
-      return
-    }
-
-    setFilesName(fileName)
+  const handleFile = (file: File | null) => {    
     setFile(file)
   }
 
@@ -72,14 +65,14 @@ const RegistryForm: React.FC<{
     }
 
     const formData = new FormData()
-    formData.append("image", file)
-    console.log(formData)
+    formData.append("image", file)    
     saveBusinessPicture(`/providers/${registryResponse.id}/image`, {
       method: "PUT",
       body: formData
     })
     history.push("/verify-account")
-  }
+  }  
+
 
   useEffect(() => {
     if (savedUser) {
@@ -116,6 +109,7 @@ const RegistryForm: React.FC<{
     stateId: string
     userType: number
     businessName: string
+    businessPicture: string
   }>>(null)
 
   return (
@@ -128,7 +122,8 @@ const RegistryForm: React.FC<{
         password: "",
         stateId: "",
         userType: UserType.SERVICE_PROVIDER,
-        businessName: ""
+        businessName: "",
+        businessPicture: ""
       }}
       validationSchema={Yup.object().shape({
         names: Yup.string()
@@ -168,16 +163,21 @@ const RegistryForm: React.FC<{
               .matches(/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/g, "Por favor ingrese solo letras, espacios y/o acentos")
               .max(30, "Por favor asegúrese de que el nombre no exceda los 30 caracteres")
           }),
+          businessPicture: Yup.string()
+            .nullable()
+            .when("userType", {
+              is: UserType.SERVICE_PROVIDER,
+              then: (rule) => rule.when("businessImage", {
+                is: (value: string) => value !== "",
+                then: (rule) => rule.matches(/[^\\]*\.(jpeg|png|jpg)$/, "Por favor seleccione un archivo de imagen válido")
+              })
+            })
       })}
-      onSubmit={(values) => {
-        values.userType = +values.userType
-        const bodyRequest = {
-          ...values,
-          businessPicture: filesName?.name
-        }        
+      onSubmit={(values) => {      
+        values.userType = +values.userType        
         sendRegistryRequest("/users", {
           method: "POST",
-          body: JSON.stringify(bodyRequest)
+          body: JSON.stringify(values)
         })
       }} >
       <>
@@ -236,15 +236,18 @@ const RegistryForm: React.FC<{
                 placeholder="Nombre del negocio"
                 type="text" />
               <SingleFileInput
-                id="evidenceFiles"
-                name="evidenceFiles"
+                id="businessPicture"
+                name="businessPicture"
                 label='Imagen de negocio'
-                inputHandler={handleFile}
-                accept='image/*' />              
+                inputHandler={handleFile}                
+                accept='.jpg, .jpeg, .png' />              
             </>
           ) : null}
           <button disabled={statesFetchingIsLoading} type="submit"
-            className={`mx-auto mb-5 ${registryRequestIsLoading ? "btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" : "btn-primary mx-auto"}`} >
+            className={`
+              mx-auto mb-5 ${registryRequestIsLoading ?
+              "btn-primary-outlined hover:bg-yellow-500 hover:text-white transition-colors ease-linear" :
+              "btn-primary mx-auto"}`} >
             Registrarme
           </button>
         </Form>
