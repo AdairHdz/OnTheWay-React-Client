@@ -35,14 +35,14 @@ const ServiceProvidersSearchPage = () => {
     } = useFetch<City[]>()    
 
     useEffect(() => {
-        fetchStates("http://127.0.0.1:8000/states")
+        fetchStates("/states")
     }, [])
 
     const [stateId, setStateId] = useState<string>("")
 
     useEffect(() => {
         if(stateId) {            
-            fetchCities(`http://127.0.0.1:8000/states/${stateId}/cities`)
+            fetchCities(`/states/${stateId}/cities`)
         }
     }, [stateId])
 
@@ -67,7 +67,7 @@ const ServiceProvidersSearchPage = () => {
       }
 
       const getServiceProvidersByURLCriteria = (urlCriteria: string) => {
-        fetchServiceProviders(`http://127.0.0.1:8000/${urlCriteria}`)
+        fetchServiceProviders(`${urlCriteria}`)
       }
 
     return (
@@ -100,7 +100,7 @@ const ServiceProvidersSearchPage = () => {
                             .max(100, "No se permiten tarifas mayores a $100.00 MXN")
                     })}
                     onSubmit={(values) => {
-                        getServiceProvidersByURLCriteria(`providers?page=1&pageSize=10&maxPriceRate=${values.maxPriceRate}&cityId=${values.city}&kindOfService=${values.kindOfService}`)
+                        getServiceProvidersByURLCriteria(`/providers?page=1&pageSize=10&maxPriceRate=${values.maxPriceRate}&cityId=${values.city}&kindOfService=${values.kindOfService}`)
                     }}>
                     <Form className="flex flex-col justify-between lg:justify-around lg:flex-row lg:items-center">
                         <SelectInput id="kindOfService" name="kindOfService" label="Tipo de servicio">

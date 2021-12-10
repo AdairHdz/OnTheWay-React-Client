@@ -24,7 +24,7 @@ const PriceRateItem: React.FC<{
     let kindOfService: string
 
     const { data } = useContext(AuthContext)
-    const {setFlashMessage, message} = useFlashMessage()
+    const {setFlashMessage} = useFlashMessage()
 
     switch (props.priceRate.kindOfService) {
         case KindOfService.DELIVERY:
@@ -48,9 +48,12 @@ const PriceRateItem: React.FC<{
     }
 
     const deletePriceRate = () => {        
-        sendRequest(`http://127.0.0.1:8000/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
+        sendRequest(`/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
             method: "DELETE"
-        })        
+        })
+        if(props.deletePriceRateHandler) {
+            props.deletePriceRateHandler()
+        }        
     }
 
     useEffect(() => {

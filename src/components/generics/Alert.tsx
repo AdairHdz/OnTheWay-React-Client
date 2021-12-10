@@ -12,13 +12,15 @@ const Alert: React.FC<{
     closeAlertHandler?: () => void
 }> = (props) => {
 
-    const [display, setDisplay] = useState<boolean>(true)    
+    const [display, setDisplay] = useState<boolean>(false)
     const { resetFlashMessage } = useFlashMessage()
 
     useEffect(() => {
         if(props.show) {
-            setDisplay(true)            
+            setDisplay(true)
+            return
         }
+        setDisplay(false)
     }, [props.show])
 
     // useEffect(() => {

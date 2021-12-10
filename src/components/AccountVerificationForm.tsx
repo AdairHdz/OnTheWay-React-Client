@@ -41,7 +41,7 @@ const AccountVerificationForm = () => {
     }, [accountActivationError])
 
     const sendNewActivationCode = () => {        
-        requestNewActivationCode(`http://127.0.0.1:8000/users/${data?.userId}/verify`, {
+        requestNewActivationCode(`/users/${data?.userId}/verify`, {
             method: "PUT",
             body: JSON.stringify({
                 emailAddress: data?.emailAddress
@@ -67,11 +67,12 @@ const AccountVerificationForm = () => {
                 }}
                 validationSchema={Yup.object({
                     verificationCode: Yup.string()
+                        .trim()
                         .required("Este campo es obligatorio")
                         .length(8, "El código de verificación debe tener 8 dígitos"),
                 })}
                 onSubmit={(values) => {
-                    sendAccountActivationRequest(`http://127.0.0.1:8000/users/${data?.userId}/verify`, {
+                    sendAccountActivationRequest(`/users/${data?.userId}/verify`, {
                         method: "PATCH",
                         body: JSON.stringify(values)
                     })

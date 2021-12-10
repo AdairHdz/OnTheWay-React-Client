@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik"
-import Modal from "../generics/Modal"
 import * as Yup from "yup"
 import StandardInput from "../generics/StandardInput"
 import { useContext, useEffect } from "react"
@@ -20,7 +19,7 @@ const NewAddressForm: React.FC<{
     } = useFetch<City[]>()
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
+        fetchCities(`/states/${data?.stateId}/cities`)
     }, [])
 
     const {
@@ -51,20 +50,28 @@ const NewAddressForm: React.FC<{
                 }}
                 validationSchema={Yup.object({
                     outdoorNumber: Yup.string()
-                        .required("Campo obligatorio"),
+                        .trim()                        
+                        .required("Campo obligatorio")
+                        .max(50, "Por favor ingrese 50 o menos caracteres"),
                     indoorNumber: Yup.string()
-                        .nullable(),
+                        .nullable()
+                        .trim()
+                        .max(50, "Por favor ingrese 50 o menos caracteres"),
                     street: Yup.string()
-                        .required("Campo obligatorio"),
+                        .trim()
+                        .required("Campo obligatorio")
+                        .max(100, "Por favor ingrese 100 o menos caracteres"),
                     suburb: Yup.string()
-                        .optional(),
+                        .optional()    
+                        .trim()
+                        .max(100, "Por favor ingrese 100 o menos caracteres"),
                     cityId: Yup.string()
                         .required("Campo obligatorio")
                         .uuid("Por favor seleccione una ciudad")
 
                 })}
                 onSubmit={(values) => {                    
-                    registerAddress(`http://127.0.0.1:8000/requesters/${data?.id}/addresses`, {
+                    registerAddress(`/requesters/${data?.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)
                     })                    

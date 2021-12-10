@@ -58,7 +58,7 @@ const NewReviewForm: React.FC<{
         for(let i = 0; i < files.length; i++) {
             formData.append("evidence[]", files.item(i)!)
         }
-        saveEvidences(`http://127.0.0.1:8000/providers/${props.serviceProviderId}/reviews/${savedReview.id}/evidence`, {
+        saveEvidences(`/providers/${props.serviceProviderId}/reviews/${savedReview.id}/evidence`, {
             method: "POST",
             body: formData
         })
@@ -95,9 +95,8 @@ const NewReviewForm: React.FC<{
                         serviceRequesterId: data?.id,                        
                         score,
                         serviceRequestId: requestId
-                    }
-                    console.log(body)
-                    saveReview(`http://127.0.0.1:8000/providers/${props.serviceProviderId}/reviews`, {
+                    }                    
+                    saveReview(`/providers/${props.serviceProviderId}/reviews`, {
                         method: "POST",
                         body: JSON.stringify(body)
                     })

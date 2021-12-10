@@ -37,7 +37,7 @@ const ReviewItem: React.FC<{
                 {props.evidence?.map(evidence => (
                     <a target="_blank"
                         rel="noreferrer"
-                        href={`http://127.0.0.1:8000/reviews/${props.id}/${evidence.fileName}`}
+                        href={`/reviews/${props.id}/${evidence.fileName}`}
                         className="text-blue-600 block"
                         > {evidence.fileName} </a>
                 ))}

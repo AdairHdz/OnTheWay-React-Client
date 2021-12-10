@@ -30,7 +30,7 @@ const InfoOVerview: React.FC<{
     const history = useHistory()
 
     const logoutHandler = () => {
-        sendLogoutRequest(`http://127.0.0.1:8000/users/logout`, {
+        sendLogoutRequest(`/users/logout`, {
             method: "POST"
         })
         logout()
@@ -44,7 +44,7 @@ const InfoOVerview: React.FC<{
     return (
         <div className="flex flex-col md:flex-row">
             <img
-                src={props.data?.businessPicture.includes(".") ? `http://127.0.0.1:8000/images/${props.data.businessPicture}` : "https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=130&w=220"}
+                src={props.data?.businessPicture.includes(".") ? `/images/${props.data.businessPicture}` : "https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=130&w=220"}
                 alt=""
                 className="mr-10 w-full md:w-1/2 md:mr-0" />
             <div className="flex justify-between w-full">

@@ -65,7 +65,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { data } = useContext(AuthContext)
 
     useEffect(() => {
-        fetchCities(`http://127.0.0.1:8000/states/${data?.stateId}/cities`)
+        fetchCities(`/states/${data?.stateId}/cities`)
     }, [data?.stateId])
 
     const [showModal, setShowModal] = useState(false)
@@ -85,7 +85,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }
 
     const getAddresses = () => {
-        fetchAddresses(`http://127.0.0.1:8000/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
+        fetchAddresses(`/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
     }
 
 
@@ -104,12 +104,12 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }, [serviceRequestResponseStatus, history])
 
     useEffect(() => {
-        fetchAddresses(`http://127.0.0.1:8000/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
+        fetchAddresses(`/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
     }, [selectedCity, data?.id])
 
     useEffect(() => {
         if (selectedKindOfService && selectedCity) {
-            fetchPriceRate(`http://127.0.0.1:8000/providers/${providerId}/priceRates/${selectedCity}?kindOfService=${selectedKindOfService}`)
+            fetchPriceRate(`/providers/${providerId}/priceRates/${selectedCity}?kindOfService=${selectedKindOfService}`)
         }
     }, [selectedCity, selectedKindOfService])
 
@@ -158,9 +158,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: values.description
-                        }
-                        console.log(payload)
-                        sendServiceRequest(`http://127.0.0.1:8000/requests`, {
+                        }                        
+                        sendServiceRequest(`/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)
                         })

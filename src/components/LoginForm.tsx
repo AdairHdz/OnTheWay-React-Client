@@ -15,7 +15,7 @@ const LoginForm: React.FC<{
 
     const authContext = useContext(AuthContext)
     const history = useHistory()
-    const { setFlashMessage, message } = useFlashMessage()
+    const { setFlashMessage } = useFlashMessage()
 
     const {
         data,
@@ -37,8 +37,12 @@ const LoginForm: React.FC<{
             return
         }                
 
-        if (error && !isLoading) {            
-            setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
+        if (error && !isLoading) {        
+            if(responseStatus === 403) {
+                setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
+                return
+            }
+            setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
             return
         }
     }, [data, error, isLoading, authContext, history])
@@ -51,17 +55,21 @@ const LoginForm: React.FC<{
             }}
             validationSchema={Yup.object({
                 emailAddress: Yup.string()
+                    .trim()
                     .required("Este campo es obligatorio")
-                    .email("Por favor inserte una dirección de correo válida"),
+                    .email("Por favor inserte una dirección de correo válida")
+                    .max(254, "Por favor inserte una dirección de correo con 254 caracteres o menos"),
                 password: Yup.string()
-                    .required("Este campo es obligatorio")                    
+                    .trim()    
+                    .required("Este campo es obligatorio")
+                    .max(50, "Por favor inserte una contraseña de longitud igual o menor a 50 caracteres"),
             })}
             onSubmit={(values) => {
                 const init = {
                     method: "POST",
                     body: JSON.stringify(values)
                 }
-                sendRequest("http://127.0.0.1:8000/users/login", init)
+                sendRequest("/users/login", init)
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">
                 <Form className="m-auto w-full px-12">

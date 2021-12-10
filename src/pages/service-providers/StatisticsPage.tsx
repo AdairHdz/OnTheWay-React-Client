@@ -46,7 +46,7 @@ const StatisticsPage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchStatistics(`http://127.0.0.1:8000/providers/${data?.id}/statistics?startingDate=${values.startingDate}&endingDate=${values.endingDate}`)
+                        fetchStatistics(`/providers/${data?.id}/statistics?startingDate=${values.startingDate}&endingDate=${values.endingDate}`)
                     }} >
                     <Form>
                         <StandardInput
