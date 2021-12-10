@@ -30,11 +30,13 @@ const ServiceRequestItem: React.FC<{
     }
 
     return (
-        <div className="rounded-xl bg-blue-500 flex text-white justify-between p-2 text-left gap-3 items-center">
+        <div className={`
+            rounded-xl bg-blue-500 flex text-white
+            justify-between p-2 text-left gap-3 items-center`}>
             <figure className="w-12 h-12">
                 <img
                     className="rounded-full w-full h-full"
-                    src={renderImage(props.status)} alt="" />
+                    src={renderImage(props.status)} alt="Service Request Status" />
             </figure>
             <div className="flex-grow">
                 <p className="font-bold text-sm lg:text-lg"> {getKindOfService(props.kindOfService)} </p>
@@ -42,7 +44,9 @@ const ServiceRequestItem: React.FC<{
                     <p className="font-light text-xs lg:text-lg"> {props.date} </p>                    
                 </div>
             </div>
-            <p className="font-light text-xs lg:text-lg italic self-start"> { getServiceRequestStatus(props.status) } </p>
+            <p className="font-light text-xs lg:text-lg italic self-start">
+                { getServiceRequestStatus(props.status) }
+            </p>
         </div>
     )
 }

@@ -1,6 +1,5 @@
 import KindOfService from "../../../enums/kind-of-service"
 import PriceRate from "../../../responses/price-rate"
-import WorkingDayBadge from "./workingDayBadge"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTimes } from "@fortawesome/free-solid-svg-icons"
 import useFetch from "../../../hooks/use-fetch"
@@ -9,6 +8,7 @@ import { AuthContext } from "../../../store/AuthContext"
 import Spinner from "../../generics/Spinner"
 import useFlashMessage from "../../../hooks/use-flash-message"
 import UserType from "../../../enums/user-type"
+import WorkingDayBadge from "./WorkingDayBadge"
 
 const PriceRateItem: React.FC<{
     priceRate: PriceRate,
@@ -73,11 +73,17 @@ const PriceRateItem: React.FC<{
         <div className="shadow-md rounded-lg p-5 text-gray-800 mb-5 text-left">            
             <div className="flex justify-between">
                 <div className="flex gap-2">
-                    {props.priceRate.workingDays.map(workingDay => <WorkingDayBadge key={workingDay} workingDay={workingDay} />)}
+                    {props.priceRate.workingDays.map(
+                        (workingDay) => <WorkingDayBadge key={workingDay} workingDay={workingDay} />
+                    )}
                 </div>
                 {isLoading && <Spinner /> }
                 {!isLoading && data?.userType === UserType.SERVICE_PROVIDER 
-                    && <FontAwesomeIcon icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} /> }
+                    && (
+                    <FontAwesomeIcon
+                        icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} />
+                    )
+                }
             </div>
             <p className="text-lg font-bold"> {props.priceRate.city.name} </p>
             <p className="font-bold"> {props.priceRate.startingHour} - {props.priceRate.endingHour} </p>

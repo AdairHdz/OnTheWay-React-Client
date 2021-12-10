@@ -44,8 +44,10 @@ const InfoOVerview: React.FC<{
     return (
         <div className="flex flex-col md:flex-row">
             <img
-                src={props.data?.businessPicture.includes(".") ? `/images/${props.data.businessPicture}` : "https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=130&w=220"}
-                alt=""
+                src={props.data?.businessPicture.includes(".") ?
+                    `${process.env.REACT_APP_BASE_API_URL}:${process.env.REACT_APP_BASE_API_PORT}/images/${props.data.businessPicture}` : "https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=130&w=220"
+                }
+                alt="Business Logo"
                 className="mr-10 w-full md:w-1/2 md:mr-0" />
             <div className="flex justify-between w-full">
                 {props.error && !props.isLoading && (
@@ -57,8 +59,12 @@ const InfoOVerview: React.FC<{
                         <div className="flex flex-col justify-around p-5">
                             <div className="flex flex-grow items-center">
                                 <div className="p-5 align text-left">
-                                    <p className="font-bold text-xl mb-3"> {props.data?.businessName} </p>
-                                    <p className="text-md mb-5"> {`${props.data?.names} ${props.data?.lastname}`} </p>
+                                    <p className="font-bold text-xl mb-3">
+                                        {props.data?.businessName}
+                                    </p>
+                                    <p className="text-md mb-5">
+                                        {`${props.data?.names} ${props.data?.lastname}`}
+                                    </p>
                                     <StarRate rate={props.data?.averageScore || 0} />
                                 </div>
 
@@ -81,7 +87,11 @@ const InfoOVerview: React.FC<{
                         {userData?.userType === UserType.SERVICE_PROVIDER && (
                             <div className="p-5 flex flex-col justify-between">
                                 <button
-                                    className="block border border-blue-600 text-blue-600 bg-transparent px-5 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-blue-600 transition-colors"
+                                    className={`
+                                        block border border-blue-600 text-blue-600
+                                        bg-transparent px-5 py-2 rounded-sm cursor-pointer
+                                        hover:text-white hover:bg-blue-600 transition-colors`
+                                    }
                                     type="button"
                                     onClick={logoutHandler}>
                                     Cerrar sesión

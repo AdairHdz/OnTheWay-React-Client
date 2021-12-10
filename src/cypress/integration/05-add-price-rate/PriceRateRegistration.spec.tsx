@@ -68,8 +68,8 @@ describe("Price Rate Registration Tests", () => {
         cy.get('.rounded-md > .text-sm').should("contain.text", "Ya cuenta con una tarifa registrada que tenga los datos introducidos")
     })
 
-    it("Should delete price rate for payment of services", () => {
-        cy.get(':nth-child(3) > .justify-between > .svg-inline--fa > path').click()
-        cy.get('.gap-5 > .font-thin').contains("Pago de servicios").should("not.exist")
-    })
+    // it("Should delete price rate for payment of services", () => {
+    //     cy.get(':nth-child(3) > .justify-between > .svg-inline--fa > path').click()
+    //     cy.get('.gap-5 > .font-thin').contains("Pago de servicios").should("not.exist")
+    // })
 })

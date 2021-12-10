@@ -7,7 +7,9 @@ const LabeledIcon: React.FC<{
     text: string
 }> = (props) => {
     return (
-        <div className={`flex flex-col items-center h-full justify-center p-2 md:p-2 ${props.className}`}>
+        <div className={`
+            flex flex-col items-center h-full
+            justify-center p-2 md:p-2 ${props.className}`}>
             <FontAwesomeIcon
                 icon={props.component}
                 className="text-white" />

@@ -77,11 +77,21 @@ const NewAddressForm: React.FC<{
                     })                    
                 }}>
                 <Form>
-                    <StandardInput id="indoorNumber" name="indoorNumber" type="text" label="Número interior" />
-                    <StandardInput id="outdoorNumber" name="outdoorNumber" type="text" label="Número exterior" />
-                    <StandardInput id="street" name="street" type="text" label="Calle" />
-                    <StandardInput id="suburb" name="suburb" type="text" label="Colonia" />
-                    <SelectInput id="cityId" name="cityId" label="Ciudad">
+                    <StandardInput
+                        id="indoorNumber"
+                        name="indoorNumber" type="text" label="Número interior" />
+                    <StandardInput
+                        id="outdoorNumber"
+                        name="outdoorNumber" type="text" label="Número exterior" />
+                    <StandardInput
+                        id="street"
+                        name="street" type="text" label="Calle" />
+                    <StandardInput
+                        id="suburb"
+                        name="suburb" type="text" label="Colonia" />
+                    <SelectInput
+                        id="cityId"
+                        name="cityId" label="Ciudad">
                         <option>Seleccione una ciudad</option>
                         {cities && cities.map((city) => (
                             <option value={city.id} key={city.id}> {city.name} </option>

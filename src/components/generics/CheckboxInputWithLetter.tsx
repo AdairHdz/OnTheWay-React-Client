@@ -14,9 +14,13 @@ const CheckboxInputWithLetter: React.FC<{
                 type="checkbox"                
                 id={props.id}
                 {...fieldProps}
-                className={`bg-white text-blue-600 rounded-full w-full h-full checked:bg-blue-600 group-hover:bg-blue-600 absolute`}
+                className={`
+                    bg-white text-blue-600 rounded-full w-full h-full
+                    checked:bg-blue-600 group-hover:bg-blue-600 absolute`}
             />
-            <label htmlFor={props.id} className={`absolute h-full w-full text-center ${textColor}`}>
+            <label
+                htmlFor={props.id}
+                className={`absolute h-full w-full text-center ${textColor}`}>
                 {props.letter}
             </label>
         </div>

@@ -10,7 +10,7 @@ const FileInput: React.FC<{
     inputHandler?: (files: FileList|null, filesNames: FileName[]) => void
 }> = (props) => {    
 
-    const [fieldProps, metadata, helpers] = useField({name: props.name})
+    const [fieldProps, metadata] = useField({name: props.name})
 
     return (
         <div className="mb-5">
@@ -26,7 +26,7 @@ const FileInput: React.FC<{
                 {...fieldProps}
                 id={props.id}
                 name={props.name}
-                accept={`${props.accept ? props.accept : 'image/*,.mp4'}`}
+                accept={`${props.accept ? props.accept : '.png, .jpeg, .jpg,.mp4'}`}
                 multiple={props.multiple ? props.multiple : true}
                 onChange={(e) => {
                     const value = e.currentTarget.files

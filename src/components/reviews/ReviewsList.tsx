@@ -41,7 +41,8 @@ const ReviewsList: React.FC<{
 
     return (
         <>
-            <div className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-auto max-h-screen">                
+            <div
+                className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-auto max-h-screen">
                 {props.reviews !== undefined && (
                     <>                    
                         {props.reviews.data && props.reviews.data.map(review => (
@@ -61,10 +62,26 @@ const ReviewsList: React.FC<{
                                 perPage: props.reviews.perPage,
                                 total: props.reviews.total
                             }}
-                            goToPreviousPageHandler={ () => { props.fetchReviews(props.reviews.links!.prev!) } }
-                            goToNextPageHandler={ () => { props.fetchReviews(props.reviews.links!.next!) } }
-                            goToFirstPageHandler={ () => { props.fetchReviews(props.reviews.links!.first!) } }
-                            goToLastPageHandler={ () => { props.fetchReviews(props.reviews.links!.last!) } } />
+                            goToPreviousPageHandler={
+                                () => {
+                                    props.fetchReviews(props.reviews.links!.prev!)
+                                }
+                            }
+                            goToNextPageHandler={
+                                () => {
+                                    props.fetchReviews(props.reviews.links!.next!)
+                                }
+                            }
+                            goToFirstPageHandler={
+                                () => {
+                                    props.fetchReviews(props.reviews.links!.first!)
+                                }
+                            }
+                            goToLastPageHandler={
+                                () => {
+                                    props.fetchReviews(props.reviews.links!.last!)
+                                }
+                            } />
                     </>
                 )}
 

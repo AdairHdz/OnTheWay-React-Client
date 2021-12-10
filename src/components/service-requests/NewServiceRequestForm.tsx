@@ -73,8 +73,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const [selectedKindOfService, setSelectedKindOfService] = useState<string>("")
 
     const renderServiceRequestError = () => {
-        if(priceRateFetchingError && !priceRateFetchingIsLoading) {            
-            if(priceRateFetchingStatus === 404) {                  
+        if (priceRateFetchingError && !priceRateFetchingIsLoading) {
+            if (priceRateFetchingStatus === 404) {
                 return <ErrorMessage errorTitle="Sin resultados"
                     errorMessage={"Este proveedor de servicios no cuenta con una tarifa activa para " +
                         "los criterios proporcionados."} className="mb-5" />
@@ -141,7 +141,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             description: Yup.string()
                                 .trim()
                                 .max(254, "Por favor inserte un texto de longitud menor a 254 caracteres")
-                        },                        
+                        },
                     )}
                     onSubmit={(values) => {
                         const payload: {
@@ -158,14 +158,20 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: values.description
-                        }                        
+                        }
                         sendServiceRequest(`/requests`, {
                             method: "POST",
                             body: JSON.stringify(payload)
                         })
                     }}>
                     <Form>
-                        <SelectInput id="kindOfService" name="kindOfService" label="Tipo de servicio" changeHandler={(value: string) => { setSelectedKindOfService(value) }}>
+                        <SelectInput
+                            id="kindOfService"
+                            name="kindOfService"
+                            label="Tipo de servicio"
+                            changeHandler={(value: string) => {
+                                setSelectedKindOfService(value)
+                            }}>
                             <option>Seleccione un tipo de servicio</option>
                             <option value={KindOfService.SERVICE_PAYMENT}>Pago de servicios</option>
                             <option value={KindOfService.DRUG_SHOPPING}>Compra de fármacos</option>
@@ -173,21 +179,33 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             <option value={KindOfService.DELIVERY}>Entrega</option>
                             <option value={KindOfService.OTHER}>Otro</option>
                         </SelectInput>
-                        <SelectInput id="city" name="city" label="Ciudad" changeHandler={(value: string) => { setSelectedCity(value) }}>
+                        <SelectInput
+                            id="city" name="city" label="Ciudad"
+                            changeHandler={(value: string) => { setSelectedCity(value) }}>
                             <option>Seleccione una ciudad</option>
-                            {cities && cities.map((city) => <option value={city.id} key={city.id}> {city.name} </option>)}
+                            {cities && cities.map(
+                                (city) => <option value={city.id} key={city.id}> {city.name} </option>
+                            )}
                         </SelectInput>
                         <div className="flex items-center gap-3 lg:gap-10">
                             <div className="flex-grow">
                                 <SelectInput id="address" name="address" label="Dirección de entrega">
                                     <option>Seleccione una dirección</option>
                                     {addresses && addresses.map((address) => (
-                                        <option value={address.id} key={address.id}> {address.street} {address.suburb} {address.outdoorNumber} </option>
+                                        <option
+                                            value={address.id}
+                                            key={address.id}>
+                                                {address.street} {address.suburb} {address.outdoorNumber}
+                                        </option>
                                     ))}
                                 </SelectInput>
                             </div>
                             <div
-                                className="bg-yellow-500 text-white rounded-full h-10 w-10 flex justify-center items-center cursor-pointer"
+                                className={`
+                                    bg-yellow-500 text-white
+                                    rounded-full h-10 w-10 flex justify-center
+                                    items-center cursor-pointer`
+                                }
                                 onClick={() => { setShowModal(true) }}>
                                 <span className="inline-block text-center">
                                     <FontAwesomeIcon icon={faPlus} />
@@ -197,14 +215,22 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         <TextArea id="description" name="description" label="Detalles adicionales" />
                         {priceRateFetchingIsLoading && <Spinner />}
                         {renderServiceRequestError()}
-                        {priceRate && <p className="text-xl font-bold text-center mb-5">Total: ${priceRate.price} MXN</p>}
-                        {priceRateFetchingStatus === 200 && (
-                            <button className="mx-auto w-1/2 lg:w-1/3 btn-primary" type="submit">Enviar</button>
+                        {priceRate && (
+                            <p className="text-xl font-bold text-center mb-5">
+                                Total: ${priceRate.price} MXN
+                            </p>
                         )}
-                        {serviceRequestIsLoading && <Spinner />}     
+                        {priceRateFetchingStatus === 200 && (
+                            <button
+                                className="mx-auto w-1/2 lg:w-1/3 btn-primary"
+                                type="submit">
+                                    Enviar
+                            </button>
+                        )}
+                        {serviceRequestIsLoading && <Spinner />}
                         {serviceRequestError && !serviceRequestIsLoading && (
                             <ErrorMessage errorMessage={serviceRequestError.message} />
-                        )}                   
+                        )}
                         <Modal show={showModal} closeModalHandler={() => { setShowModal(false) }}>
                             <NewAddressForm
                                 submitFormHandler={submitFormHandler}

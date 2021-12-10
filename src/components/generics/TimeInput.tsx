@@ -9,7 +9,9 @@ const TimeInput: React.FC<{
     const [fieldProps, metadata] = useField({name: props.name, id: props.id})
     return (
         <div>         
-            <label className="block text-center font-bold" htmlFor={props.id}> {props.label} </label>
+            <label className="block text-center font-bold" htmlFor={props.id}>
+                {props.label}
+            </label>
             <input
                 type="time"
                 className={`rounded-sm border-gray-300 bg-gray-200 ${props.className}`}

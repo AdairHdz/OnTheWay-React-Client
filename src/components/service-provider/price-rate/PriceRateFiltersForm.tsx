@@ -62,29 +62,49 @@ const PriceRateFiltersForm: React.FC<{
             <Form>
                 <p className="text-lg text-center font-bold mb-5">Tipo de servicio</p>
                 <div className="w-full mx-auto text-center md:flex md:justify-between">
-                    <div role="group" aria-labelledby="checkbox-group" className="md:flex-grow flex flex-col items-start">
+                    <div
+                        role="group" aria-labelledby="checkbox-group"
+                        className="md:flex-grow flex flex-col items-start">
                         <label>
-                            <Field type="radio" name="kindOfService" value={KindOfService.DELIVERY.toString()} />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value={KindOfService.DELIVERY.toString()} />
                             Entrega
                         </label>
                         <label>
-                            <Field type="radio" name="kindOfService" value={KindOfService.SERVICE_PAYMENT.toString()} />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value={KindOfService.SERVICE_PAYMENT.toString()} />
                             Pago de servicios
                         </label>
                         <label>
-                            <Field type="radio" name="kindOfService" value={KindOfService.GROCERY_SHOPPING.toString()} />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value={KindOfService.GROCERY_SHOPPING.toString()} />
                             Compra de víveres
                         </label>
                         <label>
-                            <Field type="radio" name="kindOfService" value={KindOfService.DRUG_SHOPPING.toString()} />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value={KindOfService.DRUG_SHOPPING.toString()} />
                             Compra de fármacos
                         </label>
                         <label>
-                            <Field type="radio" name="kindOfService" value={KindOfService.OTHER.toString()} />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value={KindOfService.OTHER.toString()} />
                             Otro
                         </label>
                         <label>
-                            <Field type="radio" name="kindOfService" value="" />
+                            <Field
+                                type="radio"
+                                name="kindOfService"
+                                value="" />
                             Todos
                         </label>
                     </div>
@@ -94,7 +114,11 @@ const PriceRateFiltersForm: React.FC<{
                             name="city"
                             label="Ciudad">
                             <option value="">Todas</option>
-                            {cities && cities.map((city) => <option value={city.id}> {city.name} </option>)}
+                            {cities && cities.map(
+                                (city) => (
+                                    <option value={city.id}> {city.name} </option>
+                                ))
+                            }
                         </SelectInput>
                     </div>
                 </div>

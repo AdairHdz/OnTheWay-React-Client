@@ -23,7 +23,7 @@ const SliderInput: React.FC<{
                 </>                
             )}            
             <input
-                className="w-full border-0 border-b-2 border-gray-300 focus:outline-none"                
+                className="w-full border-0 border-b-2 border-gray-300 focus:outline-none"
                 {...fieldProps}
                 onChange={
                     (e) => { 

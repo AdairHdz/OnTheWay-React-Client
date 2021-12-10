@@ -140,12 +140,12 @@ describe("Registry Page Tests", () => {
 
     it("Should show 'Imagen de negocio' field when user type is SERVICE_PROVIDER", () => {
         cy.get('#userType').select("Proveedor de servicio")
-        cy.get('#evidenceFiles').should("exist")
+        cy.get('#businessPicture').should("exist")
     })
 
     it("Should NOT show 'Imagen de negocio' field when user type is SERVICE_PROVIDER", () => {
         cy.get('#userType').select("Solicitante de servicio")
-        cy.get('#evidenceFiles').should("not.exist")
+        cy.get('#businessPicture').should("not.exist")
     })    
 
     it("Should succeed in registering a service requester", () => { 

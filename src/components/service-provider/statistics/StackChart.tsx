@@ -13,18 +13,19 @@ const StackChart: React.FC<{
     const [serviceRequests, setServiceRequests] = useState<number[]>([])
 
     useEffect(() => {
-        let weekdaysArray = props.requestedServicesPerWeekday.map((requestedServicePerWeekday) => {
-            return weekdayMapper(requestedServicePerWeekday.weekday)
-        })    
+        let weekdaysArray = props.requestedServicesPerWeekday.map(
+            (requestedServicePerWeekday) => {
+                return weekdayMapper(requestedServicePerWeekday.weekday)
+            })
         setWeekdays(weekdaysArray)
     }, [props.requestedServicesPerWeekday])
 
     useEffect(() => {
         let serviceRequestsQuantity: number[] = []
-        serviceRequestsQuantity = props.requestedServicesPerWeekday.map((requestedServicePerWeekday) => {
-            console.log(`Cantidad: ${requestedServicePerWeekday.requestedServices} en el día: ${weekdayMapper(requestedServicePerWeekday.weekday)}`)
-            return requestedServicePerWeekday.requestedServices
-        })        
+        serviceRequestsQuantity = props.requestedServicesPerWeekday.map(
+            (requestedServicePerWeekday) => {
+                return requestedServicePerWeekday.requestedServices
+            })
         setServiceRequests(serviceRequestsQuantity)
     }, [props.requestedServicesPerWeekday])
 
@@ -59,8 +60,12 @@ const StackChart: React.FC<{
             <p className="text-center text-2xl"> {props.title} </p>
             <Bar data={data} className='mb-5' />
             {props.requestedServicesPerWeekday?.map((requestedServicePerWeekday) => {
-                return <p> {`${weekdayMapper(requestedServicePerWeekday.weekday)}: ${requestedServicePerWeekday.requestedServices}`} </p>
-            })}            
+                return (
+                    <p>
+                        {`${weekdayMapper(requestedServicePerWeekday.weekday)}: ${requestedServicePerWeekday.requestedServices}`}
+                    </p>
+                )
+            })}
         </div>
     )
 };

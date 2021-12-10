@@ -11,15 +11,7 @@ const CheckboxInput: React.FC<{
 
     return (
         <div className={`${props.className}`}>
-            <div className="px-3">
-                {/* <label className="inline ">
-                    <input
-                        type="checkbox"
-                        className="rounded-sm bg-gray-200 border-gray-300 mr-3"
-                        id={props.id}
-                        {...fieldProps} />
-                    {props.label}
-                </label>                 */}
+            <div className="px-3">                
                 <label>
                     <Field type="checkbox" {...fieldProps} name={props.name} />
                     {props.label}

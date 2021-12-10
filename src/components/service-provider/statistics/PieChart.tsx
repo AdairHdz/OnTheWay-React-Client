@@ -22,9 +22,10 @@ const PieChart: React.FC<{
 
   useEffect(() => {
     let requestedServ: number[] = []
-    requestedServ = props.requestedServicesPerKindOfService.map((requestedServicePerKindOfService) => {
-      return requestedServicePerKindOfService.requestedServices
-    })
+    requestedServ = props.requestedServicesPerKindOfService.map(
+      (requestedServicePerKindOfService) => {
+        return requestedServicePerKindOfService.requestedServices
+      })
     setRequestedServicesQuantity(requestedServ)
   }, [props.requestedServicesPerKindOfService])
 
@@ -59,7 +60,11 @@ const PieChart: React.FC<{
       <p className="text-center text-2xl mb-5"> {props.title} </p>
       <Pie data={data} className='mb-5' />
       {props.requestedServicesPerKindOfService?.map((requestedServicePerKindOfService) => {
-        return <p> {`${getKindOfService(requestedServicePerKindOfService.kindOfService)}: ${requestedServicePerKindOfService.requestedServices}`} </p>
+        return (
+          <p>
+            {`${getKindOfService(requestedServicePerKindOfService.kindOfService)}: ${requestedServicePerKindOfService.requestedServices}`}
+          </p>
+        )
       })}
     </div>
   )
