@@ -15,7 +15,7 @@ const NewPriceRateForm: React.FC<{
     submitFormHandler: (statusCode: number | undefined) => void,
     closeModalHandler: () => void
 }> = (props) => {
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const {
         error,
         isLoading,
@@ -38,7 +38,7 @@ const NewPriceRateForm: React.FC<{
     }, [responseStatus])
 
     useEffect(() => {
-        fetchCities(`/states/${data?.stateId}/cities`)
+        fetchCities(`/states/${userSessionData?.stateId}/cities`)
     }, [])
 
     return (
@@ -132,7 +132,7 @@ const NewPriceRateForm: React.FC<{
                         workingDays
                     }
 
-                    sendRequest(`/providers/${data?.id}/priceRates`, {
+                    sendRequest(`/providers/${userSessionData?.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })
@@ -216,7 +216,7 @@ const NewPriceRateForm: React.FC<{
                     </button>
 
                     {error !== undefined && !isLoading && (
-                        <ErrorMessage className="text-center" />
+                        <ErrorMessage />
                     )}
                 </Form>
             </Formik>

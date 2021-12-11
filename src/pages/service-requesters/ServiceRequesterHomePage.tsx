@@ -2,7 +2,6 @@ import { Form, Formik } from "formik"
 import StandardInput from "../../components/generics/StandardInput"
 import * as Yup from "yup"
 import { useContext } from "react"
-
 import useFetch from "../../hooks/use-fetch"
 import { AuthContext } from "../../store/AuthContext"
 import ServiceRequestDetails from "../../responses/service-request-details"
@@ -12,7 +11,7 @@ import useFlashMessage from "../../hooks/use-flash-message"
 import { useHistory } from "react-router-dom"
 
 const ServiceProviderHomePage = () => {
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
@@ -53,7 +52,7 @@ const ServiceProviderHomePage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceRequests(`/requesters/${data?.id}/requests?date=${values.date}`)
+                        fetchServiceRequests(`/requesters/${userSessionData?.id}/requests?date=${values.date}`)
                     }}>
                     <Form>
                         <StandardInput type="date" id="date" name="date" label="Fecha" />

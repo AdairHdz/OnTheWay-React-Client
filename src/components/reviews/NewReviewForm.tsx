@@ -17,7 +17,7 @@ const NewReviewForm: React.FC<{
     serviceProviderId: string
 }> = (props) => {
 
-    const {data} = useContext(AuthContext)
+    const {data: userSessionData} = useContext(AuthContext)
     const history = useHistory()
     const { requestId } = useParams<{
         requestId: string
@@ -92,7 +92,7 @@ const NewReviewForm: React.FC<{
                     const body = {
                         ...values,
                         evidence: filesNames,
-                        serviceRequesterId: data?.id,                        
+                        serviceRequesterId: userSessionData?.id,                        
                         score,
                         serviceRequestId: requestId
                     }                    

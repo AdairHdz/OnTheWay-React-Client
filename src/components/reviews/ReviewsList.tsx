@@ -15,16 +15,10 @@ const ReviewsList: React.FC<{
     fetchReviews: (url: string) => void
 }> = (props) => {        
 
-    const {data, token} = useContext(AuthContext)
+    const {data: userSessionData, token} = useContext(AuthContext)
     useEffect(() => {        
-        props.fetchReviews(`providers/${data?.id}/reviews?page=1&pageSize=5`)
-    }, [token])    
-
-    useEffect(() => {
-        if(props.reviews) {
-            console.log(props.reviews)
-        }
-    }, [props.reviews])
+        props.fetchReviews(`providers/${userSessionData?.id}/reviews?page=1&pageSize=5`)
+    }, [token])
      
     const renderReviewsError = () => {
         if(props.error && !props.isLoading) {
@@ -45,7 +39,7 @@ const ReviewsList: React.FC<{
                 className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-auto max-h-screen">
                 {props.reviews !== undefined && (
                     <>                    
-                        {props.reviews.data && props.reviews.data.map(review => (
+                        {props.reviews?.data?.map(review => (
                             <ReviewItem key={review.id}
                                 id={review.id}
                                 date={review.dateOfReview}

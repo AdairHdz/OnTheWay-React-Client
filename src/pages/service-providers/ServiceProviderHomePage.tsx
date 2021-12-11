@@ -17,7 +17,7 @@ const ServiceProviderHomePage = () => {
     const openPriceRateFormModal = () => setShowNewPriceRateForm(true)
     const closePriceRateModal = () => setShowNewPriceRateForm(false)
     const { setFlashMessage } = useFlashMessage()
-    const { data, token } = useContext(AuthContext)
+    const { data: userSessionData, token } = useContext(AuthContext)
 
     const {
         data: priceRates,
@@ -37,14 +37,14 @@ const ServiceProviderHomePage = () => {
                     finalQueryString += '&'
                 }
             })            
-            fetchPriceRates(`/providers/${data?.id}/priceRates${finalQueryString}`)
+            fetchPriceRates(`/providers/${userSessionData?.id}/priceRates${finalQueryString}`)
             return
         }
-        fetchPriceRates(`/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
     }
 
     useEffect(() => {
-        fetchPriceRates(`/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
     }, [token])
 
     const submitFormHandler = (statusCode: number | undefined) => {
@@ -55,7 +55,7 @@ const ServiceProviderHomePage = () => {
         } else {            
             setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
         }
-        fetchPriceRates(`/providers/${data?.id}/priceRates`)
+        fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
         setShowNewPriceRateForm(false)
     }
 
@@ -67,7 +67,7 @@ const ServiceProviderHomePage = () => {
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
-        fetchUserInfo(`/providers/${data?.id}`)
+        fetchUserInfo(`/providers/${userSessionData?.id}`)
     }
 
     useEffect(() => {
@@ -106,7 +106,7 @@ const ServiceProviderHomePage = () => {
                         responseStatus={priceRatesResponseStatus}
                         fetchPriceRates={getPriceRates}
                         deletePriceRateHandler={() => {
-                            fetchPriceRates(`/providers/${data?.id}/priceRates`)
+                            fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
                         }} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">

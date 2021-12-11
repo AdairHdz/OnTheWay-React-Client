@@ -15,7 +15,7 @@ const ServiceRequesterRequestsList: React.FC<{
     responseStatus: number|undefined
 }> = (props) => {
 
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
 
     const renderServiceRequestError = () => {
         if(props.serviceRequestError && !props.serviceRequestFetchingIsLoading) {
@@ -35,7 +35,7 @@ const ServiceRequesterRequestsList: React.FC<{
             {props.serviceRequests && props.serviceRequests.map((serviceRequest) => (
                 <Link
                     key={serviceRequest.id}
-                    to={`/service-requesters/${data?.id}/service-requests/${serviceRequest.id}`} >
+                    to={`/service-requesters/${userSessionData?.id}/service-requests/${serviceRequest.id}`} >
                     <ServiceRequestItem
                         kindOfService={serviceRequest.kindOfService!}
                         date={serviceRequest.date}

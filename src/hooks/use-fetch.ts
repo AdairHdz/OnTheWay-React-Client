@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import HTTPRequestError from "../models/http-request-error"
 import { AuthContext } from "../store/AuthContext"
 

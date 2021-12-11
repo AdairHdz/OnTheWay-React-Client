@@ -5,9 +5,9 @@ import { AuthContext } from "../../store/AuthContext"
 interface LoginRouteProps extends RouteProps {  }
 
 const LoginRoute: React.FC<LoginRouteProps> = (props) => {
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     
-    if(data?.id) {
+    if(userSessionData?.id) {
         return <Redirect to="/" />
     }
     return (

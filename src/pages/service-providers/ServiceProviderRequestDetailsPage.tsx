@@ -15,15 +15,15 @@ const ServiceProviderRequestDetailsPage = () => {
         requestId: string
     }>()
 
-    const { data: authData } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const { setFlashMessage } = useContext(FlashContext)
     const history = useHistory()
     const [newStatus, setNewStatus] = useState<number | undefined>()
     const {
-        isLoading,
-        error,
-        data,
-        sendRequest
+        isLoading: serviceRequestIsLoading,
+        error: serviceRequestError,
+        data: serviceRequestResponse,
+        sendRequest: fetchServiceRequestWithCity
     } = useFetch<ServiceRequestWithCity>()
 
     const {
@@ -59,7 +59,7 @@ const ServiceProviderRequestDetailsPage = () => {
     }, [statusChangeIsLoading, statusChangeError, history, newStatus, setFlashMessage])
 
     useEffect(() => {
-        sendRequest(`/providers/${authData?.id}/requests/${requestId}`)
+        fetchServiceRequestWithCity(`/providers/${userSessionData?.id}/requests/${requestId}`)
     }, [])
 
     const changeRequestStatus = (newStatus: number) => {
@@ -76,27 +76,27 @@ const ServiceProviderRequestDetailsPage = () => {
 
     return (
         <div className="shadow-md bg-white m-5 p-5 lg:w-2/3 lg:mx-auto">
-            {data && (
+            {serviceRequestResponse && (
                 <>
                     <p className="font-bold text-lg mb-5">Datos del servicio</p>
                     <div className="text-justify mb-5">
                         <p className="font-bold"> Tipo de servicio </p>
-                        <p> {getKindOfService(data.kindOfService!)} </p>
+                        <p> {getKindOfService(serviceRequestResponse.kindOfService!)} </p>
                         <p className="font-bold">Ciudad</p>
-                        <p> {data.deliveryAddress!.city!.name} </p>
+                        <p> {serviceRequestResponse.deliveryAddress!.city!.name} </p>
                         <p className="font-bold">Detalles adicionales</p>
                         <p>
-                            {data.description}
+                            {serviceRequestResponse.description}
                         </p>
                         <p className="font-bold">Costo</p>
-                        <p>$ {data.cost} MXN</p>
+                        <p>$ {serviceRequestResponse.cost} MXN</p>
                         <p className="font-bold">Fecha</p>
-                        <p> {data.date} </p>
+                        <p> {serviceRequestResponse.date} </p>
                         <p className="font-bold">Estado</p>
-                        <p> {getServiceRequestStatus(data.status!)} </p>
+                        <p> {getServiceRequestStatus(serviceRequestResponse.status!)} </p>
                     </div>
                     <div className="flex justify-around">
-                        {data.status === ServiceRequestStatus.PENDING_OF_ACCEPTANCE ? (
+                        {serviceRequestResponse.status === ServiceRequestStatus.PENDING_OF_ACCEPTANCE ? (
                             <>
                                 <button
                                     className="btn-primary"
@@ -119,8 +119,8 @@ const ServiceProviderRequestDetailsPage = () => {
                     </div>
                 </>
             )}
-            {error && !isLoading && <ErrorMessage />}
-            {isLoading && <Spinner />}
+            {serviceRequestError && !serviceRequestIsLoading && <ErrorMessage />}
+            {serviceRequestIsLoading && <Spinner />}
         </div>
     )
 }

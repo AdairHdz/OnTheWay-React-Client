@@ -13,22 +13,13 @@ const useFlashMessage = (): {
         setFlashMessage: setMessage
     } = useContext(FlashContext)
 
-    const setFlashMessage = (title: string, message: string) => {
-        // clearFlashMessage()
+    const setFlashMessage = (title: string, message: string) => {        
         setMessage(title, message)
     }
 
     const resetFlashMessage = () => {
         clearFlashMessage()
     }
-
-    // useEffect(() => {
-    //     return () => {
-    //         if(message) {                
-    //             clearFlashMessage()
-    //         }
-    //     }
-    // }, [message])
 
     useEffect(() => {                
         if(message) {
@@ -40,8 +31,7 @@ const useFlashMessage = (): {
                 clearTimeout(messageTimeout)
             }
             return cleaningFunction    
-        }
-        // return cleaningFunction
+        }        
     }, [message])
 
     return {

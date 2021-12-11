@@ -12,14 +12,14 @@ const NewAddressForm: React.FC<{
     closeModalHandler: () => void
 }> = (props) => {
 
-    const {data} = useContext(AuthContext)    
+    const {data: userSessionData} = useContext(AuthContext)    
     const {
         data: cities,
         sendRequest: fetchCities
     } = useFetch<City[]>()
 
     useEffect(() => {
-        fetchCities(`/states/${data?.stateId}/cities`)
+        fetchCities(`/states/${userSessionData?.stateId}/cities`)
     }, [])
 
     const {
@@ -71,7 +71,7 @@ const NewAddressForm: React.FC<{
 
                 })}
                 onSubmit={(values) => {                    
-                    registerAddress(`/requesters/${data?.id}/addresses`, {
+                    registerAddress(`/requesters/${userSessionData?.id}/addresses`, {
                         method: "POST",
                         body: JSON.stringify(values)
                     })                    

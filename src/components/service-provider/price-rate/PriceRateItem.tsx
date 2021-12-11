@@ -16,10 +16,10 @@ const PriceRateItem: React.FC<{
 }> = (props) => {
 
     const {
-        sendRequest,
-        error,
-        isLoading,
-        responseStatus
+        sendRequest: sendPriceRateDeletionRequest,
+        error: priceRateDeletionRequestError,
+        isLoading: priceRateDeletionRequestIsLoading,
+        responseStatus: priceRateDeletionRequestStatus
     } = useFetch()
     let kindOfService: string
 
@@ -48,7 +48,7 @@ const PriceRateItem: React.FC<{
     }
 
     const deletePriceRate = () => {        
-        sendRequest(`/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
+        sendPriceRateDeletionRequest(`/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
             method: "DELETE"
         })
         if(props.deletePriceRateHandler) {
@@ -57,17 +57,17 @@ const PriceRateItem: React.FC<{
     }
 
     useEffect(() => {
-        if(responseStatus === 204) {
+        if(priceRateDeletionRequestStatus === 204) {
             if(props.deletePriceRateHandler) {
                 props.deletePriceRateHandler()
             }            
             return
         }
 
-        if(error) {
+        if(priceRateDeletionRequestError) {
             setFlashMessage("Error", "No hemos podido eliminar su tarifa. Por favor, intente más tarde")
         }
-    }, [responseStatus, error])
+    }, [priceRateDeletionRequestStatus, priceRateDeletionRequestError])
 
     return (
         <div className="shadow-md rounded-lg p-5 text-gray-800 mb-5 text-left">            
@@ -77,8 +77,8 @@ const PriceRateItem: React.FC<{
                         (workingDay) => <WorkingDayBadge key={workingDay} workingDay={workingDay} />
                     )}
                 </div>
-                {isLoading && <Spinner /> }
-                {!isLoading && data?.userType === UserType.SERVICE_PROVIDER 
+                {priceRateDeletionRequestIsLoading && <Spinner /> }
+                {!priceRateDeletionRequestIsLoading && data?.userType === UserType.SERVICE_PROVIDER 
                     && (
                     <FontAwesomeIcon
                         icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} />
