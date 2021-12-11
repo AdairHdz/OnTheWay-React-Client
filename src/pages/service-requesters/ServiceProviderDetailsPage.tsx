@@ -77,14 +77,14 @@ const ServiceProviderDetailsPage = () => {
 
     return (
         <>
-            <div className="shadow-md bg-white flex-grow-0 mb-5">
+            <section className="shadow-md bg-white flex-grow-0 mb-5">
                 <InfoOVerview
                     data={userInfo}
                     error={userInfoError}
                     isLoading={userInfoIsLoading}
                     sendRequest={getUserInfo} />
-            </div>
-            <div className="flex flex-col lg:flex-row gap-5 py-5 px-6">
+            </section>
+            <section className="flex flex-col lg:flex-row gap-5 py-5 px-6">
                 <div className="shadow-md bg-white flex-grow relative lg:w-1/2 xl:w-5/12 mb-5">
                     <p className="text-2xl font-bold p-5 text-center mt-5">Tarifas</p>
                     <PriceRatesList
@@ -103,7 +103,7 @@ const ServiceProviderDetailsPage = () => {
                         responseStatus={reviewsStatus}
                         fetchReviews={getReviews} />
                 </div>                
-            </div>
+            </section>
         </>
 
     )

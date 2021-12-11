@@ -33,7 +33,7 @@ const StatisticsPage = () => {
 
     return (
         <>
-            <div className="shadow-md bg-white flex-grow-0 mb-5 p-5">
+            <section className="shadow-md bg-white flex-grow-0 mb-5 p-5">
                 <Formik
                     initialValues={{
                         startingDate: "",
@@ -65,8 +65,8 @@ const StatisticsPage = () => {
                         </button>
                     </Form>
                 </Formik>
-            </div>
-            <div className="mx-auto p-5 md:p-10 lg:flex lg:justify-between lg:gap-5">
+            </section>
+            <section className="mx-auto p-5 md:p-10 lg:flex lg:justify-between lg:gap-5">
                 {statisticsFetchingError && !statisticsFetchingIsLoading && (
                     <ErrorMessage errorTitle="Error"
                         errorMessage="No hemos podido recuperar los datos necesarios. Por favor, intente más tarde" />
@@ -77,7 +77,7 @@ const StatisticsPage = () => {
                         <StackChart title="Solicitudes de servicio por días de la semana" requestedServicesPerWeekday={requestedServicesPerWeekday} className="p-5 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />                        
                     </>
                 )}
-            </div>
+            </section>
         </>
     )
 }

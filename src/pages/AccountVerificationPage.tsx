@@ -7,7 +7,7 @@ const AccountVerificationPage = () => {
     const { message } = useFlashMessage()
 
     return (
-        <div className="flex flex-col md:flex-row h-screen bg-blue-600 md:bg-white">
+        <section className="flex flex-col md:flex-row h-screen bg-blue-600 md:bg-white">
             <div className="bg-blue-600 hidden md:w-1/2 h-full md:flex">
                 <img src={Image} className="hidden md:block m-auto" alt="App Logo" />
             </div>
@@ -18,7 +18,7 @@ const AccountVerificationPage = () => {
                     message={message?.message || ""} />
                 <AccountVerificationForm />
             </div>
-        </div>
+        </section>
     )
 }
 

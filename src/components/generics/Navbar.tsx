@@ -42,7 +42,7 @@ const Navbar = () => {
         return null
     }
     return (
-        <div className={`
+        <nav className={`
             bg-blue-600 order-last
             flex justify-around md:h-screen md:flex-col
             md:order-first md:py-0 md:px-3`}>
@@ -52,7 +52,7 @@ const Navbar = () => {
                     text="Inicio" />
             </NavLink>
             {renderUserMenuOptions()}            
-        </div>
+        </nav>
     )
 }
 
