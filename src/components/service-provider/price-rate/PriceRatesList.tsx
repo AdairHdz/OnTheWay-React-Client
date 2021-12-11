@@ -1,6 +1,6 @@
 import PriceRateItem from "./PriceRateItem"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faMotorcycle } from "@fortawesome/free-solid-svg-icons"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import DropdownButton from "../../generics/DropdownButton"
 import { useContext, useState } from "react"
 import PriceRateFiltersForm from "./PriceRateFiltersForm"
