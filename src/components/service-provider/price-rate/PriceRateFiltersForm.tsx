@@ -11,14 +11,14 @@ import QueryParam from "../../../models/query-param"
 const PriceRateFiltersForm: React.FC<{
     changeHandler: (params: QueryParam[]) => void
 }> = (props) => {
-    const {data: userAuthData} = useContext(AuthContext)
+    const {data: userSession} = useContext(AuthContext)
     const {
         sendRequest: fetchCities,
         data: cities,        
     } = useFetch<City[]>()
 
     useEffect(() => {
-        fetchCities(`/states/${userAuthData?.stateId}/cities`)
+        fetchCities(`/states/${userSession?.stateId}/cities`)
     }, [])
     return (
         <Formik

@@ -7,10 +7,10 @@ import { AuthContext } from "../../store/AuthContext"
 import UserType from "../../enums/user-type"
 
 const Navbar = () => {
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
 
     const renderUserMenuOptions = () => {
-        if (data?.userType === UserType.SERVICE_PROVIDER) {
+        if (userSessionData?.userType === UserType.SERVICE_PROVIDER) {
             return (
                 <>
                     <NavLink activeClassName="bg-blue-800 rounded-md" to="/services">
@@ -27,7 +27,7 @@ const Navbar = () => {
             )
         }
 
-        if (data?.userType === UserType.SERVICE_REQUESTER) {
+        if (userSessionData?.userType === UserType.SERVICE_REQUESTER) {
             return (
                 <>
                     <NavLink activeClassName="bg-blue-800 rounded-md" to="/providers">
@@ -51,12 +51,7 @@ const Navbar = () => {
                     component={faHome}
                     text="Inicio" />
             </NavLink>
-            {renderUserMenuOptions()}
-            <NavLink activeClassName="bg-blue-800 rounded-md" to="/chats">
-                <LabeledIcon
-                    component={faComments}
-                    text="Mensajes" />
-            </NavLink>
+            {renderUserMenuOptions()}            
         </div>
     )
 }

@@ -9,9 +9,9 @@ import ServiceProviderRequestsList from "../../components/service-requests/Servi
 import useFlashMessage from "../../hooks/use-flash-message"
 import Alert from "../../components/generics/Alert"
 
-const ServicesPage = () => {    
-    const { data } = useContext(AuthContext)
-    const {message} = useFlashMessage()
+const ServicesPage = () => {
+    const { data: userSessionData } = useContext(AuthContext)
+    const { message } = useFlashMessage()
     const {
         data: serviceRequests,
         error: serviceRequestsFetchingError,
@@ -31,7 +31,7 @@ const ServicesPage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchServiceRequests(`/providers/${data?.id}/requests?date=${values.date}`)
+                        fetchServiceRequests(`/providers/${userSessionData?.id}/requests?date=${values.date}`)
                     }}>
                     <Form>
                         <StandardInput type="date" id="date" name="date" label="Fecha" />
@@ -41,11 +41,11 @@ const ServicesPage = () => {
             </div>
             <Alert className="absolute w-72 left-1/2 -ml-36 top-8" show={message !== undefined} title={message?.title || ""} message={message?.message || ""} />
             <ServiceProviderRequestsList
-            serviceRequests={serviceRequests}
-            className="bg-white shadow m-5 flex-grow p-3"
-            serviceRequestError={serviceRequestsFetchingError}
-            responseStatus={serviceRequestResponseStatus}
-            serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
+                serviceRequests={serviceRequests}
+                className="bg-white shadow m-5 flex-grow p-3"
+                serviceRequestError={serviceRequestsFetchingError}
+                responseStatus={serviceRequestResponseStatus}
+                serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading} />
         </div>
     )
 }

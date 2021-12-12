@@ -18,17 +18,17 @@ const LoginForm: React.FC<{
     const { setFlashMessage } = useFlashMessage()
 
     const {
-        data,
-        error,
-        isLoading,
-        sendRequest,
-        responseStatus
+        data: loginInfo,
+        error: loginError,
+        isLoading: loginRequestIsLoading,
+        sendRequest: sendLoginRequest,
+        responseStatus: loginRequestResponseStatus
     } = useFetch<Login>()
 
     useEffect(() => {        
-        if (data) {
-            authContext.login(data)            
-            if(!data.verified) {            
+        if (loginInfo) {
+            authContext.login(loginInfo)            
+            if(!loginInfo.verified) {            
                 history.push("/verify-account")
                 return
             }
@@ -37,15 +37,15 @@ const LoginForm: React.FC<{
             return
         }                
 
-        if (error && !isLoading) {        
-            if(responseStatus === 403) {
+        if (loginError && !loginRequestIsLoading) {        
+            if(loginRequestResponseStatus === 403) {
                 setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
                 return
             }
             setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
             return
         }
-    }, [data, error, isLoading, authContext, history])
+    }, [loginInfo, loginError, loginRequestIsLoading, authContext, history])
 
     return (
         <Formik
@@ -69,11 +69,11 @@ const LoginForm: React.FC<{
                     method: "POST",
                     body: JSON.stringify(values)
                 }
-                sendRequest("/users/login", init)
+                sendLoginRequest("/users/login", init)
             }} >
             <div className="w-full lg:w-4/5 xl:w-2/3 rounded-b-lg lg:rounded-lg mx-auto lg:m-auto bg-white h-full flex">
                 <Form className="m-auto w-full px-12">
-                    <img src={BlackLogo} className="mx-auto my-10" alt="" />
+                    <img src={BlackLogo} className="mx-auto my-10" alt="Black Logo" />
                     <p className="font-bold text-2xl text-center mb-5">Iniciar sesión</p>
                     <StandardInput
                         id="emailAddress"
@@ -90,7 +90,7 @@ const LoginForm: React.FC<{
                     <Link to="/" className="text-center block text-sm mt-10">
                         ¿Olvidaste tu contraseña?
                     </Link>
-                    <button type="submit" disabled={isLoading} className="btn-primary mx-auto my-10">
+                    <button type="submit" disabled={loginRequestIsLoading} className="btn-primary mx-auto my-10">
                         Iniciar sesión
                     </button>
                     <Link to="/registry" className="text-center block text-sm text-blue-500">

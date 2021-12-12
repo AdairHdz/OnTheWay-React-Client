@@ -24,7 +24,7 @@ const PriceRatesList: React.FC<{
     deletePriceRateHandler?: () => void
 }> = (props) => {
 
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
 
     const [dropdownIsActive, setDropdownIsActive] = useState(false)
     const {message} = useFlashMessage()
@@ -74,7 +74,7 @@ const PriceRatesList: React.FC<{
                         priceRate={priceRate} />
                 ))
                 }                
-                {data?.userType === UserType.SERVICE_PROVIDER ? (
+                {userSessionData?.userType === UserType.SERVICE_PROVIDER ? (
                     <div
                         className={`
                             bg-yellow-500 text-white
@@ -87,20 +87,7 @@ const PriceRatesList: React.FC<{
                             <FontAwesomeIcon icon={faPlus} />
                         </span>
                     </div>
-                ) : null}
-                {(data?.userType === UserType.SERVICE_REQUESTER) && props.openModalHandler ? (
-                    <div
-                        className={`
-                            bg-yellow-500 text-white rounded-full
-                            h-10 w-10 absolute bottom-20 right-10 flex
-                            justify-center items-center cursor-pointer`
-                        }
-                        onClick={() => { }}>
-                        <span className="inline-block text-center">
-                            <FontAwesomeIcon icon={faMotorcycle} />
-                        </span>
-                    </div>
-                ) : null}
+                ) : null}                
             </div>
 
         </>

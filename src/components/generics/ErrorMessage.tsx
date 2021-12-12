@@ -15,7 +15,9 @@ const ErrorMessage: React.FC<{
                 {props.errorTitle ? props.errorTitle : "Ocurrió un error"}
             </p>
             <p className="font-light text-center">
-                {props.errorMessage ? props.errorMessage : "Por favor, intente más tarde"}
+                {props.errorMessage ?
+                    props.errorMessage :
+                    "Ha ocurrido un error en el servidor al intentar procesar su solicitud. Por favor, intente más tarde"}
             </p>
         </div>
     )

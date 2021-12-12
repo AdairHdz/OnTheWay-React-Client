@@ -13,7 +13,7 @@ import ErrorMessage from "../../components/generics/ErrorMessage"
 
 const StatisticsPage = () => {
 
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const {
         data: statistics,
         sendRequest: fetchStatistics,
@@ -46,7 +46,7 @@ const StatisticsPage = () => {
                             .required("Este campo es obligatorio")
                     })}
                     onSubmit={(values) => {
-                        fetchStatistics(`/providers/${data?.id}/statistics?startingDate=${values.startingDate}&endingDate=${values.endingDate}`)
+                        fetchStatistics(`/providers/${userSessionData?.id}/statistics?startingDate=${values.startingDate}&endingDate=${values.endingDate}`)
                     }} >
                     <Form>
                         <StandardInput

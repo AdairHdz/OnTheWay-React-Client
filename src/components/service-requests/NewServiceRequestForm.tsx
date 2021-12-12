@@ -62,11 +62,11 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
         responseStatus: serviceRequestResponseStatus
     } = useFetch<any>()
 
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
 
     useEffect(() => {
-        fetchCities(`/states/${data?.stateId}/cities`)
-    }, [data?.stateId])
+        fetchCities(`/states/${userSessionData?.stateId}/cities`)
+    }, [userSessionData?.stateId])
 
     const [showModal, setShowModal] = useState(false)
     const [selectedCity, setSelectedCity] = useState<string>("")
@@ -85,7 +85,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }
 
     const getAddresses = () => {
-        fetchAddresses(`/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
+        fetchAddresses(`/requesters/${userSessionData?.id}/addresses?cityId=${selectedCity}`)
     }
 
 
@@ -104,8 +104,8 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     }, [serviceRequestResponseStatus, history])
 
     useEffect(() => {
-        fetchAddresses(`/requesters/${data?.id}/addresses?cityId=${selectedCity}`)
-    }, [selectedCity, data?.id])
+        fetchAddresses(`/requesters/${userSessionData?.id}/addresses?cityId=${selectedCity}`)
+    }, [selectedCity, userSessionData?.id])
 
     useEffect(() => {
         if (selectedKindOfService && selectedCity) {
@@ -154,7 +154,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         } = {
                             kindOfService: +values.kindOfService,
                             deliveryAddressId: values.address,
-                            serviceRequesterId: data?.id!,
+                            serviceRequesterId: userSessionData?.id!,
                             serviceProviderId: providerId,
                             cost: priceRate.price,
                             description: values.description

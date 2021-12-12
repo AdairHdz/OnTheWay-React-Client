@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import Evidence from "../../responses/evidence"
 import StarRate from "../generics/StarRate"
 
@@ -10,12 +9,7 @@ const ReviewItem: React.FC<{
     score: number
     details: string,
     evidence: Evidence[]
-}> = (props) => {
-
-    useEffect(() => {
-        console.log(props.evidence)
-    })
-
+}> = (props) => {    
     return (
         <div className="shadow-md rounded-lg p-8 text-gray-800 mb-5 text-left">
             <p className="font-bold mb-1">
