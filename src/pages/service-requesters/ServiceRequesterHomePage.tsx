@@ -41,7 +41,7 @@ const ServiceProviderHomePage = () => {
     const { message } = useFlashMessage()
 
     return (
-        <div className="flex flex-col h-screen lg:flex-row">
+        <section className="flex flex-col h-screen lg:flex-row">
             <div className="shadow-md bg-white m-5 p-5 ">
                 <Formik
                     initialValues={{
@@ -77,7 +77,7 @@ const ServiceProviderHomePage = () => {
                     serviceRequestFetchingIsLoading={serviceRequestsFetchingIsLoading}
                     responseStatus={serviceRequestResponseStatus} />
             </div>
-        </div>
+        </section>
     )
 }
 

@@ -72,7 +72,7 @@ const ServiceProvidersSearchPage = () => {
 
     return (
         <>
-            <div className="shadow-md m-5 p-5 bg-white" >
+            <section className="shadow-md m-5 p-5 bg-white" >
                 <Formik
                     enableReinitialize
                     innerRef={formRef}
@@ -129,8 +129,8 @@ const ServiceProvidersSearchPage = () => {
                         </button>
                     </Form>
                 </Formik>
-            </div>
-            <div className="shadow-md m-5 p-5 bg-white" >
+            </section>
+            <section className="shadow-md m-5 p-5 bg-white" >
                 {serviceProvidersFetchingIsLoading && <Spinner />}
                 { renderSearchError() }
                 {serviceProviders && serviceProviders.data && serviceProviders.data.map((serviceProvider) => {
@@ -157,7 +157,7 @@ const ServiceProvidersSearchPage = () => {
                     goToFirstPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.first!) } }
                     goToNextPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.next!) } }
                     goToPreviousPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.prev!) } } />}
-            </div>
+            </section>
         </>
     )
 }

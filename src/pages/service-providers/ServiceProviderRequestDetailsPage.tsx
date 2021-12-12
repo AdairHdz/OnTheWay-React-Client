@@ -75,7 +75,7 @@ const ServiceProviderRequestDetailsPage = () => {
     }
 
     return (
-        <div className="shadow-md bg-white m-5 p-5 lg:w-2/3 lg:mx-auto">
+        <section className="shadow-md bg-white m-5 p-5 lg:w-2/3 lg:mx-auto">
             {serviceRequestResponse && (
                 <>
                     <p className="font-bold text-lg mb-5">Datos del servicio</p>
@@ -121,7 +121,7 @@ const ServiceProviderRequestDetailsPage = () => {
             )}
             {serviceRequestError && !serviceRequestIsLoading && <ErrorMessage />}
             {serviceRequestIsLoading && <Spinner />}
-        </div>
+        </section>
     )
 }
 
