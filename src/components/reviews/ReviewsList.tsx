@@ -9,26 +9,37 @@ import { AuthContext } from "../../store/AuthContext"
 
 const ReviewsList: React.FC<{
     reviews: PaginatedReview,
-    error: HTTPRequestError|undefined,
+    error: HTTPRequestError | undefined,
     isLoading: boolean,
-    responseStatus: number|undefined
+    responseStatus: number | undefined
     fetchReviews: (url: string) => void
-}> = (props) => {        
+}> = (props) => {
 
-    const {data: userSessionData, token} = useContext(AuthContext)
-    useEffect(() => {        
+    const { data: userSessionData, token } = useContext(AuthContext)
+    useEffect(() => {
         props.fetchReviews(`providers/${userSessionData?.id}/reviews?page=1&pageSize=5`)
     }, [token])
-     
+
     const renderReviewsError = () => {
-        if(props.error && !props.isLoading) {
-            if(props.responseStatus && props.responseStatus === 404) {
-                return (
-                    <ErrorMessage errorTitle="Sin resultados"
-                        errorMessage="Parece ser que aún no hay reseñas" />
-                )
-            }
-            return <ErrorMessage />
+        if (props.error && !props.isLoading) {
+            switch (props.responseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return (
+                        <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que aún no hay reseñas" />)
+                default:
+                    return <ErrorMessage />
+            }                        
         }
         return null
     }
@@ -38,7 +49,7 @@ const ReviewsList: React.FC<{
             <div
                 className="w-full md:mt-10 md:w-11/12 md:mx-auto p-5 overflow-y-auto max-h-screen">
                 {props.reviews !== undefined && (
-                    <>                    
+                    <>
                         {props.reviews?.data?.map(review => (
                             <ReviewItem key={review.id}
                                 id={review.id}
@@ -48,7 +59,7 @@ const ReviewsList: React.FC<{
                                 serviceRequester={review.requesterName} title={review.title}
                                 evidence={review.evidence} />
                         ))}
-                        <Paginator                            
+                        <Paginator
                             paginationLinks={{
                                 links: props.reviews.links,
                                 page: props.reviews.page,
@@ -81,9 +92,9 @@ const ReviewsList: React.FC<{
 
                 {props.isLoading && <Spinner />}
 
-                { renderReviewsError() }
-            </div>            
-            
+                {renderReviewsError()}
+            </div>
+
         </>
     )
 }

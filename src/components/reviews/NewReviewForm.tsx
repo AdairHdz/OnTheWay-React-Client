@@ -17,21 +17,21 @@ const NewReviewForm: React.FC<{
     serviceProviderId: string
 }> = (props) => {
 
-    const {data: userSessionData} = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const history = useHistory()
     const { requestId } = useParams<{
         requestId: string
     }>()
     const [score, setScore] = useState(1)
     const [filesNames, setFilesNames] = useState<FileName[]>([])
-    const [files, setFiles] = useState<FileList|null>()
-    const {setFlashMessage} = useFlashMessage()
+    const [files, setFiles] = useState<FileList | null>()
+    const { setFlashMessage } = useFlashMessage()
 
-    const handleFiles = (files: FileList|null, filesNames: FileName[]) => {
-        if(files === null) {
+    const handleFiles = (files: FileList | null, filesNames: FileName[]) => {
+        if (files === null) {
             return
         }
-        
+
         setFilesNames(filesNames)
         setFiles(files)
     }
@@ -40,8 +40,25 @@ const NewReviewForm: React.FC<{
         data: savedReview,
         sendRequest: saveReview,
         isLoading: saveReviewIsLoading,
-        error: saveReviewHasError
+        error: saveReviewHasError,
+        responseStatus: saveReviewResponseStatus
     } = useFetch<ReviewWithRequesterId>()
+
+    const renderError = () => {
+        if (saveReviewHasError && !saveReviewIsLoading) {
+            switch (saveReviewResponseStatus) {
+                case 0:
+                    return <ErrorMessage errorTitle="Conexión rechazada"
+                        errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                case 400:
+                    return <ErrorMessage errorTitle="Solicitud no válida"
+                        errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                default:
+                    return <ErrorMessage />
+            }
+        }
+        return null
+    }
 
     const {
         sendRequest: saveEvidences
@@ -49,13 +66,13 @@ const NewReviewForm: React.FC<{
 
     const sendEvidenceFiles = () => {
         setFlashMessage("Reseña registrada", "La reseña ha sido registrada con éxito")
-        if(!files) {            
+        if (!files) {
             history.push("/")
             return
         }
 
         const formData = new FormData()
-        for(let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             formData.append("evidence[]", files.item(i)!)
         }
         saveEvidences(`/providers/${props.serviceProviderId}/reviews/${savedReview.id}/evidence`, {
@@ -66,10 +83,10 @@ const NewReviewForm: React.FC<{
     }
 
     useEffect(() => {
-        if(savedReview) {
+        if (savedReview) {
             sendEvidenceFiles()
         }
-    }, [savedReview])    
+    }, [savedReview])
 
     return (
         <>
@@ -78,24 +95,24 @@ const NewReviewForm: React.FC<{
             <Formik
                 validationSchema={Yup.object({
                     title: Yup.string()
-                        .required("Este campo es obligatorio")                        
+                        .required("Este campo es obligatorio")
                         .max(50, "Este campo no puede tener más de 50 caracteres"),
                     details: Yup.string()
                         .required("Este campo es obligatorio")
-                        .max(150, "Este campo no puede tener más de 150 caracteres"),                    
+                        .max(150, "Este campo no puede tener más de 150 caracteres"),
                 })}
                 initialValues={{
                     title: "",
-                    details: "",             
+                    details: "",
                 }}
                 onSubmit={(values) => {
                     const body = {
                         ...values,
                         evidence: filesNames,
-                        serviceRequesterId: userSessionData?.id,                        
+                        serviceRequesterId: userSessionData?.id,
                         score,
                         serviceRequestId: requestId
-                    }                    
+                    }
                     saveReview(`/providers/${props.serviceProviderId}/reviews`, {
                         method: "POST",
                         body: JSON.stringify(body)
@@ -123,11 +140,7 @@ const NewReviewForm: React.FC<{
                             mx-auto mb-5 ${saveReviewIsLoading ? 'btn-outlined' : 'btn-primary'}`
                         }
                         disabled={saveReviewIsLoading} >Calificar</button>
-                    {saveReviewHasError && (
-                        <ErrorMessage
-                            errorTitle="Error"
-                            errorMessage="No se pudo guardar la reseña. Por favor, intente más tarde" />
-                    )}
+                    {renderError()}
                 </Form>
             </Formik>
         </>

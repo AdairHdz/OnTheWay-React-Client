@@ -18,7 +18,8 @@ const ServiceProviderDetailsPage = () => {
         data: userInfo,
         error: userInfoError,
         isLoading: userInfoIsLoading,
-        sendRequest: fetchUserInfo
+        sendRequest: fetchUserInfo,
+        responseStatus: userInfoResponseStatus
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
@@ -82,7 +83,8 @@ const ServiceProviderDetailsPage = () => {
                     data={userInfo}
                     error={userInfoError}
                     isLoading={userInfoIsLoading}
-                    sendRequest={getUserInfo} />
+                    sendRequest={getUserInfo}
+                    responseStatus={userInfoResponseStatus} />
             </section>
             <section className="flex flex-col lg:flex-row gap-5 py-5 px-6">
                 <div className="shadow-md bg-white flex-grow relative lg:w-1/2 xl:w-5/12 mb-5">

@@ -26,11 +26,21 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const { message, setFlashMessage } = useFlashMessage()
 
     const submitFormHandler = (statusCode: number | undefined) => {
-        if (statusCode === 200) {
-            getAddresses()
-            setFlashMessage("Dirección registrada", "La nueva dirección se ha registrado correctamente")
-        } else {
-            setFlashMessage("Error", "No hemos podido registrar su nueva dirección. Por favor, intente más tarde")
+        if (statusCode) {
+            switch (statusCode) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 201:
+                    getAddresses()
+                    setFlashMessage("Dirección registrada", "La nueva dirección se ha registrado correctamente")
+                    break
+                case 400:
+                    setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                    break
+                default:
+                    setFlashMessage("Error", "No hemos podido registrar su nueva dirección. Por favor, intente más tarde")
+            }
         }
         setShowModal(false)
     }
@@ -72,14 +82,39 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
     const [selectedCity, setSelectedCity] = useState<string>("")
     const [selectedKindOfService, setSelectedKindOfService] = useState<string>("")
 
-    const renderServiceRequestError = () => {
+    const renderPriceRateError = () => {
         if (priceRateFetchingError && !priceRateFetchingIsLoading) {
-            if (priceRateFetchingStatus === 404) {
-                return <ErrorMessage errorTitle="Sin resultados"
-                    errorMessage={"Este proveedor de servicios no cuenta con una tarifa activa para " +
-                        "los criterios proporcionados."} className="mb-5" />
+            switch (priceRateFetchingStatus) {
+                case 0:
+                    return <ErrorMessage errorTitle="Conexión rechazada"
+                        errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" className="mb-5" />
+                case 400:
+                    return <ErrorMessage errorTitle="Solicitud no válida"
+                        errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" className="mb-5" />
+                case 404:
+                    return <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage={"Este proveedor de servicios no cuenta con una tarifa activa para " +
+                            "los criterios proporcionados."} className="mb-5" />
+                default:
+                    return <ErrorMessage className="mb-5" />
             }
-            return <ErrorMessage errorMessage={serviceRequestError?.message} className="mb-5" />
+        }
+        return null
+    }
+
+
+    const renderServiceRequestError = () => {
+        if (serviceRequestError && !serviceRequestIsLoading) {
+            switch (serviceRequestResponseStatus) {
+                case 0:
+                    return <ErrorMessage errorTitle="Conexión rechazada"
+                        errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" className="mb-5" />
+                case 400:
+                    return <ErrorMessage errorTitle="Solicitud no válida"
+                        errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" className="mb-5" />
+                default:
+                    return <ErrorMessage className="mb-5" />
+            }
         }
         return null
     }
@@ -94,13 +129,20 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
             return
         }
 
-        if (serviceRequestResponseStatus === 200) {
-            setFlashMessage("Solicitud de servicio enviada", "Su solicitud de servicio ha sido enviada de forma exitosa")
-            history.push("/")
-            return
+        switch (serviceRequestResponseStatus) {
+            case 0:
+                setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                break
+            case 201:
+                setFlashMessage("Solicitud de servicio enviada", "Su solicitud de servicio ha sido enviada de forma exitosa")
+                break
+            case 400:
+                setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                break
+            default:
+                setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
         }
-        setFlashMessage("Error", "No hemos podido enviar su solicitud de servicio. Por favor, intente más tarde")
-        history.push("/")
+        history.push("/")        
     }, [serviceRequestResponseStatus, history])
 
     useEffect(() => {
@@ -195,7 +237,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                                         <option
                                             value={address.id}
                                             key={address.id}>
-                                                {address.street} {address.suburb} {address.outdoorNumber}
+                                            {address.street} {address.suburb} {address.outdoorNumber}
                                         </option>
                                     ))}
                                 </SelectInput>
@@ -214,7 +256,7 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                         </div>
                         <TextArea id="description" name="description" label="Detalles adicionales" />
                         {priceRateFetchingIsLoading && <Spinner />}
-                        {renderServiceRequestError()}
+                        {renderPriceRateError()}
                         {priceRate && (
                             <p className="text-xl font-bold text-center mb-5">
                                 Total: ${priceRate.price} MXN
@@ -224,13 +266,11 @@ const NewServiceRequestForm: React.FC<{}> = (props) => {
                             <button
                                 className="mx-auto w-1/2 lg:w-1/3 btn-primary"
                                 type="submit">
-                                    Enviar
+                                Enviar
                             </button>
                         )}
                         {serviceRequestIsLoading && <Spinner />}
-                        {serviceRequestError && !serviceRequestIsLoading && (
-                            <ErrorMessage errorMessage={serviceRequestError.message} />
-                        )}
+                        {renderServiceRequestError()}
                         <Modal show={showModal} closeModalHandler={() => { setShowModal(false) }}>
                             <NewAddressForm
                                 submitFormHandler={submitFormHandler}

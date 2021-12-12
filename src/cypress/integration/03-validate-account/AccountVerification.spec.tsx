@@ -39,7 +39,7 @@ describe("Account Verification Page Tests", () => {
         cy.get('.btn-primary').click()
         cy.get('#verificationCode').type("12345678")
         cy.get('.btn-primary').click()
-        cy.get('.rounded-md > .text-sm').should("contain.text", "No se ha podido verificar su cuenta. Por favor, intente más tarde")
+        cy.get('.rounded-md > .text-sm').should("contain.text", "Ocurrió un error inesperado. Por favor, intente más tarde")
     })
 
     it("Should verify the account of the service requester successfully", () => {

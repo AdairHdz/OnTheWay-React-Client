@@ -18,10 +18,34 @@ const StatisticsPage = () => {
         data: statistics,
         sendRequest: fetchStatistics,
         error: statisticsFetchingError,
-        isLoading: statisticsFetchingIsLoading
+        isLoading: statisticsFetchingIsLoading,
+        responseStatus: statisticsFetchingStatus
     } = useFetch<Statistics>()
     const [requestedServicesPerKindOfService, setRequestedServicesPerKindOfService] = useState<RequestedServicesPerKindOfService[]>([])
     const [requestedServicesPerWeekday, setRequestedServicesPerWeekday] = useState<RequestedServicesPerWeekday[]>([])
+
+    const renderError = () => {
+        if (statisticsFetchingError && !statisticsFetchingIsLoading) {
+            switch (statisticsFetchingStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return (
+                        <ErrorMessage errorTitle="Error"
+                            errorMessage="No hemos podido recuperar los datos necesarios. Por favor, intente más tarde" />)
+                default:
+                    return <ErrorMessage />
+            }
+        }
+    }
 
     useEffect(() => {
         if (statistics === undefined) {
@@ -67,14 +91,11 @@ const StatisticsPage = () => {
                 </Formik>
             </section>
             <section className="mx-auto p-5 md:p-10 lg:flex lg:justify-between lg:gap-5">
-                {statisticsFetchingError && !statisticsFetchingIsLoading && (
-                    <ErrorMessage errorTitle="Error"
-                        errorMessage="No hemos podido recuperar los datos necesarios. Por favor, intente más tarde" />
-                )}
+                {renderError()}
                 {!statisticsFetchingError && (
                     <>
-                        <PieChart title="Solicitudes de servicio por tipo de servicio" requestedServicesPerKindOfService={requestedServicesPerKindOfService} className="p-5 mb-10 lg:mb-0 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />                        
-                        <StackChart title="Solicitudes de servicio por días de la semana" requestedServicesPerWeekday={requestedServicesPerWeekday} className="p-5 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />                        
+                        <PieChart title="Solicitudes de servicio por tipo de servicio" requestedServicesPerKindOfService={requestedServicesPerKindOfService} className="p-5 mb-10 lg:mb-0 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />
+                        <StackChart title="Solicitudes de servicio por días de la semana" requestedServicesPerWeekday={requestedServicesPerWeekday} className="p-5 lg:w-1/2 bg-white md:p-3 shadow-xl rounded-xl" />
                     </>
                 )}
             </section>

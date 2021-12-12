@@ -12,35 +12,68 @@ const AccountVerificationForm = () => {
     const {
         sendRequest: sendAccountActivationRequest,
         responseStatus: accountActivationResponseStatus,
-        error: accountActivationError
+        error: accountActivationError,
+        isLoading: accountActivationIsLoading
     } = useFetch()
 
     const {
-        sendRequest: requestNewActivationCode
+        sendRequest: requestNewActivationCode,
+        error: requestNewActivationCodeError,
+        responseStatus: requestNewActivationCodeResponseStatus,
+        isLoading: requestNewActivationCodeIsLoading
     } = useFetch()
 
     const [canRequestNewCode, setCanRequestNewCode] = useState(true)
 
-    const {data, activateAccount} = useContext(AuthContext)
+    const { data, activateAccount } = useContext(AuthContext)
 
     const history = useHistory()
-    const {setFlashMessage} = useFlashMessage()
+    const { setFlashMessage } = useFlashMessage()
 
     useEffect(() => {
-        if(accountActivationResponseStatus === 204) {
+        if (accountActivationResponseStatus === 204) {
             activateAccount()
             setFlashMessage("Cuenta verificada", "Hemos verificado su cuenta. Ahora podrá iniciar sesión")
             history.push("/")
+            return
         }
-    }, [accountActivationResponseStatus])
 
-    useEffect(() => {
-        if(accountActivationError) {
-            setFlashMessage("Error", "No se ha podido verificar su cuenta. Por favor, intente más tarde")
+        if (accountActivationError && !accountActivationIsLoading) {
+            switch (accountActivationResponseStatus) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 400:
+                    setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                    break
+                default:
+                    setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
+            }            
         }
-    }, [accountActivationError])
+    }, [accountActivationError, accountActivationIsLoading, accountActivationResponseStatus])
 
-    const sendNewActivationCode = () => {        
+    useEffect(() => {      
+        if(requestNewActivationCodeResponseStatus === 204) {            
+            setFlashMessage("Nuevo código", "Hemos enviado un nuevo código de verificación a tu dirección de correo electrónico")
+            return
+        }  
+
+        if (requestNewActivationCodeError && !requestNewActivationCodeIsLoading) {
+            switch (requestNewActivationCodeResponseStatus) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 400:
+                    setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                    break                    
+                default:
+                    setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
+            }
+            return
+        }        
+    }, [requestNewActivationCodeError, requestNewActivationCodeIsLoading, requestNewActivationCodeResponseStatus])
+
+    const sendNewActivationCode = () => {
         requestNewActivationCode(`/users/${data?.userId}/verify`, {
             method: "PUT",
             body: JSON.stringify({
@@ -48,20 +81,19 @@ const AccountVerificationForm = () => {
             })
         })
         setCanRequestNewCode(false)
-        setFlashMessage("Nuevo código", "Hemos enviado un nuevo código de verificación a tu dirección de correo electrónico")
     }
 
     useEffect(() => {
-        if(!canRequestNewCode) {
+        if (!canRequestNewCode) {
             setTimeout(() => {
-             setCanRequestNewCode(true)
+                setCanRequestNewCode(true)
             }, 5000)
         }
     }, [canRequestNewCode])
 
     return (
-        <div className="flex flex-col w-full justify-around">            
-            <Formik                
+        <div className="flex flex-col w-full justify-around">
+            <Formik
                 initialValues={{
                     verificationCode: ""
                 }}
@@ -93,12 +125,12 @@ const AccountVerificationForm = () => {
                 <p className="text-sm text-gray-500 mb-3">
                     ¿No recibiste ningún código en tu dirección de correo?
                 </p>
-                <button 
+                <button
                     disabled={!canRequestNewCode}
                     className={
                         `btn-primary-outlined mx-auto ${canRequestNewCode ?
-                        "hover:bg-yellow-500 hover:text-white transition-colors ease-linear" :
-                        "cursor-wait"}`
+                            "hover:bg-yellow-500 hover:text-white transition-colors ease-linear" :
+                            "cursor-wait"}`
                     }
                     onClick={sendNewActivationCode}>
                     Enviar nuevo código

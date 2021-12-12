@@ -48,13 +48,21 @@ const ServiceProviderHomePage = () => {
     }, [token])
 
     const submitFormHandler = (statusCode: number | undefined) => {
-        if (statusCode === 200) {
-            setFlashMessage("Tarifa registrada", "Su nueva tarifa ha sido registrada con éxito")
-        } else if(statusCode === 453) {
-            setFlashMessage("Tarifa repetida", "Ya cuenta con una tarifa registrada que tenga los datos introducidos")
-        } else {            
-            setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
-        }
+        if(statusCode) {
+            switch(statusCode) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 201:
+                    setFlashMessage("Tarifa registrada", "Su nueva tarifa ha sido registrada con éxito")
+                    break
+                case 453:
+                    setFlashMessage("Tarifa repetida", "Ya cuenta con una tarifa registrada que tenga los datos introducidos")
+                    break
+                default:
+                    setFlashMessage("Error", "Ha ocurrido un error al intentar registrar su nueva tarifa. Por favor, intente más tarde")
+            }
+        }        
         fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
         setShowNewPriceRateForm(false)
     }
@@ -63,7 +71,8 @@ const ServiceProviderHomePage = () => {
         data: userInfo,
         error: userInfoError,
         isLoading: userInfoIsLoading,
-        sendRequest: fetchUserInfo
+        sendRequest: fetchUserInfo,
+        responseStatus: userInfoResponseStatus
     } = useFetch<ServiceProviderInfoOverview>()
 
     const getUserInfo = () => {
@@ -93,7 +102,8 @@ const ServiceProviderHomePage = () => {
                     data={userInfo}
                     error={userInfoError}
                     isLoading={userInfoIsLoading}
-                    sendRequest={getUserInfo} />
+                    sendRequest={getUserInfo}
+                    responseStatus={userInfoResponseStatus} />
             </section>
             <section className="flex flex-col lg:flex-row gap-5 relative py-5 px-6">
                 <div className="shadow-md bg-white flex-grow relative lg:w-1/2 xl:w-5/12 mb-5">

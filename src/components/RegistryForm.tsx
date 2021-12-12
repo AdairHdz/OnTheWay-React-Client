@@ -29,7 +29,7 @@ const RegistryForm: React.FC<{
     error: registryError,
     isLoading: registryRequestIsLoading,
     sendRequest: sendRegistryRequest,
-    responseStatus
+    responseStatus: registryRequestResponseStatus
   } = useFetch<RegistryInfo>()
 
   const {
@@ -85,21 +85,28 @@ const RegistryForm: React.FC<{
   }, [])
 
   useEffect(() => {
-    if (responseStatus === 200 && registryResponse) {
+    if (registryRequestResponseStatus === 201 && registryResponse) {
       setSavedUser(true)
       return
     }
 
-    if (responseStatus === 452) {
-      setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
-      return
-    }
-
     if (registryError && !registryRequestIsLoading) {
-      setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")      
+      switch(registryRequestResponseStatus) {
+        case 0:
+          setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+          break
+        case 400:
+          setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+          break
+        case 452:
+          setFlashMessage("Dirección de correo ya registrada", "La dirección de correo electrónico ya fue usada anteriormente para crear una cuenta")
+          break
+        default:
+          setFlashMessage("Error al intentar registrar su cuenta", "Ocurrió un error al intentar registrar su cuenta. Por favor, intente más tarde")
+      }      
       return
     }
-  }, [history, responseStatus, registryError, registryRequestIsLoading])
+  }, [history, registryRequestResponseStatus, registryError, registryRequestIsLoading])
 
   const formRef = useRef<FormikProps<{
     names: string
