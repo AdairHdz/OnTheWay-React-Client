@@ -27,21 +27,33 @@ const PriceRatesList: React.FC<{
     const { data: userSessionData } = useContext(AuthContext)
 
     const [dropdownIsActive, setDropdownIsActive] = useState(false)
-    const {message} = useFlashMessage()
-    
+    const { message } = useFlashMessage()
+
     const toggleHandler = () => {
         setDropdownIsActive((prevState => !prevState))
     }
 
     const renderPriceRatesError = () => {
         if (props.error && !props.isLoading) {
-            if (props.responseStatus && props.responseStatus === 404) {
-                return (
-                    <ErrorMessage errorTitle="Sin resultados"
-                        errorMessage="Parece ser que aún no hay tarifas registradas" />
-                )
+            switch (props.responseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return (
+                        <ErrorMessage errorTitle="Sin resultados"
+                            errorMessage="Parece ser que aún no hay tarifas registradas" />
+                    )
+                default:
+                    return <ErrorMessage />
             }
-            return <ErrorMessage />
         }
 
         return null
@@ -64,7 +76,7 @@ const PriceRatesList: React.FC<{
                         toggleHandler={toggleHandler} />
                 )}
                 {dropdownIsActive && <PriceRateFiltersForm
-                    changeHandler={ props.fetchPriceRates } />}
+                    changeHandler={props.fetchPriceRates} />}
                 {renderPriceRatesError()}
 
                 {props.isLoading && <Spinner />}
@@ -73,7 +85,7 @@ const PriceRatesList: React.FC<{
                         deletePriceRateHandler={props.deletePriceRateHandler}
                         priceRate={priceRate} />
                 ))
-                }                
+                }
                 {userSessionData?.userType === UserType.SERVICE_PROVIDER ? (
                     <div
                         className={`
@@ -87,7 +99,7 @@ const PriceRatesList: React.FC<{
                             <FontAwesomeIcon icon={faPlus} />
                         </span>
                     </div>
-                ) : null}                
+                ) : null}
             </div>
 
         </>

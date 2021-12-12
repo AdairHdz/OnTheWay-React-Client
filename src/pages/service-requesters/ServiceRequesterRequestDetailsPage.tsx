@@ -25,39 +25,71 @@ const ServiceRequesterRequestDetailsPage = () => {
         isLoading: serviceRequestIsLoading,
         error: serviceRequestError,
         data: serviceRequestResponse,
-        sendRequest: fetchServiceRequest
+        sendRequest: fetchServiceRequest,
+        responseStatus: serviceRequestResponseStatus
     } = useFetch<ServiceRequestWithCity>()
 
     const {
         isLoading: statusChangeIsLoading,
         error: statusChangeError,
+        responseStatus: statusChangeResponseStatus,
         sendRequest: changeStatus,
     } = useFetch()
 
     const [showReviewForm, setShowReviewForm] = useState(false)
 
+    const renderError = () => {
+        if (serviceRequestError && !serviceRequestIsLoading) {
+            switch (serviceRequestResponseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return (
+                        <ErrorMessage errorTitle="Sin resultados"
+                            errorMessage="Parece ser que no tiene solicitudes de servicio en la fecha especificada" />
+                    )
+                default:
+                    return <ErrorMessage />
+            }
+        }
+        return null
+    }
+
     useEffect(() => {
         if (!statusChangeIsLoading && statusChangeError) {
-            const title = "Error"
-            const message = "Ha ocurrido un error al procesar su solicitud. Por favor intente más tarde"
-            setFlashMessage(title, message)
+            switch (statusChangeResponseStatus) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 400:
+                    setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                    break
+                default:
+                    setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
+            }
             history.push("/")
         }
 
-        if (!statusChangeIsLoading && !statusChangeError) {
+        if (statusChangeResponseStatus === 204) {
 
             if (newStatus === ServiceRequestStatus.CONCLUDED) {
-                const title = "Solicitud de servicio concluida"
-                const message = "La solicitud de servicio se ha marcado como concluida"
-                setFlashMessage(title, message)
+                setFlashMessage("Solicitud de servicio concluida", "La solicitud de servicio se ha marcado como concluida")
                 history.push("/")
+                return
             }
 
             if (newStatus === ServiceRequestStatus.CANCELED) {
-                const title = "Solicitud de servicio cancelada"
-                const message = "La solicitud de servicio se ha marcado como cancelada"
-                setFlashMessage(title, message)
+                setFlashMessage("Solicitud de servicio cancelada", "La solicitud de servicio se ha marcado como cancelada")
                 history.push("/")
+                return
             }
         }
 
@@ -88,8 +120,8 @@ const ServiceRequesterRequestDetailsPage = () => {
                     setNewStatus(ServiceRequestStatus.CONCLUDED)
                 }}>Marcar como completado</button>
             case ServiceRequestStatus.CONCLUDED:
-                if(serviceRequestResponse.hasBeenReviewed) {
-                    return null    
+                if (serviceRequestResponse.hasBeenReviewed) {
+                    return null
                 }
                 return <button className="btn-primary" onClick={() => setShowReviewForm(true)}>Calificar servicio</button>
             case ServiceRequestStatus.PENDING_OF_ACCEPTANCE:
@@ -125,7 +157,7 @@ const ServiceRequesterRequestDetailsPage = () => {
                     </div>
                 </>
             )}
-            {serviceRequestError && !serviceRequestIsLoading && <ErrorMessage />}
+            {renderError()}
             {serviceRequestIsLoading && <Spinner />}
             <Modal show={showReviewForm} closeModalHandler={() => { setShowReviewForm(false) }}>
                 <NewReviewForm serviceProviderId={serviceRequestResponse?.serviceProvider?.id || ""} />

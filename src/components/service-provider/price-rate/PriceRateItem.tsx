@@ -61,10 +61,19 @@ const PriceRateItem: React.FC<{
             return
         }
 
-        if(priceRateDeletionRequestError) {
-            setFlashMessage("Error", "No hemos podido eliminar su tarifa. Por favor, intente más tarde")
+        if(priceRateDeletionRequestError && !priceRateDeletionRequestIsLoading) {
+            switch(priceRateDeletionRequestStatus) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break                
+                case 400:
+                    setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
+                    break
+                default:
+                    setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
+            }            
         }
-    }, [priceRateDeletionRequestStatus, priceRateDeletionRequestError])
+    }, [priceRateDeletionRequestStatus, priceRateDeletionRequestError, priceRateDeletionRequestIsLoading])
 
     return (
         <div className="shadow-md rounded-lg p-5 text-gray-800 mb-5 text-left">            

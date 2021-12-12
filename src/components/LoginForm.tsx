@@ -37,13 +37,17 @@ const LoginForm: React.FC<{
             return
         }                
 
-        if (loginError && !loginRequestIsLoading) {        
-            if(loginRequestResponseStatus === 403) {
-                setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
-                return
-            }
-            setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
-            return
+        if (loginError && !loginRequestIsLoading) {
+            switch(loginRequestResponseStatus) {
+                case 0:
+                    setFlashMessage("Conexión rechazada", "No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde")
+                    break
+                case 403:
+                    setFlashMessage("Credenciales incorrectas", "La dirección de correo electrónico o la contraseña no coinciden con nuestros registros")
+                    break
+                default:
+                    setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
+            }            
         }
     }, [loginInfo, loginError, loginRequestIsLoading, authContext, history])
 

@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 import LabeledIcon from "./LabeledIcon"
 import { faHome } from "@fortawesome/free-solid-svg-icons"
-import { faMotorcycle, faDollarSign, faComments, faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faMotorcycle, faDollarSign, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { useContext } from "react"
 import { AuthContext } from "../../store/AuthContext"
 import UserType from "../../enums/user-type"

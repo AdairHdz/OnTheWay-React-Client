@@ -12,19 +12,31 @@ const ServiceProviderRequestsList: React.FC<{
     serviceRequests: ServiceRequestDetails[],
     serviceRequestError: HTTPRequestError | undefined,
     serviceRequestFetchingIsLoading: boolean,
-    responseStatus: number|undefined
+    responseStatus: number | undefined
 }> = (props) => {
     const { data: userSessionData } = useContext(AuthContext)
 
     const renderServiceRequestError = () => {
-        if(props.serviceRequestError && !props.serviceRequestFetchingIsLoading) {
-            if(props.responseStatus && props.responseStatus === 404) {
-                return (
-                    <ErrorMessage errorTitle="Sin resultados"
-                        errorMessage="Parece ser que no tiene solicitudes de servicio en la fecha especificada" />
-                )
+        if (props.serviceRequestError && !props.serviceRequestFetchingIsLoading) {
+            switch (props.responseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return (
+                        <ErrorMessage errorTitle="Sin resultados"
+                            errorMessage="Parece ser que no tiene solicitudes de servicio en la fecha especificada" />
+                    )
+                default:
+                    return <ErrorMessage />
             }
-            return <ErrorMessage />
         }
         return null
     }
@@ -40,9 +52,9 @@ const ServiceProviderRequestsList: React.FC<{
                         date={serviceRequest.date}
                         status={serviceRequest.status!} />
                 </Link>
-            ))}            
+            ))}
             {props.serviceRequestFetchingIsLoading && <Spinner />}
-            { renderServiceRequestError() }
+            {renderServiceRequestError()}
         </div>
     )
 }

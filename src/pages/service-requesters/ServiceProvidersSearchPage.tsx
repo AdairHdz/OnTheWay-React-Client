@@ -32,7 +32,7 @@ const ServiceProvidersSearchPage = () => {
     const {
         data: cities,
         sendRequest: fetchCities
-    } = useFetch<City[]>()    
+    } = useFetch<City[]>()
 
     useEffect(() => {
         fetchStates("/states")
@@ -41,34 +41,46 @@ const ServiceProvidersSearchPage = () => {
     const [stateId, setStateId] = useState<string>("")
 
     useEffect(() => {
-        if(stateId) {            
+        if (stateId) {
             fetchCities(`/states/${stateId}/cities`)
         }
     }, [stateId])
 
-    const [maxValue, setMaxValue] = useState<number>(1)    
+    const [maxValue, setMaxValue] = useState<number>(1)
 
     const formRef = useRef<FormikProps<{
         kindOfService: number,
         state: string,
         city: string,
         maxPriceRate: number
-      }>>(null)
+    }>>(null)
 
-      const renderSearchError = () => {
-          if(serviceProvidersFetchingError && !serviceProvidersFetchingIsLoading) {
-            if(serviceProvidersResponseStatus && serviceProvidersResponseStatus === 404) {
-                return <ErrorMessage errorTitle="Sin resultados"
-                    errorMessage="Parece ser que no hay proveedores de servicios que cumplan con los criterios que especificó" />
+    const renderSearchError = () => {
+        if (serviceProvidersFetchingError && !serviceProvidersFetchingIsLoading) {
+            switch (serviceProvidersResponseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que no hay proveedores de servicios que cumplan con los criterios que especificó" />
+                default:
+                    return <ErrorMessage />
             }
-            return <ErrorMessage />
-          }
-          return null
-      }
+        }
+        return null
+    }
 
-      const getServiceProvidersByURLCriteria = (urlCriteria: string) => {
+    const getServiceProvidersByURLCriteria = (urlCriteria: string) => {
         fetchServiceProviders(`${urlCriteria}`)
-      }
+    }
 
     return (
         <>
@@ -110,7 +122,7 @@ const ServiceProvidersSearchPage = () => {
                             <option value={KindOfService.SERVICE_PAYMENT}>Pago de servicios</option>
                             <option value={KindOfService.OTHER}>Otro</option>
                         </SelectInput>
-                        <SelectInput id="state" name="state" label="Estado" changeHandler={(value: string) => {setStateId(value)}}>
+                        <SelectInput id="state" name="state" label="Estado" changeHandler={(value: string) => { setStateId(value) }}>
                             <option>Seleccione un Estado</option>
                             {states && states.map((state) => <option value={state.id} key={state.id}>{state.name}</option>)}
                         </SelectInput>
@@ -132,7 +144,7 @@ const ServiceProvidersSearchPage = () => {
             </section>
             <section className="shadow-md m-5 p-5 bg-white" >
                 {serviceProvidersFetchingIsLoading && <Spinner />}
-                { renderSearchError() }
+                {renderSearchError()}
                 {serviceProviders && serviceProviders.data && serviceProviders.data.map((serviceProvider) => {
                     return (
                         <Link key={serviceProvider.id} to={`/service-providers/${serviceProvider.id}`}>
@@ -141,7 +153,7 @@ const ServiceProvidersSearchPage = () => {
                                 serviceProviderName={`${serviceProvider.names} ${serviceProvider.lastNames}`}
                                 serviceProviderAverageScore={serviceProvider.averageScore}
                                 priceRate={serviceProvider.priceRate} />
-                                
+
                         </Link>
                     )
                 })}
@@ -153,10 +165,10 @@ const ServiceProvidersSearchPage = () => {
                         perPage: serviceProviders.perPage,
                         total: serviceProviders.total
                     }}
-                    goToLastPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.last!) } }
-                    goToFirstPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.first!) } }
-                    goToNextPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.next!) } }
-                    goToPreviousPageHandler={ () => { getServiceProvidersByURLCriteria(serviceProviders.links!.prev!) } } />}
+                    goToLastPageHandler={() => { getServiceProvidersByURLCriteria(serviceProviders.links!.last!) }}
+                    goToFirstPageHandler={() => { getServiceProvidersByURLCriteria(serviceProviders.links!.first!) }}
+                    goToNextPageHandler={() => { getServiceProvidersByURLCriteria(serviceProviders.links!.next!) }}
+                    goToPreviousPageHandler={() => { getServiceProvidersByURLCriteria(serviceProviders.links!.prev!) }} />}
             </section>
         </>
     )

@@ -15,12 +15,36 @@ const InfoOVerview: React.FC<{
     data: ServiceProviderInfoOverview,
     error: HTTPRequestError | undefined,
     isLoading: boolean,
+    responseStatus: number|undefined
     sendRequest: () => void
 }> = (props) => {
 
     const {
         sendRequest: sendLogoutRequest
     } = useFetch()
+
+    const renderError = () => {
+        if(props.error && !props.isLoading) {
+            switch(props.responseStatus) {
+                case 0:
+                    return (
+                        <ErrorMessage errorTitle="Conexión rechazada"
+                            errorMessage="No pudimos establecer una conexión con nuestros servidores. Por favor, intente más tarde" />
+                    )
+                case 400:
+                    return (
+                        <ErrorMessage errorTitle="Solicitud no válida"
+                            errorMessage="Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente" />
+                    )
+                case 404:
+                    return <ErrorMessage errorTitle="Sin resultados"
+                        errorMessage="Parece ser que no hay un proveedor con el ID especificado" />
+                default:
+                    return <ErrorMessage />
+            }
+        }
+        return null
+    }
 
     const {
         logout,
@@ -50,9 +74,7 @@ const InfoOVerview: React.FC<{
                 alt="Business Logo"
                 className="mr-10 w-full md:w-1/2 md:mr-0" />
             <div className="flex justify-between w-full">
-                {props.error && !props.isLoading && (
-                    <ErrorMessage />
-                )}
+                {renderError()}
                 {props.isLoading && <Spinner />}
                 {props.data && (
                     <>
