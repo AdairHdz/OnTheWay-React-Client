@@ -17,10 +17,10 @@ const NewPriceRateForm: React.FC<{
 }> = (props) => {
     const { data: userSessionData } = useContext(AuthContext)
     const {
-        error,
-        isLoading,
-        sendRequest,
-        responseStatus
+        error: priceRateSavingError,
+        isLoading: priceRateSavingIsLoading,
+        sendRequest: savePriceRate,
+        responseStatus: priceRateSavingStatus
     } = useFetch()
 
     const {
@@ -30,12 +30,12 @@ const NewPriceRateForm: React.FC<{
 
 
     useEffect(() => {
-        if (responseStatus !== undefined) {
-            props.submitFormHandler(responseStatus)
+        if (priceRateSavingStatus !== undefined) {
+            props.submitFormHandler(priceRateSavingStatus)
             return
         }
 
-    }, [responseStatus])
+    }, [priceRateSavingStatus])
 
     useEffect(() => {
         fetchCities(`/states/${userSessionData?.stateId}/cities`)
@@ -44,37 +44,21 @@ const NewPriceRateForm: React.FC<{
     return (
         <>
             <p className="text-center text-lg mb-5">Nueva tarifa</p>
-            <Formik
+            <Formik                
                 initialValues={{
-                    monday: false,
-                    tuesday: false,
-                    wednesday: false,
-                    thursday: false,
-                    friday: false,
-                    saturday: false,
-                    sunday: false,
-                    city: "",
+                    workingDays: [],
+                    cityId: "",
                     kindOfService: 1,
                     price: 0,
                     startingHour: "",
                     endingHour: ""
-                }}
+                }}                
                 validationSchema={Yup.object({
-                    monday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    tuesday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    wednesday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    thursday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    friday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    saturday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    sunday: Yup.boolean()
-                        .oneOf([true, false], "Valor no válido"),
-                    city: Yup.string()
+                    workingDays: Yup.array()
+                        .min(1)
+                        .max(7)
+                        .required(),
+                    cityId: Yup.string()
                         .required("Por favor seleccione una ciudad")
                         .uuid("Valor no válido"),
                     kindOfService: Yup.number()
@@ -92,47 +76,18 @@ const NewPriceRateForm: React.FC<{
                 onSubmit={(values) => {
                     values.kindOfService = +values.kindOfService
                     values.price = +values.price
-                    const {
-                        city: cityId,
-                        startingHour,
-                        endingHour,
-                        kindOfService,
-                        price
-                    } = values
-
-                    let workingDays: number[] = []
-                    if (values.monday) {
-                        workingDays.push(1)
-                    }
-                    if (values.tuesday) {
-                        workingDays.push(2)
-                    }
-                    if (values.wednesday) {
-                        workingDays.push(3)
-                    }
-                    if (values.thursday) {
-                        workingDays.push(4)
-                    }
-                    if (values.friday) {
-                        workingDays.push(5)
-                    }
-                    if (values.saturday) {
-                        workingDays.push(6)
-                    }
-                    if (values.sunday) {
-                        workingDays.push(7)
-                    }
+                    const workingDaysParsedToNumberType = values.workingDays.map((workingDay) => +workingDay)
 
                     const requestBody = {
-                        cityId,
-                        startingHour,
-                        endingHour,
-                        kindOfService,
-                        price,
-                        workingDays
-                    }
-
-                    sendRequest(`/providers/${userSessionData?.id}/priceRates`, {
+                        cityId: values.cityId,
+                        kindOfService: values.kindOfService,
+                        price: values.price,
+                        startingHour: values.startingHour,
+                        endingHour: values.endingHour,
+                        workingDays: workingDaysParsedToNumberType
+                    }                    
+                    
+                    savePriceRate(`/providers/${userSessionData?.id}/priceRates`, {
                         method: "POST",
                         body: JSON.stringify(requestBody)
                     })
@@ -141,36 +96,43 @@ const NewPriceRateForm: React.FC<{
                     <div className="mb-5 flex justify-around">
                         <CheckboxInputWithLetter
                             id="monday"
-                            name="monday"
-                            letter="L" />
+                            name="workingDays"
+                            letter="L"
+                            value={1} />
                         <CheckboxInputWithLetter
                             id="tuesday"
-                            name="tuesday"
-                            letter="M" />
+                            name="workingDays"
+                            letter="M"
+                            value={2} />
                         <CheckboxInputWithLetter
                             id="wednesday"
-                            name="wednesday"
-                            letter="M" />
+                            name="workingDays"
+                            letter="M"
+                            value={3} />
                         <CheckboxInputWithLetter
                             id="thursday"
-                            name="thursday"
-                            letter="J" />
+                            name="workingDays"
+                            letter="J"
+                            value={4} />
                         <CheckboxInputWithLetter
                             id="friday"
-                            name="friday"
-                            letter="V" />
+                            name="workingDays"
+                            letter="V"
+                            value={5} />
                         <CheckboxInputWithLetter
                             id="saturday"
-                            name="saturday"
-                            letter="S" />
+                            name="workingDays"
+                            letter="S"
+                            value={6} />
                         <CheckboxInputWithLetter
                             id="sunday"
-                            name="sunday"
-                            letter="D" />
+                            name="workingDays"
+                            letter="D"
+                            value={7} />
                     </div>
                     <SelectInput
-                        id="city"
-                        name="city" >
+                        id="cityId"
+                        name="cityId" >
                         <option disabled value="">Ciudad</option>
                         {cities && cities.map((city) => (
                             <option value={city.id} key={city.id}> {city.name} </option>
@@ -210,12 +172,12 @@ const NewPriceRateForm: React.FC<{
                     </div>
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={priceRateSavingIsLoading}
                         className="btn-primary mx-auto">
                         Registrar
                     </button>
 
-                    {error !== undefined && !isLoading && (
+                    {priceRateSavingError !== undefined && !priceRateSavingIsLoading && (
                         <ErrorMessage />
                     )}
                 </Form>

@@ -17,7 +17,7 @@ describe("Address Registry Tests", () => {
         cy.get('.flex-grow > .font-bold').click()
         cy.get('.btn-primary').click()
         cy.get('.bg-yellow-500').click()
-        cy.get('.rounded-lg > .font-bold').should("contain.text", "Añadir dirección")
+        cy.get('#outdoorNumber').should("exist")
     })
 
     it("Should display 'Campo obligatorio' in outdoor number field", () => {

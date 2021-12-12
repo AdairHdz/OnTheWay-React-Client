@@ -23,7 +23,7 @@ const PriceRateItem: React.FC<{
     } = useFetch()
     let kindOfService: string
 
-    const { data } = useContext(AuthContext)
+    const { data: userSessionData } = useContext(AuthContext)
     const {setFlashMessage} = useFlashMessage()
 
     switch (props.priceRate.kindOfService) {
@@ -48,12 +48,9 @@ const PriceRateItem: React.FC<{
     }
 
     const deletePriceRate = () => {        
-        sendPriceRateDeletionRequest(`/providers/${data?.id}/priceRates/${props.priceRate.id}`, {
+        sendPriceRateDeletionRequest(`/providers/${userSessionData?.id}/priceRates/${props.priceRate.id}`, {
             method: "DELETE"
-        })
-        if(props.deletePriceRateHandler) {
-            props.deletePriceRateHandler()
-        }        
+        })        
     }
 
     useEffect(() => {
@@ -78,7 +75,7 @@ const PriceRateItem: React.FC<{
                     )}
                 </div>
                 {priceRateDeletionRequestIsLoading && <Spinner /> }
-                {!priceRateDeletionRequestIsLoading && data?.userType === UserType.SERVICE_PROVIDER 
+                {!priceRateDeletionRequestIsLoading && userSessionData?.userType === UserType.SERVICE_PROVIDER 
                     && (
                     <FontAwesomeIcon
                         icon={faTimes} className="cursor-pointer" onClick={deletePriceRate} />

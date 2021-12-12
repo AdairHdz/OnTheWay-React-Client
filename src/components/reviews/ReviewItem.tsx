@@ -29,7 +29,9 @@ const ReviewItem: React.FC<{
             </p>
             <div>
                 {props.evidence?.map(evidence => (
-                    <a target="_blank"
+                    <a 
+                        key={evidence.id}
+                        target="_blank"
                         rel="noreferrer"
                         href={`${process.env.REACT_APP_BASE_API_URL}:${process.env.REACT_APP_BASE_API_PORT}/reviews/${props.id}/${evidence.fileName}`}
                         className="text-blue-600 block"
