@@ -1,0 +1,8 @@
+coverage
+.nyc_output
+docker/
+node_modules
+.env.dev
+.env.test
+.gitignore
+example.env
