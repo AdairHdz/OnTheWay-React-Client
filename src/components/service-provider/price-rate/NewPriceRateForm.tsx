@@ -71,7 +71,7 @@ const NewPriceRateForm: React.FC<{
                     startingHour: Yup.string()
                         .required("Por favor seleccione una hora de inicio"),
                     endingHour: Yup.string()
-                        .required("Por favor seleccione una hora de inicio"),
+                        .required("Por favor seleccione una hora de fin"),
                 })}
                 onSubmit={(values) => {
                     values.kindOfService = +values.kindOfService

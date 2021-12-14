@@ -117,6 +117,7 @@ const ServiceProviderHomePage = () => {
                         fetchPriceRates={getPriceRates}
                         deletePriceRateHandler={() => {
                             fetchPriceRates(`/providers/${userSessionData?.id}/priceRates`)
+                            setFlashMessage("Tarifa eliminada", "Su tarifa ha sido eliminada con éxito")
                         }} />
                 </div>
                 <div className="shadow-md bg-white flex-grow mb-5 lg:w-1/2 xl:w-7/12 md:p-5">
