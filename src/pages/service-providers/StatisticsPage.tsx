@@ -40,7 +40,7 @@ const StatisticsPage = () => {
                 case 404:
                     return (
                         <ErrorMessage errorTitle="Error"
-                            errorMessage="No hemos podido recuperar los datos necesarios. Por favor, intente más tarde" />)
+                            errorMessage="No existen datos para las fechas introducidas." />)
                 default:
                     return <ErrorMessage />
             }

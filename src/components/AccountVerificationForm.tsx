@@ -46,6 +46,9 @@ const AccountVerificationForm = () => {
                 case 400:
                     setFlashMessage("Solicitud no válida", "Los datos introducidos no son válidos. Por favor, verifique la información e intente nuevamente")
                     break
+                case 404:
+                    setFlashMessage("Código incorrecto", "El código que ha introducido no coincide con nuestros registros")
+                    break
                 default:
                     setFlashMessage("Ocurrió un error", "Ocurrió un error inesperado. Por favor, intente más tarde")
             }            
